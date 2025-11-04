@@ -1,6 +1,6 @@
 import React, { use, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../slice/slice";
+
 import toast from "react-hot-toast";
 import { validatePassword } from "val-pass";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,7 +14,6 @@ import { LuUpload } from "react-icons/lu";
 const Register = () => {
   let nagivate = useNavigate();
   const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.user);
   const [errorMessage, setErrorMessage] = useState("");
 
   const [formData, setFormData] = useState({
@@ -56,7 +55,8 @@ const Register = () => {
       toast.error("Passwords do not match");
       return;
     }
-    dispatch(registerUser(formData));
+   
+   
     toast.success("Registration successful! Please log in.");
     console.log(formData);
 
@@ -270,24 +270,17 @@ const Register = () => {
 
           <button
             type="submit"
-            disabled={loading}
+            
             className={`w-full relative overflow-hidden bg-linear-to-r from-cyan-400 to-purple-500 text-white py-2.5 sm:py-3 mt-6 rounded-lg 
               transition-all duration-300 ease-in-out transform text-sm sm:text-base font-medium
               hover:scale-[1.02] hover:from-purple-500 hover:to-cyan-400 active:scale-95 focus:outline-none shadow-lg`}
           >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                <span className="text-sm sm:text-base">
-                  Creating Account...
-                </span>
-              </span>
-            ) : (
+          (
               <span className="relative z-10 flex justify-center gap-3 items-center">
                 <span>Create Account</span>
                 <GoArrowRight className="text-lg sm:text-xl" />
               </span>
-            )}
+            )
             <span className="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity"></span>
           </button>
 
