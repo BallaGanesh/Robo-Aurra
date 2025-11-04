@@ -10,6 +10,7 @@ import { MdOutlineEmail } from "react-icons/md";
 import { GoLock } from "react-icons/go";
 import { GoArrowRight } from "react-icons/go";
 import { LuUpload } from "react-icons/lu";
+import { CgProfile } from "react-icons/cg";
 
 const Register = () => {
   let nagivate = useNavigate();
@@ -55,8 +56,7 @@ const Register = () => {
       toast.error("Passwords do not match");
       return;
     }
-   
-   
+
     toast.success("Registration successful! Please log in.");
     console.log(formData);
 
@@ -69,9 +69,9 @@ const Register = () => {
         <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-cyan-400/10 to-purple-500/10 backdrop-blur-sm"></div>
         <div className="relative z-10 flex flex-col justify-center items-center h-full p-5">
           <img
-            src="/4575caffe972bdbd2209c4926317bbc8c6b180e0-removebg-preview.png"
+            src="logo.png"
             alt="Logo"
-            className="w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 object-contain mx-auto"
+            className="w-35 h-35 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-100 lg:h-100 object-contain mx-auto"
           />
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-light text-white mb-4 transition-all duration-300">
             Welcome To Our Platform
@@ -102,7 +102,7 @@ const Register = () => {
             </Link>
           </p>
 
-          <div className="flex justify-center mb-4">
+          {/* <div className="flex justify-center mb-4">
             <div className="relative w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-300">
               {preview ? (
                 <img
@@ -113,19 +113,38 @@ const Register = () => {
               ) : (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="w-10 h-10 text-gray-400"
+                  
+                  className="w-10 h-10 text-gray-400 "
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                >
-                  <path
+                > */}
+
+          {/* <CgProfile className="h-7 w-7 "/> */}
+
+          {/* <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={1.5}
                     d="M12 4v16m8-8H4"
-                  />
-                </svg>
+                  /> */}
+          {/* </svg>
               )}
+            </div>
+          </div> */}
+
+          {/* @trial */}
+          <div className="flex justify-center mb-4">
+            <div className="relative w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-300">
+              {preview ? (
+                <img
+                  src={preview}
+                  alt="Preview"
+                  className="object-cover w-full h-full"
+                />
+              ) : (
+                <CgProfile className="text-gray-400" size={50} />
+                )}
             </div>
           </div>
 
@@ -238,9 +257,6 @@ const Register = () => {
                 </div>
               </div>
             </div>
-
-            
-
           </div>
 
           <div className="flex items-center mt-4">
@@ -270,17 +286,15 @@ const Register = () => {
 
           <button
             type="submit"
-            
             className={`w-full relative overflow-hidden bg-linear-to-r from-cyan-400 to-purple-500 text-white py-2.5 sm:py-3 mt-6 rounded-lg 
               transition-all duration-300 ease-in-out transform text-sm sm:text-base font-medium
               hover:scale-[1.02] hover:from-purple-500 hover:to-cyan-400 active:scale-95 focus:outline-none shadow-lg`}
           >
-          (
-              <span className="relative z-10 flex justify-center gap-3 items-center">
-                <span>Create Account</span>
-                <GoArrowRight className="text-lg sm:text-xl" />
-              </span>
-            )
+            <span className="relative z-10 flex justify-center gap-3 items-center">
+              <span>Create Account</span>
+              <GoArrowRight className="text-lg sm:text-xl" />
+            </span>
+
             <span className="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity"></span>
           </button>
 
