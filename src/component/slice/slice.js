@@ -7,11 +7,13 @@ const initialState = {
 export const userSlice = createSlice({
   name: 'counter',
   initialState,
-  reducers: {}
+  reducers: {
+    loggeduser:()=>{}
+  }
 })
 
 
 
-// export const { } = counterSlice.actions
+export const {loggeduser } = userSlice.actions
 
 export default userSlice.reducer
