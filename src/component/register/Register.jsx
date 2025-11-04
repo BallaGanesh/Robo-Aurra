@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { use, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import toast from "react-hot-toast";
@@ -16,6 +16,24 @@ const Register = () => {
   let nagivate = useNavigate();
   const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleBoxClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setProfileImage(URL.createObjectURL(file));
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setProfileImage(null);
+    fileInputRef.current.value = "";
+  };
 
   const [formData, setFormData] = useState({
     fullName: "",
