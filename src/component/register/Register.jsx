@@ -1,4 +1,4 @@
-import React, { use, useRef, useState } from "react";
+import React, {  useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import toast from "react-hot-toast";
@@ -11,6 +11,7 @@ import { GoLock } from "react-icons/go";
 import { GoArrowRight } from "react-icons/go";
 import { LuUpload } from "react-icons/lu";
 import { CgProfile } from "react-icons/cg";
+import { LuX } from "react-icons/lu";
 
 const Register = () => {
   let nagivate = useNavigate();
@@ -254,27 +255,48 @@ const Register = () => {
               />
             </div>
 
-            <div className="w-full max-w-sm mx-auto">
-              <div className="bg-linear-to-b from-[#f9fbff] to-[#edf3ff] rounded-lg sm:rounded-2xl border border-gray-300 shadow-sm p-3 sm:p-4">
-                <label className="flex gap-2 text-sm sm:text-base mb-2 justify-start items-center">
-                  <span className="text-[#155DFC] text-lg sm:text-xl">
-                    <LuUpload />
-                  </span>
-                  Profile Image
-                </label>
-                <div className="flex flex-col items-center justify-center border-2 border-dashed border-blue-400 bg-white rounded-lg sm:rounded-xl py-3 sm:py-4 px-2 cursor-pointer hover:bg-blue-50 transition-all duration-300">
-                  <span className="text-[#155DFC] text-2xl sm:text-3xl">
-                    <LuUpload />
-                  </span>
-                  <p className="text-blue-500 font-medium text-sm sm:text-base mt-1">
-                    Upload profile image
-                  </p>
-                  <p className="text-gray-400 text-xs sm:text-sm">
-                    Image will appear above
-                  </p>
-                </div>
-              </div>
-            </div>
+             <div className="w-full max-w-md mx-auto">
+      <label className="block text-gray-700 font-medium mb-2">
+        Profile Image
+      </label>
+
+      <div className="flex gap-4 items-center">
+        {/* Upload Box */}
+        <div
+          onClick={handleBoxClick}
+          className="flex flex-col justify-center items-center border-2 border-dashed border-blue-400 bg-white rounded-md w-90 h-32 cursor-pointer hover:bg-blue-50 transition-all duration-300"
+        >
+          <LuUpload className="text-blue-500 text-2xl mb-1" />
+          <p className="text-blue-500 text-sm font-medium">Click to change</p>
+        </div>
+
+        {/* Image Preview */}
+        {profileImage && (
+          <div className="relative inline-block ">
+  <img
+    src={profileImage}
+    alt="Uploaded"
+    className="w-32 h-32 object-cover rounded-md border"
+  />
+            <button
+              onClick={handleRemoveImage}
+              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+            >
+              <LuX size={18} />
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Hidden File Input */}
+      <input
+        type="file"
+        accept="image/*"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        className="hidden"
+      />
+    </div>
           </div>
 
           <div className="flex items-center mt-4">
