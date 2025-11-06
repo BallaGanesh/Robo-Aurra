@@ -14,9 +14,11 @@ import { CgProfile } from "react-icons/cg";
 import { LuX } from "react-icons/lu";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
+
 const Register = () => {
   let nagivate = useNavigate();
   const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.Auth);
   const [errorMessage, setErrorMessage] = useState("");
   const [profileImage, setProfileImage] = useState(null);
   const [passwordError, setPasswordError] = useState("");
@@ -27,6 +29,7 @@ const Register = () => {
   const [isPasswordValid, setIsPasswordValid] = useState(null);
 
   const fileInputRef = useRef(null);
+   const [preview, setPreview] = useState(null);
 
   const handleBoxClick = () => {
     fileInputRef.current.click();
@@ -52,7 +55,7 @@ const Register = () => {
     image: null,
   });
 
-  const [preview, setPreview] = useState(null);
+  
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -399,12 +402,13 @@ const Register = () => {
 
           <button
             type="submit"
+            disabled={loading}
             className={`w-full relative overflow-hidden bg-linear-to-r from-cyan-400 to-purple-500 text-white py-2.5 sm:py-3 mt-6 rounded-lg 
               transition-all duration-300 ease-in-out transform text-sm sm:text-base font-medium
               hover:scale-[1.02] hover:from-purple-500 hover:to-cyan-400 active:scale-95 focus:outline-none shadow-lg`}
           >
             <span className="relative z-10 flex justify-center gap-3 items-center">
-              <span>Create Account</span>
+              <span>{loading ? "Creating Account..." : "Create Account"}</span>
               <GoArrowRight className="text-lg sm:text-xl" />
             </span>
 
@@ -430,6 +434,7 @@ const Register = () => {
             />
             Continue with Google
           </button>
+           {error && <p className="text-center text-red-500 text-sm mt-2">{error}</p>}
         </form>
 
         <p className="text-[10px] sm:text-xs text-gray-500 mt-4 sm:mt-6 text-center">
