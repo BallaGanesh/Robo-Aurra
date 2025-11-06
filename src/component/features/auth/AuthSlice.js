@@ -4,7 +4,7 @@ import axios from "axios";
 // ✅ Register user API call
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
-  async (formData, { rejectWithValue }) => {
+  async (formData, thunkAPI) => {
     try {
       // Example endpoint — replace with your backend API
       const response = await axios.post("http://localhost:5000/api/register", formData, {
@@ -12,7 +12,7 @@ export const registerUser = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue(
+      return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Registration failed"
       );
     }
@@ -26,7 +26,11 @@ const authSlice = createSlice({
     loading: false,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    logoutUser: (state) => {
+      state.user = null;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.pending, (state) => {
@@ -44,4 +48,5 @@ const authSlice = createSlice({
   },
 });
 
+export const { logoutUser } = authSlice.actions;
 export default authSlice.reducer;
