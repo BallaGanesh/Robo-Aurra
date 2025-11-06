@@ -32,11 +32,12 @@ const Register = () => {
    const [preview, setPreview] = useState(null);
 
   const handleBoxClick = () => {
-    fileInputRef.current.click();
+   fileInputRef.current.click();
   };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+    formData.image = file;
     if (file) {
       setProfileImage(URL.createObjectURL(file));
     }
@@ -83,24 +84,26 @@ const Register = () => {
     }
 
     setFormData({ ...formData, [name]: value });
+    
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let { fullName, email, password, confirmPassword, image } = formData;
-    if ((!fullName || !email || !password || !confirmPassword, !image)) {
-      toast.error("All fields are mandatory");
+    let { fullName, email, password, confirmPassword,image } = formData;
+    
+    
+    if(!fullName || !email || !password || !confirmPassword||!image){
+      toast.error("Please fill all the fields");
       return;
-    }
-    if (formData.password !== formData.confirmPassword) {
+    } 
+    if (password !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
-    }
-
-    toast.success("Registration successful! Please log in.");
+    }   
+    toast.success("Registration successful!");
     console.log(formData);
-
     nagivate("/login");
+    
   };
 
   return (
@@ -157,18 +160,6 @@ const Register = () => {
             </div>
           </div>
 
-          {/* <div className="text-center mb-4">
-            <label className="block text-sm text-gray-600 mb-1">
-              Upload profile image
-            </label>
-            <input
-              type="file"
-              name="image"
-              accept="image/*"
-              onChange={handleChange}
-              className="block w-full text-sm text-gray-600"
-            />
-          </div> */}
 
           <div className="space-y-4 sm:space-y-5">
             <div className="space-y-1 sm:space-y-1.5">
