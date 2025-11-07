@@ -15,7 +15,7 @@ import { LuUpload } from "react-icons/lu";
 import { CgProfile } from "react-icons/cg";
 import { LuX } from "react-icons/lu";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { registerUser } from "../features/auth/AuthSlice";
+
 
 
 const Register = () => {
@@ -93,7 +93,9 @@ const Register = () => {
 
    (async ()=>{
      try {
-      let result=  await dispatch(registerUser(formData)).unwrap();
+      let result=  await dispatch(registerUser(formData));
+      console.log(result);
+      
       if(result.status===201){
         toast.success("Registration successful!");
         nagivate("/login");
