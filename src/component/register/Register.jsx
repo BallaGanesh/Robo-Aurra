@@ -1,7 +1,6 @@
-import React, {  useRef, useState } from "react";
-import { useDispatch, useSelector} from "react-redux";
-import {registerUser} from "../features/auth/AuthSlice";
-
+import React, { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../features/auth/AuthSlice";
 
 import toast from "react-hot-toast";
 import { validatePassword } from "val-pass";
@@ -16,8 +15,6 @@ import { CgProfile } from "react-icons/cg";
 import { LuX } from "react-icons/lu";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-
-
 const Register = () => {
   let nagivate = useNavigate();
   const dispatch = useDispatch();
@@ -25,21 +22,20 @@ const Register = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [profileImage, setProfileImage] = useState(null);
   const fileInputRef = useRef(null);
-   const [preview, setPreview] = useState(null);
+  const [preview, setPreview] = useState(null);
 
   const handleBoxClick = () => {
-   fileInputRef.current.click();
+    fileInputRef.current.click();
   };
 
-  const handleFileChange = (event) => {4
-    console.log(event.target);
-    
-    const file = event.target.files[0];
-    
+  const handleFileChange = (event) => {
+    const file = event.target.files && event.target.files[0];
     if (file) {
-      setProfileImage(URL.createObjectURL(file));
+      const objectUrl = URL.createObjectURL(file);
+      setProfileImage(objectUrl);
+      setPreview(objectUrl);
+      setFormData((prev) => ({ ...prev, profilePhoto: file }));
     }
-    formData.profilePhoto = file;
   };
 
   const handleRemoveImage = () => {
@@ -55,14 +51,9 @@ const Register = () => {
     profilePhoto: null,
   });
 
-  
-
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "profilePhoto" && files.length > 0) {
-      setFormData({ ...formData, image: files[0] });
-      setPreview(URL.createObjectURL(files[0]));
-    } else if (name == "password") {
+    const { name, value } = e.target;
+    if (name === "password") {
       let { validateAll, getAllValidationErrorMessage } = validatePassword(
         value,
         8
@@ -70,47 +61,43 @@ const Register = () => {
       validateAll()
         ? setErrorMessage("")
         : setErrorMessage(getAllValidationErrorMessage);
-      value == "" && setErrorMessage("");
+      if (value === "") setErrorMessage("");
     }
-    setFormData({ ...formData, [name]: value });
-    
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let { username, email, password, confirmPassword,profilePhoto } = formData;
-    
-    
-    if(!username || !email || !password || !confirmPassword||!profilePhoto){
+    let { username, email, password, confirmPassword, profilePhoto } = formData;
+
+    if (!username || !email || !password || !confirmPassword || !profilePhoto) {
       toast.error("Please fill all the fields");
       return;
-    } 
+    }
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
-    }   
+    }
     console.log(formData);
 
-   (async ()=>{
-     try {
-      let result=  await dispatch(registerUser(formData));
-      console.log(result);
-      
-      if(result.status===201){
+    (async () => {
+      try {
+        // build FormData for multipart upload
+        const payload = new FormData();
+        payload.append("username", username);
+        payload.append("email", email);
+        payload.append("password", password);
+        if (profilePhoto) payload.append("profilePhoto", profilePhoto);
+
+        // unwrap will throw on rejection and return payload on success
+        const data = await dispatch(registerUser(payload)).unwrap();
+        console.log("register result:", data);
         toast.success("Registration successful!");
         nagivate("/login");
-      } else{
-        toast.error("Registration failed!");
+      } catch (err) {
+        toast.error(err || "Something went wrong during registration");
       }
-      
-     } catch (error) {
-      toast.error("something went wrong")
-        return;
-     }
-   }
-
-   )();
-    
+    })();
   };
 
   return (
@@ -152,38 +139,6 @@ const Register = () => {
             </Link>
           </p>
 
-          {/* <div className="flex justify-center mb-4">
-            <div className="relative w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-300">
-              {preview ? (
-                <img
-                  src={preview}
-                  alt="Preview"
-                  className="object-cover w-full h-full"
-                />
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  
-                  className="w-10 h-10 text-gray-400 "
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                > */}
-
-          {/* <CgProfile className="h-7 w-7 "/> */}
-
-          {/* <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M12 4v16m8-8H4"
-                  /> */}
-          {/* </svg>
-              )}
-            </div>
-          </div> */}
-
-          {/* @trial */}
           <div className="flex justify-center mb-4">
             <div className="relative w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-300">
               {preview ? (
@@ -194,10 +149,9 @@ const Register = () => {
                 />
               ) : (
                 <CgProfile className="text-gray-400" size={50} />
-                )}
+              )}
             </div>
           </div>
-
 
           <div className="space-y-4 sm:space-y-5">
             <div className="space-y-1 sm:space-y-1.5">
@@ -209,7 +163,7 @@ const Register = () => {
                 type="text"
                 name="username"
                 placeholder="e.g. John Doe"
-                value={formData.fullName}
+                value={formData.username}
                 onChange={handleChange}
                 required
                 className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all duration-300"
@@ -274,52 +228,51 @@ const Register = () => {
               />
             </div>
 
-             <div className="w-full max-w-md mx-auto">
-      <label className="block text-gray-700 font-medium mb-2">
-        Profile Image
-      </label>
+            <div className="w-full max-w-md mx-auto">
+              <label className="block text-gray-700 font-medium mb-2">
+                Profile Image
+              </label>
 
-      <div className="flex gap-4 items-center">
-        {/* Upload Box */}
-        <div
-          onClick={handleBoxClick}
-          className="flex flex-col justify-center items-center border-2 border-dashed border-blue-400 bg-white rounded-md w-90 h-32 cursor-pointer hover:bg-blue-50 transition-all duration-300"
-        >
-          <LuUpload className="text-blue-500 text-2xl mb-1" />
-          <p className="text-blue-500 text-sm font-medium">Click to change</p>
-        </div>
+              <div className="flex gap-4 items-center">
+                {/* Upload Box */}
+                <div
+                  onClick={handleBoxClick}
+                  className="flex flex-col justify-center items-center border-2 border-dashed border-blue-400 bg-white rounded-md w-90 h-32 cursor-pointer hover:bg-blue-50 transition-all duration-300"
+                >
+                  <LuUpload className="text-blue-500 text-2xl mb-1" />
+                  <p className="text-blue-500 text-sm font-medium">
+                    Click to change
+                  </p>
+                </div>
 
-        {/* Image Preview */}
-        {profileImage && (
-          <div className="relative inline-block ">
-  <img
-    src={profileImage}
-    alt="Uploaded"
-    className="w-32 h-32 object-cover rounded-md border"
-  />
-            <button
-              onClick={handleRemoveImage}
-              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-            >
-              <LuX size={18} />
-            </button>
-          </div>
-        )}
-      </div>
+                {/* Image Preview */}
+                {profileImage && (
+                  <div className="relative inline-block ">
+                    <img
+                      src={profileImage}
+                      alt="Uploaded"
+                      className="w-32 h-32 object-cover rounded-md border"
+                    />
+                    <button
+                      onClick={handleRemoveImage}
+                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                    >
+                      <LuX size={18} />
+                    </button>
+                  </div>
+                )}
+              </div>
 
-      {/* Hidden File Input */}
-      <input
-        type="file"
-        accept="image/*"
-        ref={fileInputRef}
-        onChange={(e)=>{
-          handleFileChange(e)
-          handleChange(e)
-        }}
-        className="hidden"
-        name="image"
-      />
-    </div>
+              {/* Hidden File Input */}
+              <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+                name="profilePhoto"
+              />
+            </div>
           </div>
 
           <div className="flex items-center mt-4">
@@ -381,7 +334,9 @@ const Register = () => {
             />
             Continue with Google
           </button>
-           {error && <p className="text-center text-red-500 text-sm mt-2">{error}</p>}
+          {error && (
+            <p className="text-center text-red-500 text-sm mt-2">{error}</p>
+          )}
         </form>
 
         <p className="text-[10px] sm:text-xs text-gray-500 mt-4 sm:mt-6 text-center">
