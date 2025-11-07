@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const storedToken = localStorage.getItem("token") ;
+const storedToken = localStorage.getItem("token");
 
-// ✅ Register user API call
+//  Register user API call
 export const registerUser = createAsyncThunk(
   "api/users/register",
   async (formData, thunkAPI) => {
@@ -13,11 +13,11 @@ export const registerUser = createAsyncThunk(
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log(response);
-      
-      return response;
+      // return only response.data so components receive a normalized payload
+      return response.data;
     } catch (error) {
       console.log(error);
-      
+
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Registration failed"
       );
@@ -27,26 +27,25 @@ export const registerUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
   "api/users/login",
-  async (formData, thunkAPI) => {   
+  async (formData, thunkAPI) => {
     try {
       // Example endpoint — replace with your backend API
       const response = await axios.post("http://localhost:5000/api/users/login", formData);
       console.log(response);
-      
-      return response;
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Login failed"
       );
-    }                           
+    }
   }
-);                 
+);
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
-    token:storedToken || null,
+    token: storedToken || null,
     loading: false,
     error: null,
   },
@@ -77,9 +76,12 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
+        // action.payload is response.data from the server
         state.user = action.payload;
-        state.token = action.payload.data.token;
-        localStorage.setItem("token", action.payload.data.token);
+        if (action.payload?.token) {
+          state.token = action.payload.token;
+          localStorage.setItem("token", action.payload.token);
+        }
 
       })
       .addCase(loginUser.rejected, (state, action) => {
