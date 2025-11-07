@@ -7,9 +7,10 @@ export const registerUser = createAsyncThunk(
   async (formData, { rejectWithValue }) => {
     try {
       // Example endpoint — replace with your backend API
-      const response = await axios.post("http://localhost:5000/api/register", formData, {
+      const response = await axios.post("http://localhost:5000/api/users/register", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      console.log("Registration response:", response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -18,6 +19,7 @@ export const registerUser = createAsyncThunk(
     }
   }
 );
+
 
 const authSlice = createSlice({
   name: "auth",
