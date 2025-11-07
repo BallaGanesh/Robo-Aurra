@@ -25,7 +25,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { email, password } = formData;
-
+    console.log(formData);
     if (!email || !password) {
       toast.error("Please fill all fields");
       return;
