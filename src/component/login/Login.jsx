@@ -4,9 +4,12 @@ import { MdOutlineEmail } from "react-icons/md";
 import { GoLock } from "react-icons/go";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { loginUser } from "../features/auth/AuthSlice";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const navigate = useNavigate();
+   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -27,14 +30,28 @@ const Login = () => {
       toast.error("Please fill all fields");
       return;
     }
-
-    // You can replace this logic with your API call
-    if (email === "test@example.com" && password === "password123") {
-      toast.success("Login successful!");
-      navigate("/dashboard"); // redirect after successful login
-    } else {
-      toast.error("Invalid email or password");
-    }
+    console.log(formData);
+    
+    (async ()=>{
+         try {
+          let result=  await dispatch(loginUser(formData)).unwrap();
+          console.log(result);
+          
+          if(result.status===200){
+            toast.success("login successful!");
+            navigate("/home");
+          } else{
+            toast.error("login failed!");
+          }
+          
+         } catch (error) {
+          toast.error("something went wrong")
+            return;
+         }
+       }
+    
+       )();
+    
   };
 
   return (

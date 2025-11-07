@@ -13,6 +13,7 @@ import { LuUpload } from "react-icons/lu";
 import { CgProfile } from "react-icons/cg";
 import { LuX } from "react-icons/lu";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { registerUser } from "../features/auth/AuthSlice";
 
 
 const Register = () => {
@@ -37,10 +38,11 @@ const Register = () => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    formData.image = file;
+    
     if (file) {
       setProfileImage(URL.createObjectURL(file));
     }
+    formData.profilePhoto = file;
   };
 
   const handleRemoveImage = () => {
@@ -49,18 +51,18 @@ const Register = () => {
   };
 
   const [formData, setFormData] = useState({
-    fullName: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
-    image: null,
+    profilePhoto: null,
   });
 
   
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "image" && files.length > 0) {
+    if (name === "profilePhoto" && files.length > 0) {
       setFormData({ ...formData, image: files[0] });
       setPreview(URL.createObjectURL(files[0]));
     } else if (name == "password") {
@@ -89,10 +91,10 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let { fullName, email, password, confirmPassword,image } = formData;
+    let { username, email, password, confirmPassword,profilePhoto } = formData;
     
     
-    if(!fullName || !email || !password || !confirmPassword||!image){
+    if(!username || !email || !password || !confirmPassword||!profilePhoto){
       toast.error("Please fill all the fields");
       return;
     } 
@@ -100,9 +102,25 @@ const Register = () => {
       toast.error("Passwords do not match");
       return;
     }   
-    toast.success("Registration successful!");
     console.log(formData);
-    nagivate("/login");
+
+   (async ()=>{
+     try {
+      let result=  await dispatch(registerUser(formData)).unwrap();
+      if(result.status===201){
+        toast.success("Registration successful!");
+        nagivate("/login");
+      } else{
+        toast.error("Registration failed!");
+      }
+      
+     } catch (error) {
+      toast.error("something went wrong")
+        return;
+     }
+   }
+
+   )();
     
   };
 
@@ -169,7 +187,7 @@ const Register = () => {
               </h3>
               <input
                 type="text"
-                name="fullName"
+                name="username"
                 placeholder="e.g. John Doe"
                 value={formData.fullName}
                 onChange={handleChange}
