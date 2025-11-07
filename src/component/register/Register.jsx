@@ -14,6 +14,8 @@ import { GoArrowRight } from "react-icons/go";
 import { LuUpload } from "react-icons/lu";
 import { CgProfile } from "react-icons/cg";
 import { LuX } from "react-icons/lu";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { registerUser } from "../features/auth/AuthSlice";
 
 
 const Register = () => {
@@ -26,16 +28,18 @@ const Register = () => {
    const [preview, setPreview] = useState(null);
 
   const handleBoxClick = () => {
-    fileInputRef.current.click();
+   fileInputRef.current.click();
   };
 
   const handleFileChange = (event) => {4
     console.log(event.target);
     
     const file = event.target.files[0];
+    
     if (file) {
       setProfileImage(URL.createObjectURL(file));
     }
+    formData.profilePhoto = file;
   };
 
   const handleRemoveImage = () => {
@@ -44,20 +48,18 @@ const Register = () => {
   };
 
   const [formData, setFormData] = useState({
-    fullName: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
-    image: "",
+    profilePhoto: null,
   });
 
   
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "image") {
-      // console.log(files[0]);
-      
+    if (name === "profilePhoto" && files.length > 0) {
       setFormData({ ...formData, image: files[0] });
       setPreview(URL.createObjectURL(files[0]));
     } else if (name == "password") {
@@ -71,31 +73,42 @@ const Register = () => {
       value == "" && setErrorMessage("");
     }
     setFormData({ ...formData, [name]: value });
+    
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    let { username, email, password, confirmPassword,profilePhoto } = formData;
     
-    let { fullName, email, password, confirmPassword, image } = formData;
-    let payload={username:fullName,email,password,profilePhoto:image}
-    console.log(payload);
     
-    dispatch(registerUser(payload))
-    // console.log(formData);
-    if ((!fullName || !email || !password || !confirmPassword || !image)) {
-      toast.error("All fields are mandatory");
+    if(!username || !email || !password || !confirmPassword||!profilePhoto){
+      toast.error("Please fill all the fields");
       return;
-    }
-    if (formData.password !== formData.confirmPassword) {
+    } 
+    if (password !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
-    }
+    }   
+    console.log(formData);
 
-    toast.success("Registration successful! Please log in.");
+   (async ()=>{
+     try {
+      let result=  await dispatch(registerUser(formData)).unwrap();
+      if(result.status===201){
+        toast.success("Registration successful!");
+        nagivate("/login");
+      } else{
+        toast.error("Registration failed!");
+      }
+      
+     } catch (error) {
+      toast.error("something went wrong")
+        return;
+     }
+   }
+
+   )();
     
-
-    nagivate("/login");
   };
 
   return (
@@ -183,18 +196,6 @@ const Register = () => {
             </div>
           </div>
 
-          {/* <div className="text-center mb-4">
-            <label className="block text-sm text-gray-600 mb-1">
-              Upload profile image
-            </label>
-            <input
-              type="file"
-              name="image"
-              accept="image/*"
-              onChange={handleChange}
-              className="block w-full text-sm text-gray-600"
-            />
-          </div> */}
 
           <div className="space-y-4 sm:space-y-5">
             <div className="space-y-1 sm:space-y-1.5">
@@ -204,7 +205,7 @@ const Register = () => {
               </h3>
               <input
                 type="text"
-                name="fullName"
+                name="username"
                 placeholder="e.g. John Doe"
                 value={formData.fullName}
                 onChange={handleChange}
