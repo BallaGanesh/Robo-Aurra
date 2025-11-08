@@ -23,6 +23,12 @@ const Register = () => {
   const [profileImage, setProfileImage] = useState(null);
   const fileInputRef = useRef(null);
   const [preview, setPreview] = useState(null);
+   const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isPasswordMatched, setIsPasswordMatched] = useState(null);
+  const [isPasswordValid, setIsPasswordValid] = useState(null);
 
   const handleBoxClick = () => {
     fileInputRef.current.click();
@@ -153,6 +159,7 @@ const Register = () => {
             </div>
           </div>
 
+
           <div className="space-y-4 sm:space-y-5">
             <div className="space-y-1 sm:space-y-1.5">
               <h3 className="flex gap-2 items-center text-sm sm:text-base">
@@ -169,7 +176,7 @@ const Register = () => {
                 className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all duration-300"
               />
             </div>
-
+{/* Email ADDRESS */}
             <div className="space-y-1 sm:space-y-1.5">
               <h3 className="flex gap-2 items-center text-sm sm:text-base">
                 <MdOutlineEmail className="text-[#155DFC] text-lg sm:text-xl font-light" />
@@ -185,49 +192,132 @@ const Register = () => {
                 className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all duration-300"
               />
             </div>
-
-            <div className="space-y-1 sm:space-y-1.5">
+{/* PASSWORD */}
+            <div className="space-y-1 sm:space-y-1.5 relative">
               <h3 className="flex gap-2 items-center text-sm sm:text-base">
                 <GoLock className="text-[#155DFC] text-lg sm:text-xl" />
                 Password
               </h3>
-              <input
-                type="password"
-                name="password"
-                placeholder="Enter a strong password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all duration-300"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Enter a strong password"
+                  value={formData.password}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setFormData({ ...formData, password: value });
+
+                    // password validation
+                    const { validateAll, getAllValidationErrorMessage } =
+                      validatePassword(value, 8);
+                    if (value.trim() === "") {
+                      setPasswordError("");
+                      setIsPasswordValid(null);
+                    } else if (!validateAll()) {
+                      setPasswordError(getAllValidationErrorMessage);
+                      setIsPasswordValid(false);
+                    } else {
+                      setPasswordError("");
+                      setIsPasswordValid(true);
+                    }
+                  }}
+                  required
+                  className={`w-full px-3 sm:px-4 py-2 pr-10 text-sm sm:text-base border rounded-lg focus:outline-none focus:ring-2 transition-all duration-300
+        ${
+          isPasswordValid === null
+            ? "border-gray-300 focus:ring-indigo-400"
+            : isPasswordValid
+            ? "border-green-500 focus:ring-green-400"
+            : "border-red-500 focus:ring-red-400"
+        }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? (
+                    <FaEyeSlash size={18} />
+                  ) : (
+                    <FaEye size={18} />
+                  )}
+                </button>
+              </div>
+
+              {passwordError && (
+                <p className="text-xs sm:text-sm text-red-600 mt-1">
+                  *{passwordError}
+                </p>
+              )}
             </div>
 
-            <div
-              className={`flex w-full rounded-lg ${
-                !errorMessage ? "hidden" : ""
-              }`}
-            >
-              <span className="text-xs sm:text-sm text-red-600">
-                *{errorMessage}
-              </span>
-            </div>
-
-            <div className="space-y-1 sm:space-y-1.5">
+{/* CONFIRM PASSWORD */}
+         <div className="space-y-1 sm:space-y-1.5 mt-2 relative">
               <h3 className="flex gap-2 items-center text-sm sm:text-base">
                 <GoLock className="text-[#155DFC] text-lg sm:text-xl" />
                 Confirm Password
               </h3>
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="Re-enter your password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-                className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all duration-300"
-              />
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  placeholder="Re-enter your password"
+                  value={formData.confirmPassword}
+                  onChange={(e) => {
+                    setFormData({
+                      ...formData,
+                      confirmPassword: e.target.value,
+                    });
+                    setIsPasswordMatched(null);
+                    setConfirmPasswordError("");
+                  }}
+                  onBlur={() => {
+                    const { password, confirmPassword } = formData;
+                    if (password.trim() && confirmPassword.trim()) {
+                      if (password === confirmPassword) {
+                        setIsPasswordMatched(true);
+                        setConfirmPasswordError("");
+                      } else {
+                        setIsPasswordMatched(false);
+                        setConfirmPasswordError("Passwords do not match");
+                      }
+                    } else {
+                      setIsPasswordMatched(null);
+                      setConfirmPasswordError("");
+                    }
+                  }}
+                  required
+                  className={`w-full px-3 sm:px-4 py-2 pr-10 text-sm sm:text-base border rounded-lg focus:outline-none focus:ring-2 transition-all duration-300
+        ${
+          isPasswordMatched === false
+            ? "border-red-500 focus:ring-red-400"
+            : isPasswordMatched === true
+            ? "border-green-500 focus:ring-green-400"
+            : "border-gray-300 focus:ring-indigo-400"
+        }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+                >
+                  {showConfirmPassword ? (
+                    <FaEyeSlash size={18} />
+                  ) : (
+                    <FaEye size={18} />
+                  )}
+                </button>
+              </div>
+
+              {confirmPasswordError && (
+                <p className="text-xs sm:text-sm text-red-600 mt-1">
+                  *{confirmPasswordError}
+                </p>
+              )}
             </div>
 
+{/* UPLOAD PROFILE */}
             <div className="w-full max-w-md mx-auto">
               <label className="block text-gray-700 font-medium mb-2">
                 Profile Image
