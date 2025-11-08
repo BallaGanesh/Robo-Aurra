@@ -23,7 +23,7 @@ const Register = () => {
   const [profileImage, setProfileImage] = useState(null);
   const fileInputRef = useRef(null);
   const [preview, setPreview] = useState(null);
-   const [passwordError, setPasswordError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -46,6 +46,8 @@ const Register = () => {
 
   const handleRemoveImage = () => {
     setProfileImage(null);
+    setPreview(null);
+    setFormData((prev) => ({ ...prev, profilePhoto: null }));
     fileInputRef.current.value = "";
   };
 
@@ -159,7 +161,6 @@ const Register = () => {
             </div>
           </div>
 
-
           <div className="space-y-4 sm:space-y-5">
             <div className="space-y-1 sm:space-y-1.5">
               <h3 className="flex gap-2 items-center text-sm sm:text-base">
@@ -176,7 +177,7 @@ const Register = () => {
                 className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all duration-300"
               />
             </div>
-{/* Email ADDRESS */}
+            {/* Email ADDRESS */}
             <div className="space-y-1 sm:space-y-1.5">
               <h3 className="flex gap-2 items-center text-sm sm:text-base">
                 <MdOutlineEmail className="text-[#155DFC] text-lg sm:text-xl font-light" />
@@ -192,7 +193,7 @@ const Register = () => {
                 className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all duration-300"
               />
             </div>
-{/* PASSWORD */}
+            {/* PASSWORD */}
             <div className="space-y-1 sm:space-y-1.5 relative">
               <h3 className="flex gap-2 items-center text-sm sm:text-base">
                 <GoLock className="text-[#155DFC] text-lg sm:text-xl" />
@@ -252,8 +253,8 @@ const Register = () => {
               )}
             </div>
 
-{/* CONFIRM PASSWORD */}
-         <div className="space-y-1 sm:space-y-1.5 mt-2 relative">
+            {/* CONFIRM PASSWORD */}
+            <div className="space-y-1 sm:space-y-1.5 mt-2 relative">
               <h3 className="flex gap-2 items-center text-sm sm:text-base">
                 <GoLock className="text-[#155DFC] text-lg sm:text-xl" />
                 Confirm Password
@@ -317,7 +318,7 @@ const Register = () => {
               )}
             </div>
 
-{/* UPLOAD PROFILE */}
+            {/* UPLOAD PROFILE */}
             <div className="w-full max-w-md mx-auto">
               <label className="block text-gray-700 font-medium mb-2">
                 Profile Image

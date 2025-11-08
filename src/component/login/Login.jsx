@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 
 const Login = () => {
   const navigate = useNavigate();
-   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -31,27 +31,23 @@ const Login = () => {
       return;
     }
     console.log(formData);
-    
-    (async ()=>{
-         try {
-          let result=  await dispatch(loginUser(formData)).unwrap();
-          console.log(result);
-          
-          if(result.status===200){
-            toast.success("login successful!");
-            navigate("/home");
-          } else{
-            toast.error("login failed!");
-          }
-          
-         } catch (error) {
-          toast.error("something went wrong")
-            return;
-         }
-       }
-    
-       )();
-    
+
+    (async () => {
+      try {
+        let result = await dispatch(loginUser(formData)).unwrap();
+        console.log(result);
+
+        if (result && result.token) {
+          toast.success("Login successful!");
+          navigate("/home");
+        } else {
+          toast.error("Login failed - Invalid credentials");
+        }
+      } catch (error) {
+        toast.error(error || "Something went wrong");
+        return;
+      }
+    })();
   };
 
   return (
@@ -88,10 +84,7 @@ const Login = () => {
           </h2>
           <p className="text-center text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6">
             Don’t have an account?{" "}
-            <Link
-              to="/"
-              className="text-[#155DFC] hover:underline font-medium"
-            >
+            <Link to="/" className="text-[#155DFC] hover:underline font-medium">
               Create one
             </Link>
           </p>
