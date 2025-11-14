@@ -78,6 +78,7 @@ const authSlice = createSlice({
         state.loading = false;
         // action.payload is response.data from the server
         state.user = action.payload;
+        
         if (action.payload?.token) {
           state.token = action.payload.token;
           localStorage.setItem("token", action.payload.token);
