@@ -3,6 +3,11 @@ import Register from "../register/Register";
 import Login from "../login/Login";
 import Home from '../ui/pages/Home';
 import Explore from './../ui/pages/Explore';
+import Settings from './../ui/pages/Settings';
+import Profile from './../ui/pages/Profile';
+import Messages from "../ui/pages/Messages";
+import NotFound from './../ui/pages/NotFound';
+import NotificationsPage from './../ui/pages/notifications/NotificationPage';
 
 let routers = createBrowserRouter([{
     path:"/",
@@ -11,12 +16,25 @@ let routers = createBrowserRouter([{
 }, {
     path:"/login",
     element:<Login></Login>
-}, 
-{
+}, {
     path:"/Explore",
     element:<Explore></Explore>
-}, 
-
+}, {
+    path:"/Settings",
+    element:<Settings></Settings>
+}, {
+    path:"/Profile",
+    element: <Profile></Profile>
+}, {
+    path:"/Messages",
+    element:<Messages></Messages>
+}, {
+    path:'/notifications',
+    element:<NotificationsPage></NotificationsPage>
+}, {
+    // path:'*',
+    // element:<NotFound></NotFound>
+}
 ])
 
 export default routers;

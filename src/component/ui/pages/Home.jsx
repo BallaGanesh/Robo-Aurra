@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
+import { BsPlusLg } from "react-icons/bs";
+
 import Layout from "../Layout";
 import PostCard from "../PostCard";
 import CreatePostModal from "../Createpostmodal";
 
-import { BsPlusLg } from "react-icons/bs";
-
-export default function Index() {
+const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [posts, setPosts] = useState([]);
 
-  // Initialize with sample posts
+  // Initializing with sample posts
   useEffect(() => {
     setPosts([
       {
@@ -103,8 +103,7 @@ export default function Index() {
             "url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&h=500&fit=crop')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-        }}
-      >
+        }}>
         <div className="absolute inset-0 bg-linear-to-br from-blue-900/75 via-purple-900/65 to-indigo-900/50" />
         <div className="relative max-w-full mx-auto px-4 py-16 md:py-24 z-10">
           <h1
@@ -112,16 +111,14 @@ export default function Index() {
             style={{
               fontFamily: "'Poppins', sans-serif",
               letterSpacing: "-0.02em",
-            }}
-          >
+            }}>
             <span className="w-full bg-linear-to-r from-cyan-200 via-blue-200 to-purple-200 bg-clip-text text-transparent drop-shadow-xl">
               Welcome to AURRA
             </span>
           </h1>
           <p
             className="text-white/95 text-xl md:text-2xl font-medium tracking-wide max-w-2xl leading-relaxed drop-shadow-lg"
-            style={{ fontFamily: "'Inter', sans-serif" }}
-          >
+            style={{ fontFamily: "'Inter', sans-serif" }}>
             Connect, share, and discover amazing content from your network
           </p>
         </div>
@@ -147,10 +144,11 @@ export default function Index() {
       {/* Floating Create Post Button */}
       <button
         onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-8 right-8 w-16 h-16 rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white shadow-xl shadow-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-200 hover:scale-110 active:scale-95 flex items-center justify-center z-40"
+        className="fixed bottom-20 md:bottom-6 right-5 w-16 h-16 rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white shadow-xl shadow-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-200 hover:scale-110 active:scale-95 flex items-center justify-center z-40"
         title="Create new post">
         <BsPlusLg size={28} />
       </button>
+
 
       {/* Create Post Modal */}
       <CreatePostModal
@@ -158,8 +156,8 @@ export default function Index() {
         onClose={() => setIsModalOpen(false)}
         onPost={handleCreatePost}
         userAvatar="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=400&fit=crop"
-        userName="You"
-      />
+        userName="You"/>
     </Layout>
   );
 }
+export default Home;

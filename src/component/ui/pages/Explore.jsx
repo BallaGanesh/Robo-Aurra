@@ -2,7 +2,9 @@ import { useState } from "react";
 import Layout from "../Layout";
 import PostCard from "../PostCard";
 
-
+import { CiSearch } from "react-icons/ci";
+import { IoMdGrid } from "react-icons/io";
+import { IoListOutline } from "react-icons/io5";
 
 const Explore = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -98,28 +100,25 @@ const Explore = () => {
   return (
     <Layout>
       {/* Header */}
-      <div className="sticky top-0 z-30 bg-card border-b border-border">
+      <div className="sticky top-0 z-30 bg-card border-b border-border bg-white">
         <div className="max-w-6xl mx-auto px-4 py-4">
-          <h1 className="text-3xl font-bold gradient-text mb-4">Explore</h1>
+          <h1 className="text-3xl font-bold gradient-text mb-4 bg-linear-to-r  from-purple-600 to-blue-500 w-25 bg-clip-text text-transparent">Explore</h1>
 
           {/* Search */}
-          <div className="relative mb-4">
-            {/* <Search
-              size={20}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground"
-            /> */}
+          <div className="relative mb-4 ">
+            <CiSearch 
+              className="size-6 absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground"/>
 
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search posts, hashtags..."
-              className="w-full pl-12 pr-4 py-3 rounded-full bg-muted border border-border focus:outline-none focus:ring-2 focus:ring-primary text-foreground placeholder-muted-foreground"
-            />
+              className="w-full pl-12 pr-4 py-3 rounded-full bg-muted border border-border focus:outline-none focus:ring-2 focus:ring-primary text-foreground placeholder-muted-foreground"/>
           </div>
 
           {/* Tabs */}
-          <div className="flex gap-4 border-t border-border pt-4">
+          <div className="flex gap-4 border-t border-border pt-4 ">
             {["posts", "hashtags"].map((tab) => (
               <button
                 key={tab}
@@ -128,8 +127,7 @@ const Explore = () => {
                   activeTab === tab
                     ? "border-primary text-primary"
                     : "border-transparent text-muted-foreground hover:text-foreground"
-                }`}
-              >
+                }`}>
                 {tab === "posts" ? "Posts" : "Hashtags"}
               </button>
             ))}
@@ -143,7 +141,6 @@ const Explore = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold">Trending Posts</h2>
-
               <div className="flex gap-2">
                 <button
                   onClick={() => setViewMode("grid")}
@@ -151,20 +148,17 @@ const Explore = () => {
                     viewMode === "grid"
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {/* <Grid size={20} /> */}
+                  }`}>
+                  <IoMdGrid className="text-2xl text-gray-500 hover:rounded-full hover:bg-gray-200 hover:text-blue-500  p-0.5 "/>
                 </button>
-
                 <button
                   onClick={() => setViewMode("list")}
                   className={`icon-button ${
                     viewMode === "list"
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {/* <List size={20} /> */}
+                  }`}>
+                  <IoListOutline className="text-2xl text-gray-500 hover:rounded-full hover:bg-gray-200 hover:text-blue-500 m-2 p-0.5 " />
                 </button>
               </div>
             </div>
@@ -188,13 +182,11 @@ const Explore = () => {
         {activeTab === "hashtags" && (
           <div>
             <h2 className="text-xl font-bold mb-4">Trending Hashtags</h2>
-
             <div className="space-y-3">
               {trendingHashtags.map((hashtag, idx) => (
                 <div
                   key={idx}
-                  className="social-card p-4 flex items-center justify-between hover:bg-muted/50 cursor-pointer transition-all duration-200"
-                >
+                  className="social-card p-4 flex items-center justify-between hover:bg-muted/50 cursor-pointer transition-all duration-200">
                   <div>
                     <p className="font-semibold text-primary">{hashtag.name}</p>
                     <p className="text-sm text-muted-foreground">
