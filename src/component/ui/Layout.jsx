@@ -8,7 +8,7 @@ import { FaRegHeart } from "react-icons/fa6";
 import { FiUser } from "react-icons/fi";
 import { LuSettings } from "react-icons/lu";
 
-export function Layout({ children }) {
+const Layout = ({ children }) => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -36,7 +36,7 @@ export function Layout({ children }) {
             <div className="w-12 h-12  rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300">
               <img src="/Only logo-aurra.png"/>
             </div>
-            <span className="text-2xl font-bold gradient-text hidden lg:inline bg-linear-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-3xl font-bold gradient-text hidden lg:inline bg-linear-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
               AURRA
             </span>
           </Link>
@@ -83,7 +83,7 @@ export function Layout({ children }) {
                 <img src="/Only logo-aurra.png" alt="" className=" w-"/>
             </span>
           </div>
-          <span className="text-2xl font-bold gradient-text">AURRA</span>
+          <span className="text-3xl font-bold gradient-text bg-linear-to-r  to-purple-600 from-blue-500 w-25 bg-clip-text text-transparent">AURRA</span>
         </Link>
       </div>
 
