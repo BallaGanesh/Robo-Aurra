@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const storedToken = localStorage.getItem("token");
+const storedUser = localStorage.getItem("user");
 
 //  Register user API call
 export const registerUser = createAsyncThunk(
@@ -9,7 +10,7 @@ export const registerUser = createAsyncThunk(
   async (formData, thunkAPI) => {
     try {
       // Example endpoint — replace with your backend API
-      const response = await axios.post("http://192.168.0.86:5000/api/users/register", formData, {
+      const response = await axios.post("http://192.168.0.28:5000/api/users/register", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log(response);
@@ -30,7 +31,7 @@ export const loginUser = createAsyncThunk(
   async (formData, thunkAPI) => {
     try {
       // Example endpoint — replace with your backend API
-      const response = await axios.post("http://192.168.0.86:5000/api/users/login", formData);
+      const response = await axios.post("http://192.168.0.28:5000/api/users/login", formData);
       console.log(response);
       return response.data;
     } catch (error) {
@@ -44,7 +45,7 @@ export const loginUser = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: null,
+    user: storedUser ? JSON.parse(storedUser) : null,
     token: storedToken || null,
     loading: false,
     error: null,
@@ -54,6 +55,7 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
     }
   },
   extraReducers: (builder) => {
@@ -82,6 +84,7 @@ const authSlice = createSlice({
         if (action.payload?.token) {
           state.token = action.payload.token;
           localStorage.setItem("token", action.payload.token);
+          localStorage.setItem("user", JSON.stringify(action.payload));
         }
 
       })

@@ -7,10 +7,21 @@ import { FiMessageCircle } from "react-icons/fi";
 import { FaRegHeart } from "react-icons/fa6";
 import { FiUser } from "react-icons/fi";
 import { LuSettings } from "react-icons/lu";
+import { useSelector } from "react-redux";
 
 const Layout = ({ children }) => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openPreview, setOpenPreview] = useState(false);
+  const [zoom, setZoom] = useState(1);
+
+  const auth = useSelector((state)=>state.Auth);
+  
+  
+  const user = auth?.user ?? null;
+   const{profilePhoto,username,email} =user.user;
+  
+   
 
   const navItems = [
     { path: "/", label: "Home", icon: FiHome },
@@ -65,11 +76,50 @@ const Layout = ({ children }) => {
         <div className="p-4 border-t border-gray-300 border-border hover:bg-muted/30 transition-colors">
           <div className="flex items-center gap-3 cursor-pointer group">
             <div className="w-10 h-10 rounded-full bg-linear-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm group-hover:shadow-lg transition-all">
-              U
+              <img
+                src={
+                  profilePhoto
+                    ? `data:image/jpeg;base64,${profilePhoto}`
+                    : '/logo.png'
+                }
+                alt={username ?? 'avatar'}
+                className="size-full cursor-pointer rounded-full"
+                onClick={() => profilePhoto && setOpenPreview(true)}
+              />
+              
+              {/* opening Preview */}
+              {openPreview && profilePhoto && (
+                <div
+                  className="fixed inset-0 bg-black/70 backdrop-blur-sm flex justify-center items-center z-999999999 !important"
+                  onClick={() => setOpenPreview(false)}
+                >
+                  <div
+                    onClick={(e) => e.stopPropagation()}
+                    className="animate-zoomIn relative"
+                  >
+                    {/* Close Button */}
+                    <button
+                      onClick={() => setOpenPreview(false)}
+                      className="absolute -top-4 -right-4 bg-white text-black rounded-full px-2 py-1 shadow-lg hover:bg-gray-200"
+                    >
+                      ✕
+                    </button>
+
+                    {/* Enlarged Image */}
+                    <img
+                      src={`data:image/jpeg;base64,${profilePhoto}`}
+                      alt=""
+                      className="max-w-[90vw] max-h-[90vh] rounded-xl shadow-xl"
+                    />
+                  </div>
+                </div>
+              )}
+
+
             </div>
             <div className="hidden lg:block">
-              <p className="text-sm font-semibold">You</p>
-              <p className="text-xs text-muted-foreground">your_username</p>
+              <p className="text-sm font-semibold">{username ?? 'Guest'}</p>
+              <p className="text-xs text-muted-foreground">{email ?? ''}</p>
             </div>
           </div>
         </div>
@@ -96,7 +146,7 @@ const Layout = ({ children }) => {
               to={path}
               className={`flex-1 flex flex-col items-center justify-center py-3 transition-all ${
                 isActive(path)
-                  ? "text-blue-500 scale-110"
+                  ? "text-blue-500 scale-110 "
                   : "text-muted-foreground hover:text-foreground"
               }`}>
               <Icon size={25} />

@@ -3,6 +3,7 @@ import PostCard from '../PostCard';
 import Layout from "../Layout";
 
 
+
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("posts");
   const [viewMode, setViewMode] = useState("grid");
@@ -185,6 +186,7 @@ const Profile = () => {
             <div className="flex-1">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
                 <div>
+                  {/* <h1 className="text-2xl md:text-3xl font-bold">{user.name}</h1> */}
                   <h1 className="text-2xl md:text-3xl font-bold">{user.name}</h1>
                   <p className="text-muted-foreground text-lg">@{user.username}</p>
                 </div>
