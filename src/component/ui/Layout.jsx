@@ -25,9 +25,9 @@ const Layout = ({ children }) => {
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
-    <div className="flex h-screen bg-background text-foreground">
+    <div className="flex h-screen bg-background text-foreground ">
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex md:w-64 lg:w-80 border-r border-gray-300 border-border bg-card flex-col sticky top-0 shadow-lg">
+      <aside className="hidden md:flex md:w-64 lg:w-56 border-r border-gray-300 border-border bg-card flex-col sticky top-0 shadow-lg">
         {/* Logo */}
         <div className="p-4 lg:p-6 border-b border-gray-300 border-border hover:bg-muted/30 transition-colors">
           <Link 
@@ -48,9 +48,9 @@ const Layout = ({ children }) => {
             <Link
               key={path}
               to={path}
-              className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 group ${
+              className={`flex items-center text- gap-4 px-4 py-3 rounded-xl transition-all duration-300 group ${
                 isActive(path)
-                  ? "bg-linear-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/30 scale-105"
+                  ? "bg-linear-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/30 scale-105 "
                   : "text-foreground hover:bg-muted/50 hover:translate-x-1"
               }`}>
               <Icon

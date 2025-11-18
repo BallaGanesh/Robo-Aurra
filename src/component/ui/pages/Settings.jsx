@@ -11,7 +11,8 @@ import { GoLock } from "react-icons/go";
 
 const Settings = () => {
   const [isDarkMode, setIsDarkMode] = useState(
-    document.documentElement.classList.contains("dark")
+    // document.documentElement.classList.contains("dark")
+    false
   );
 
   const [settings, setSettings] = useState({
