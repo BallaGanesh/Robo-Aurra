@@ -16,12 +16,24 @@ const Layout = ({ children }) => {
   const [zoom, setZoom] = useState(1);
 
   const auth = useSelector((state)=>state.Auth);
-  
-  
+
+
   const user = auth?.user ?? null;
    const{profilePhoto,username,email} =user.user;
   
+   const valueFromChild=useSelector((state)=>state.child.valueFromChild);
+   console.log(valueFromChild);
    
+
+   const lightMode={
+    backgroundColor:"white",
+    color:"black",
+   
+   }
+   const darkMode={
+    backgroundColor:"black",
+    color:"gray",
+    }
 
   const navItems = [
     { path: "/", label: "Home", icon: FiHome },
@@ -36,7 +48,7 @@ const Layout = ({ children }) => {
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
-    <div className="flex h-screen bg-background text-foreground">
+    <div className="flex h-screen bg-background text-foreground" style={`${valueFromChild}`==="light"?lightMode:darkMode}>
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex md:w-64 lg:w-80 border-r border-gray-300 border-border bg-card flex-col sticky top-0 shadow-lg">
         {/* Logo */}

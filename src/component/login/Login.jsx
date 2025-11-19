@@ -40,7 +40,7 @@ const Login = () => {
 
         if (result && result.token) {
           toast.success("Login successful!");
-          navigate("/home");
+          navigate("/");
         } else {
           toast.error("Login failed - Invalid credentials");
         }

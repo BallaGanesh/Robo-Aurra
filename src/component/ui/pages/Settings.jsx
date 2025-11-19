@@ -8,10 +8,18 @@ import { IoMoonOutline } from "react-icons/io5";
 import { CgChevronRight } from "react-icons/cg";
 import { FiLogOut } from "react-icons/fi";
 import { GoLock } from "react-icons/go";
+import { useDispatch } from "react-redux";
+import { setChildValue } from "../../features/auth/childSlice";
 
 const Settings = () => {
+
+   const dispatch = useDispatch();
+
+  
+  
   const [isDarkMode, setIsDarkMode] = useState(
-    document.documentElement.classList.contains("dark")
+    // document.documentElement.classList.contains("dark")
+    false
   );
 
   const [settings, setSettings] = useState({
@@ -29,13 +37,14 @@ const Settings = () => {
 
   const handleToggleTheme = () => {
     setIsDarkMode(!isDarkMode);
-    if (isDarkMode) {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    } else {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    }
+    dispatch(setChildValue(isDarkMode ? "dark" : "light"));
+    // if (isDarkMode) {
+    //   document.documentElement.classList.remove("dark");
+    //   localStorage.setItem("theme", "light");
+    // } else {
+    //   document.documentElement.classList.add("dark");
+    //   localStorage.setItem("theme", "dark");
+    // }
   };
 
   const handleToggleSetting = (key) => {
@@ -90,21 +99,21 @@ const Settings = () => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               {isDarkMode ? (
-                <IoMoonOutline size={24} className="text-purple-600" />
+               <AiOutlineSun size={24} className="text-blue-500" />
               ) : (
-                <AiOutlineSun size={24} className="text-blue-500" />
+                <IoMoonOutline size={24} className="text-purple-600" />
               )}
               <div>
                 <h3 className="font-semibold">Appearance</h3>
                 <p className="text-sm text-muted-foreground">
-                  {isDarkMode ? "Dark" : "Light"} mode
+                  {isDarkMode ? "Light" : "Dark"} mode
                 </p>
               </div>
             </div>
             <button
               onClick={handleToggleTheme}
               className="rounded-full font-semibold bg-linear-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg px-6">
-              {isDarkMode ? "Light Mode" : "Dark Mode"}
+              {isDarkMode ? "Dark Mode" : "Light Mode"}
             </button>
           </div>
           <p className="text-sm text-muted-foreground">Toggle between light and dark themes for a comfortable viewing experience</p>

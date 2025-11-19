@@ -9,7 +9,8 @@ import CreatePostModal from "../Createpostmodal";
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [posts, setPosts] = useState([]);
-  const {user}=useSelector((s)=>s.Auth)
+  const auth=useSelector((state)=>state.Auth)
+  const user=auth?.user??null;
   console.log(user);
 
   // Initializing with sample posts
