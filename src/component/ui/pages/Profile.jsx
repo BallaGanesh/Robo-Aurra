@@ -2,6 +2,9 @@ import { useState } from "react";
 import PostCard from '../PostCard';
 import Layout from "../Layout";
 
+import { IoCloseSharp } from "react-icons/io5";
+import { GoSearch } from "react-icons/go";
+
 
 
 const Profile = () => {
@@ -110,7 +113,7 @@ const Profile = () => {
           className="bg-card rounded-2xl max-w-md w-full max-h-[80vh] overflow-hidden animate-scale-in flex flex-col"
           onClick={(e) => e.stopPropagation()}>
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-border sticky top-0 bg-card z-10">
+          <div className="flex items-center justify-between p-6 border-b border-border sticky top-0 bg-card z-10 bg-white">
             <h2 className="text-xl font-bold">{title}</h2>
             <button
               onClick={() => {
@@ -118,27 +121,27 @@ const Profile = () => {
                 setShowFollowingModal(false);
               }}
               className="icon-button text-muted-foreground hover:text-foreground">
-              <X size={24} />
+              <IoCloseSharp size={24} />
             </button>
           </div>
 
           {/* Search */}
-          <div className="p-4 border-b border-border">
+          <div className="p-4 border-b border-border bg-white">
             <div className="relative">
-              <Search
+              <GoSearch
                 size={18}
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"/>
+                className="absolute text-gray-600 left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"/>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search..."
-                className="w-full pl-10 pr-4 py-2 rounded-full bg-muted border border-border focus:outline-none focus:ring-2 focus:ring-primary text-sm text-foreground placeholder-muted-foreground"/>
+                className="w-full pl-10 pr-4 py-2 bg-gray-300 rounded-full bg-muted border border-border focus:outline-none focus:ring-2 focus:ring-primary text-sm text-foreground placeholder-muted-foreground"/>
             </div>
           </div>
 
           {/* List */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto bg-white">
             {filteredFollowers.map((follower) => (
               <div
                 key={follower.id}
@@ -299,7 +302,7 @@ const Profile = () => {
               <button
                 onClick={() => setShowEditModal(false)}
                 className="icon-button text-muted-foreground hover:text-foreground">
-                <X size={24} />
+                <IoCloseSharp size={24} />
               </button>
             </div>
 

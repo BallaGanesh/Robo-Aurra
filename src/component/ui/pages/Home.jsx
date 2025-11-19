@@ -101,7 +101,7 @@ const Home = () => {
     <Layout>
       {/* Hero Section */}
       <div
-        className="border-b border-border relative overflow-hidden"
+        className="border-b border-border relative overflow-hidden w-310"
         style={{
           backgroundImage:
             "url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&h=500&fit=crop')",
