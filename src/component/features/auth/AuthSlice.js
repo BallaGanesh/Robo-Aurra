@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const storedToken = localStorage.getItem("token");
+const storedUser = localStorage.getItem("user");
 
 //  Register user API call
 export const registerUser = createAsyncThunk(
@@ -44,7 +45,7 @@ export const loginUser = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: null,
+    user: storedUser ? JSON.parse(storedUser) : null,
     token: storedToken || null,
     loading: false,
     error: null,
@@ -54,6 +55,7 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
     }
   },
   extraReducers: (builder) => {
@@ -82,6 +84,7 @@ const authSlice = createSlice({
         if (action.payload?.token) {
           state.token = action.payload.token;
           localStorage.setItem("token", action.payload.token);
+          localStorage.setItem("user", JSON.stringify(action.payload));
         }
 
       })

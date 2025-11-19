@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { BsPlusLg } from "react-icons/bs";
+import { useSelector } from "react-redux";
 
 import Layout from "../Layout";
 import PostCard from "../PostCard";
@@ -8,6 +9,9 @@ import CreatePostModal from "../Createpostmodal";
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [posts, setPosts] = useState([]);
+  const auth=useSelector((state)=>state.Auth)
+  const user=auth?.user??null;
+  console.log(user);
 
   // Initializing with sample posts
   useEffect(() => {
