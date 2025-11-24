@@ -130,13 +130,13 @@ const Profile = () => {
             <div className="relative">
               <GoSearch
                 size={18}
-                className="absolute text-gray-600 left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"/>
+                className="absolute text-gray-600 left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search..."
-                className="w-full pl-10 pr-4 py-2 bg-gray-300 rounded-full bg-muted border border-border focus:outline-none focus:ring-2 focus:ring-primary text-sm text-foreground placeholder-muted-foreground"/>
+                className="w-full pl-10 pr-4 py-2 bg-gray-300 rounded-full bg-muted border border-border focus:outline-none focus:ring-2 focus:ring-primary text-sm text-foreground placeholder-muted-foreground" />
             </div>
           </div>
 
@@ -150,7 +150,7 @@ const Profile = () => {
                   <img
                     src={follower.avatar}
                     alt={follower.name}
-                    className="w-10 h-10 rounded-full object-cover"/>
+                    className="w-10 h-10 rounded-full object-cover" />
                   <div>
                     <p className="font-semibold text-sm">{follower.name}</p>
                     <p className="text-xs text-muted-foreground">@{follower.username}</p>
@@ -158,11 +158,10 @@ const Profile = () => {
                 </div>
                 <button
                   size="sm"
-                  className={`rounded-full font-semibold text-xs ${
-                    follower.isFollowing
+                  className={`rounded-full font-semibold text-xs ${follower.isFollowing
                       ? "bg-muted text-foreground hover:bg-muted/70"
                       : "bg-linear-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg"
-                  }`}>
+                    }`}>
                   {follower.isFollowing ? "Following" : "Follow"}
                 </button>
               </div>
@@ -183,7 +182,7 @@ const Profile = () => {
             <img
               src={user.avatar}
               alt={user.name}
-              className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover"/>
+              className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover" />
 
             {/* User Info */}
             <div className="flex-1">
@@ -252,20 +251,18 @@ const Profile = () => {
           <div className="flex gap-2">
             <button
               onClick={() => setViewMode("grid")}
-              className={`icon-button ${
-                viewMode === "grid"
+              className={`icon-button ${viewMode === "grid"
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:text-foreground"
-              }`}>
+                }`}>
               {/* <Grid size={20} /> */}
             </button>
             <button
               onClick={() => setViewMode("list")}
-              className={`icon-button ${
-                viewMode === "list"
+              className={`icon-button ${viewMode === "list"
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:text-foreground"
-              }`}>
+                }`}>
               {/* <List size={20} /> */}
             </button>
           </div>
@@ -298,81 +295,86 @@ const Profile = () => {
             onClick={(e) => e.stopPropagation()}>
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-border">
-              <h2 className="text-2xl font-bold">Edit Profile</h2>
+              <h2 className="text-2xl text-gray-200 font-bold">Edit Profile</h2>
               <button
                 onClick={() => setShowEditModal(false)}
-                className="icon-button text-muted-foreground hover:text-foreground">
+                className="icon-button text-muted-foreground text-gray-200 hover:text-foreground">
                 <IoCloseSharp size={24} />
               </button>
             </div>
 
             {/* Form */}
-            <div className="p-8 space-y-6">
+            <div className="p-8 space-y-6 ">
               <div className="flex flex-col items-center gap-4">
                 <img
                   src={user.avatar}
                   alt="Profile avatar"
-                  className="w-32 h-32 rounded-full object-cover border-4 border-primary/20"/>
-                <button className="rounded-full bg-muted text-foreground hover:bg-muted/70">
+                  className="w-32 h-32 rounded-full object-cover border-4 border-primary/20" />
+                <button className="rounded-full bg-muted text-gray-200 hover:bg-muted/70">
                   Change Avatar
                 </button>
+
               </div>
 
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold">Name</label>
+                  <label className="block text-sm text-gray-200 font-semibold">Name</label>
                   <input
                     type="text"
                     value={editForm.name}
                     onChange={(e) =>
                       setEditForm({ ...editForm, name: e.target.value })
                     }
-                    className="w-full px-4 py-3 rounded-xl bg-muted border border-border focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
-                    placeholder="Your name"/>
+                    className="w-full px-4 py-3 rounded-xl bg-muted border text-gray-200 border-border focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
+                    placeholder="Your name" />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold">Username</label>
+                  <label className="block text-sm text-gray-200 font-semibold">Username</label>
                   <div className="flex items-center">
-                    <span className="px-4 py-3 bg-muted rounded-l-xl border border-border border-r-0 text-muted-foreground">@</span>
+                    <span className="px-4 py-3 bg-muted rounded-l-xl border border-border text-gray-200 border-r-0 text-muted-foreground">@</span>
                     <input
                       type="text"
                       value={editForm.username}
                       onChange={(e) =>
                         setEditForm({ ...editForm, username: e.target.value })
                       }
-                      className="flex-1 px-4 py-3 rounded-r-xl bg-muted border border-border focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
-                      placeholder="username"/>
+                      className="flex-1 px-4 py-3 rounded-r-xl text-gray-200 bg-muted border border-border focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
+                      placeholder="username" />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold">Bio</label>
+                  <label className="block text-sm text-gray-200 font-semibold">Bio</label>
                   <textarea
                     value={editForm.bio}
                     onChange={(e) =>
                       setEditForm({ ...editForm, bio: e.target.value })
                     }
-                    className="w-full px-4 py-3 rounded-xl bg-muted border border-border focus:outline-none focus:ring-2 focus:ring-primary text-foreground resize-none"
+                    className="w-full px-4 py-3 rounded-xl bg-muted border text-gray-200 border-border focus:outline-none focus:ring-2 focus:ring-primary text-foreground resize-none"
                     placeholder="Tell us about yourself"
-                    rows={4}/>
-                  <p className="text-xs text-muted-foreground text-right">{editForm.bio.length}/150</p>
+                    rows={4} />
+                  <p className="text-xs text-muted-foreground text-gray-200 text-right">{editForm.bio.length}/150</p>
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-4">
+              <div className="flex gap-2 pt-0">
                 <button
                   onClick={() => setShowEditModal(false)}
-                  className="flex-1 rounded-full bg-muted text-foreground hover:bg-muted/70">
+                  className="flex-1 py-2 text-lg font-semibold rounded-full bg-muted text-foreground hover:bg-muted/70 transition"
+                >
                   Cancel
                 </button>
+
                 <button
                   onClick={() => {
                     setShowEditModal(false);
                   }}
-                  className="flex-1 rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg">
+                  className="flex-1 py-2 text-lg font-semibold rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg transition"
+                >
                   Save Changes
                 </button>
+
               </div>
             </div>
           </div>
