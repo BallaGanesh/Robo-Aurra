@@ -10,7 +10,7 @@ export const registerUser = createAsyncThunk(
   async (formData, thunkAPI) => {
     try {
       // Example endpoint — replace with your backend API
-      const response = await axios.post("http://192.168.0.205:5000/api/users/register", formData, {
+      const response = await axios.post("http://192.168.0.194:5000/api/users/register", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log(response);
@@ -31,7 +31,7 @@ export const loginUser = createAsyncThunk(
   async (formData, thunkAPI) => {
     try {
       // Example endpoint — replace with your backend API
-      const response = await axios.post("http://192.168.0.205:5000/api/users/login", formData);
+      const response = await axios.post("http://192.168.0.194:5000/api/users/login", formData);
       console.log(response);
       return response.data;
     } catch (error) {
