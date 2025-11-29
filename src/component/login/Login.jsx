@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MdOutlineEmail } from "react-icons/md";
@@ -5,11 +6,13 @@ import { GoLock } from "react-icons/go";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { loginUser } from "../features/auth/AuthSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const {loading}=useSelector((s)=>s.Auth)
+  // console.log(loading);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -26,7 +29,6 @@ const Login = () => {
     e.preventDefault();
     const { email, password } = formData;
     console.log(formData);
-    
     if (!email || !password) {
       toast.error("Please fill all fields");
       return;
@@ -59,7 +61,8 @@ const Login = () => {
           <img
             src="logo.png"
             alt="Logo"
-            className="w-35 h-35 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-100 lg:h-100 object-contain mx-auto"/>
+            className="w-35 h-35 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-100 lg:h-100 object-contain mx-auto"
+          />
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-light text-white mb-4 transition-all duration-300">
             Welcome Back,USER
           </h1>
@@ -77,15 +80,14 @@ const Login = () => {
                 justify-start w-full max-w-[420px] mx-auto md:my-8 
                 p-4 sm:p-6 md:p-8 bg-white
                 shadow-[0_0_25px_rgba(21,93,252,0.3)] 
-                transition-shadow duration-300">
+                transition-shadow duration-300"
+        >
           <h2 className="text-2xl sm:text-3xl font-light text-center mb-2 text-gray-800 transition-all duration-300">
             Login in to your account
           </h2>
           <p className="text-center text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6">
             Don’t have an account?{" "}
-            <Link 
-              to="/" 
-              className="text-[#155DFC] hover:underline font-medium">
+            <Link to="/" className="text-[#155DFC] hover:underline font-medium">
               Create one
             </Link>
           </p>
@@ -103,7 +105,8 @@ const Login = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all duration-300"/>
+              className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all duration-300"
+            />
           </div>
 
           {/* Password Field */}
@@ -120,11 +123,13 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full px-3 sm:px-4 py-2 pr-10 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all duration-300"/>
+                className="w-full px-3 sm:px-4 py-2 pr-10 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all duration-300"
+              />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700">
+                className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+              >
                 {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
               </button>
             </div>
@@ -134,7 +139,8 @@ const Login = () => {
           <div className="text-right mt-2">
             <a
               href="#"
-              className="text-sm text-indigo-500 hover:underline font-medium">
+              className="text-sm text-indigo-500 hover:underline font-medium"
+            >
               Forgot password?
             </a>
           </div>
@@ -144,24 +150,29 @@ const Login = () => {
             type="submit"
             className="w-full relative overflow-hidden bg-linear-to-r from-cyan-400 to-purple-500 text-white py-2.5 sm:py-3 mt-6 rounded-lg 
               transition-all duration-300 ease-in-out transform text-sm sm:text-base font-medium
-              hover:scale-[1.02] hover:from-purple-500 hover:to-cyan-400 active:scale-95 focus:outline-none shadow-lg">
-            <span className="relative z-10">Log In</span>
+              hover:scale-[1.02] hover:from-purple-500 hover:to-cyan-400 active:scale-95 focus:outline-none shadow-lg"
+          >
+            <span className="relative z-10">Log In {loading && <span>....</span>}</span>
             <span className="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity"></span>
           </button>
 
           <div className="flex items-center justify-center my-4 sm:my-5">
             <div className="border-t flex-1"></div>
-            <p className="mx-4 text-xs sm:text-sm text-gray-500">Or continue with</p>
+            <p className="mx-4 text-xs sm:text-sm text-gray-500">
+              Or continue with
+            </p>
             <div className="border-t flex-1"></div>
           </div>
 
           <button
             type="button"
-            className="flex items-center justify-center w-full border border-gray-300 py-2 sm:py-2.5 rounded-full hover:bg-gray-50 transition-colors duration-300 text-sm sm:text-base">
+            className="flex items-center justify-center w-full border border-gray-300 py-2 sm:py-2.5 rounded-full hover:bg-gray-50 transition-colors duration-300 text-sm sm:text-base"
+          >
             <img
               src="https://www.svgrepo.com/show/355037/google.svg"
               alt="Google"
-              className="w-4 h-4 sm:w-5 sm:h-5 mr-2"/>
+              className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
+            />
             Continue with Google
           </button>
         </form>
@@ -175,3 +186,4 @@ const Login = () => {
 };
 
 export default Login;
+
