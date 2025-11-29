@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MdOutlineEmail } from "react-icons/md";
@@ -5,11 +6,13 @@ import { GoLock } from "react-icons/go";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { loginUser } from "../features/auth/AuthSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const {loading}=useSelector((s)=>s.Auth)
+  // console.log(loading);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -26,7 +29,6 @@ const Login = () => {
     e.preventDefault();
     const { email, password } = formData;
     console.log(formData);
-
     if (!email || !password) {
       toast.error("Please fill all fields");
       return;
@@ -150,7 +152,7 @@ const Login = () => {
               transition-all duration-300 ease-in-out transform text-sm sm:text-base font-medium
               hover:scale-[1.02] hover:from-purple-500 hover:to-cyan-400 active:scale-95 focus:outline-none shadow-lg"
           >
-            <span className="relative z-10">Log In</span>
+            <span className="relative z-10">Log In {loading && <span>....</span>}</span>
             <span className="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity"></span>
           </button>
 
@@ -184,3 +186,4 @@ const Login = () => {
 };
 
 export default Login;
+
