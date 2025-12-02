@@ -9,13 +9,17 @@ import Messages from "../ui/pages/Messages";
 import NotFound from './../ui/pages/NotFound';
 import NotificationsPage from './../ui/pages/notifications/NotificationPage';
 
+
 let routers = createBrowserRouter([{
     path:"/",
-    // element:<Register></Register>
-    element:<Home></Home>
+    element:<Register></Register>
+    // element:<Home></Home>
 }, {
     path:"/login",
     element:<Login></Login>
+}, {
+    path:"/Home",
+    element:<Home></Home>
 }, {
     path:"/Explore",
     element:<Explore></Explore>

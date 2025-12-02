@@ -36,7 +36,7 @@ const Layout = ({ children }) => {
     }
 
   const navItems = [
-    { path: "/", label: "Home", icon: FiHome },
+    { path: "/home", label: "Home", icon: FiHome },
     { path: "/explore", label: "Explore", icon: FaRegCompass },
     { path: "/messages", label: "Messages", icon: FiMessageCircle },
     { path: "/notifications", label: "Notifications", icon: FaRegHeart },
