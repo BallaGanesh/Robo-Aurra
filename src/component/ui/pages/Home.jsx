@@ -162,8 +162,18 @@ const Home = () => {
             posts.length > 0 &&
             posts.map((post) => {
               // handle cases where post.user is a string (just an ID)
-              const author = typeof post.user === "string" ? null : post.user;
 
+              const author = user && post.user && typeof post.user === "object"
+                ? 
+                 {
+                    name: loggedUser?.username || "Unknown User",
+                    email: loggedUser?.email || "unknown",
+                    avatar: loggedUser?.profilePhoto
+                      ? `data:image/jpeg;base64,${loggedUser.profilePhoto}`
+                      : "/default-avatar.png",
+                  }: null;
+              
+               
               return (
                 <PostCard
                   key={post._id || post.id}

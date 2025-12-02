@@ -22,7 +22,7 @@ const Layout = ({ children }) => {
    const{profilePhoto,username,email} =user.user;
   
    const valueFromChild=useSelector((state)=>state.child.valueFromChild);
-   console.log(valueFromChild);
+   //console.log(valueFromChild);
    
 
    const lightMode={
