@@ -19,6 +19,8 @@ const PostCard = ({
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [currentLikes, setCurrentLikes] = useState(likes);
+  
+  
 
   const handleLike = () => {
     setIsLiked(!isLiked);
@@ -31,12 +33,14 @@ const PostCard = ({
       <div className="p-3 sm:p-4 flex items-center justify-between">
         <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
           <img
-            src={author.avatar}
-            alt={author.name}
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border border-border"/>
+  src={author?.avatar || "/default-avatar.png"}
+  alt={author?.name || "User"}
+  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border border-border"
+/>
+
           <div className="min-w-0 flex-1">
-            <p className="font-semibold text-foreground text-sm sm:text-base truncate">{author.name}</p>
-            <p className=" text-gray-500 text-xs sm:text-sm text-muted-foreground truncate">@{author.username}</p>
+            <p className="font-semibold text-foreground text-sm sm:text-base truncate">{author?.name || "Unknown User"}</p>
+            <p className=" text-gray-500 text-xs sm:text-sm text-muted-foreground truncate">@{author?.username || "unknown"}</p>
           </div>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
