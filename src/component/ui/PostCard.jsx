@@ -16,11 +16,15 @@ const PostCard = ({
     comments,
     shares,
 }) => {
+ 
+  const [data, setData] = useState({author});
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [currentLikes, setCurrentLikes] = useState(likes);
   
-  
+  const handleRemove=() => {
+   setData((prev)=>prev.filter((item)=>item.id !== id));
+  };
 
   const handleLike = () => {
     setIsLiked(!isLiked);
@@ -40,13 +44,13 @@ const PostCard = ({
 
           <div className="min-w-0 flex-1">
             <p className="font-semibold text-foreground text-sm sm:text-base truncate">{author?.name || "Unknown User"}</p>
-            <p className=" text-gray-500 text-xs sm:text-sm text-muted-foreground truncate">@{author?.username || "unknown"}</p>
+            <p className=" text-gray-500 text-xs sm:text-sm text-muted-foreground truncate">@{author?.name || "unknown"}</p>
           </div>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
           <span className="text-xs text-gray-500 text-muted-foreground">{timestamp}</span>
           <button className="icon-button text-muted-foreground hover:text-primary p-2 rounded-lg">
-            <FiMoreHorizontal className="text-2xl text-gray-500 rounded-full hover:rounded-full hover:bg-gray-200 p-0.5" />
+            <FiMoreHorizontal className="text-2xl text-gray-500 rounded-full hover:rounded-full hover:bg-gray-200 p-0.5"  onClick={handleRemove}/>
           </button>
         </div>
       </div>
