@@ -135,6 +135,7 @@ const articleSlice = createSlice({
       state.createdPost = null;
       state.posts = [];
     },
+   
   },
   extraReducers: (builder) => {
     builder
@@ -218,5 +219,5 @@ const articleSlice = createSlice({
   },
 });
 
-export const { logoutArticlesState } = articleSlice.actions;
+export const { logoutArticlesState, } = articleSlice.actions;
 export default articleSlice.reducer;

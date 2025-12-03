@@ -1,107 +1,4 @@
-// import { useState } from "react";
-
-// import { FiMoreHorizontal } from "react-icons/fi";
-// import { FaRegHeart, FaHeart } from "react-icons/fa6";
-// import { TbMessageCircle } from "react-icons/tb";
-// import { FiShare2 } from "react-icons/fi";
-// import { CiBookmark } from "react-icons/ci";
-// import { FaRegBookmark } from "react-icons/fa";
-// import { useDispatch } from "react-redux";
-// import { toggleLike, addComment } from "../features/articleSlice";
-// import { Link } from "react-router-dom";
-// import axios from "axios";
-
-// const PostCard = ({
-//   id,
-//   author,
-//   content,
-//   timestamp,
-//   likes,
-//   comments,
-//   shares,
-// }) => {
-//   const [data, setData] = useState({ author });
-//   const [isLiked, setIsLiked] = useState(false);
-//   const [isSaved, setIsSaved] = useState(false);
-//   const [currentLikes, setCurrentLikes] = useState(likes);
-// const [showComments, setShowComments] = useState(false);
-// const [commentText, setCommentText] = useState("");
-// const [commentsList, setCommentsList] = useState(comments || []);
-
-//   const dispatch = useDispatch();
-
-//   const handleRemove = () => {
-//     setData((prev) => prev.filter((item) => item.id !== id));
-//   };
-
-//   const handleLike = async () => {
-//     // ⭐ Step 1: Optimistic UI update
-//     setIsLiked((prev) => {
-//       const newLiked = !prev;
-//       setCurrentLikes((count) =>
-//         newLiked ? count + 1 : Math.max(0, count - 1)
-//       );
-//       return newLiked;
-//     });
-
-//     try {
-//       // ⭐ Step 2: Call backend using Redux thunk
-//       await dispatch(toggleLike(id)).unwrap();
-
-//       // The reducer will update likeCount and likedBy
-//       // If backend returns authoritative data, UI will sync automatically
-//     } catch (err) {
-//       console.error("Like API failed:", err);
-
-//       // ⭐ Step 3: Rollback optimistic UI if API failed
-//       setIsLiked((prev) => {
-//         const reverted = !prev;
-//         setCurrentLikes((count) =>
-//           reverted ? count + 1 : Math.max(0, count - 1)
-//         );
-//         return reverted;
-//       });
-//     }
-//   };
- 
-
-// // handle comment submission
-// const handleAddComment = async (postId) => {
-//   if (!commentText.trim()) return;
-
-//   try {
-//     const token = localStorage.getItem("token");
-// console.log("COMMENT SEND:", { content: commentText });
-
-//     const response = await axios.post(
-//       `https://robo-1-qqhu.onrender.com/api/articles/${postId}/comment`,
-//       { text : commentText },
-//       {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       }
-//     );
-
-//     // Optimistic update
-//     setCommentsList((prev) => [...prev, { text : commentText }]);
-//     setCommentText("");
-//   } catch (error) {
-//     console.error("Comment error:", error);
-//   }
-// };
-
-
-//   return (
-//     <div className="social-card bg-card rounded-2xl border border-gray-300 border-border shadow-md hover:shadow-xl transition-all overflow-hidden">
-//       {/* Post Header */}
-//       <div className="p-3 sm:p-4 flex items-center justify-between">
-//         <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-//           <img
-//             src={author?.avatar || "/default-avatar.png"}
-//             alt={author?.name || "User"}
-//             className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border border-border"
-//           />
+import { useEffect, useState } from "react";
 
 //           <div className="min-w-0 flex-1">
 //             <p className="font-semibold text-foreground text-sm sm:text-base truncate">
@@ -259,20 +156,24 @@ import { FaRegHeart, FaHeart } from "react-icons/fa6";
 import { TbMessageCircle } from "react-icons/tb";
 import { FiShare2 } from "react-icons/fi";
 import { FaRegBookmark } from "react-icons/fa";
-import { useDispatch } from "react-redux";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 
-const PostCard = ({ id, author, content, timestamp, likes, comments, shares }) => {
+const PostCard = ({
+    id,
+    author,
+    content,
+    timestamp,
+    likes,
+    comments,
+    shares,
+}) => {
+ 
+
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [currentLikes, setCurrentLikes] = useState(likes);
   
-  // FIX 1 — commentsList must be array
-  const [commentsList, setCommentsList] = useState(comments || []);
-  const [showComments, setShowComments] = useState(false);
-  const [commentText, setCommentText] = useState("");
-
-  const dispatch = useDispatch();
+  
 
   const handleLike = async () => {
     setIsLiked(!isLiked);
@@ -315,6 +216,13 @@ const PostCard = ({ id, author, content, timestamp, likes, comments, shares }) =
             <p className="text-xs text-gray-500">@{author?.name || "unknown"}</p>
           </div>
         </div>
+        <div className="flex items-center gap-1 sm:gap-2">
+          <span className="text-xs text-gray-500 text-muted-foreground">{timestamp}</span>
+          <button className="icon-button text-muted-foreground hover:text-primary p-2 rounded-lg">
+            <FiMoreHorizontal className="text-2xl text-gray-500 rounded-full hover:rounded-full hover:bg-gray-200 p-0.5" />
+          </button>
+        </div>
+      </div>
 
         <span className="text-xs text-gray-500">{timestamp}</span>
       </div>
