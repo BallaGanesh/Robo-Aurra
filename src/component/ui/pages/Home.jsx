@@ -11,9 +11,9 @@ import { getAllPosts } from "../../features/articleSlice";
 
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [posts, setPosts] = useState([]);
+  
   const { posts } = useSelector((state) => state.articles);
-  // console.log(posts);
+  console.log(posts);
   const authData = JSON.parse(localStorage.getItem("user"));
   const loggedUser = authData?.user;
 
@@ -22,89 +22,11 @@ const Home = () => {
   const user = auth?.user ?? null;
   // console.log(user);
 
-  // Initializing with sample posts
-  // useEffect(() => {
-  //   setPosts([
-  //     // {
-  //     //   id: "1",
-  //     //   author: {
-  //     //     name: "Sarah Johnson",
-  //     //     username: "sarahj",
-  //     //     avatar:
-  //     //       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
-  //     //   },
-  //     //   content:
-  //     //     "Just finished an amazing hiking trip! The views were absolutely stunning. Nothing beats nature and fresh air 🏔️✨",
-  //     //   timestamp: "2 hours ago",
-  //     //   likes: 324,
-  //     //   comments: 42,
-  //     //   shares: 18,
-  //     // },
-  //     // {
-  //     //   id: "2",
-  //     //   author: {
-  //     //     name: "Alex Chen",
-  //     //     username: "alexchen",
-  //     //     avatar:
-  //     //       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
-  //     //   },
-  //     //   content:
-  //     //     "Excited to announce that I just launched my new project! It combines AI with creative design. Check it out and let me know what you think! 🚀",
-  //     //   timestamp: "4 hours ago",
-  //     //   likes: 521,
-  //     //   comments: 67,
-  //     //   shares: 89,
-  //     // },
-  //     // {
-  //     //   id: "3",
-  //     //   author: {
-  //     //     name: "Emma Davis",
-  //     //     username: "emmadavis",
-  //     //     avatar:
-  //     //       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop",
-  //     //   },
-  //     //   content:
-  //     //     "Coffee and code - the perfect combination for a productive morning 💻☕",
-  //     //   timestamp: "6 hours ago",
-  //     //   likes: 892,
-  //     //   comments: 124,
-  //     //   shares: 56,
-  //     // },
-  //     // {
-  //     //   id: "4",
-  //     //   author: {
-  //     //     name: "Michael Park",
-  //     //     username: "mpark",
-  //     //     avatar:
-  //     //       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
-  //     //   },
-  //     //   content:
-  //     //     "Just captured this beautiful sunset moment. Sometimes the best things in life are free 🌅",
-  //     //   timestamp: "8 hours ago",
-  //     //   likes: 1203,
-  //     //   comments: 156,
-  //     //   shares: 92,
-  //     // },
-
-  //   ]);
-  // }, []);
+  
   useEffect(() => {
-    // console.log("DISPATCHING GET API");
     dispatch(getAllPosts());
   }, []);
 
-  //   const handleCreatePost = (content, visibility) => {
-  //   console.log("handleCreatePost CALLED with:", content);
-
-  //   const formData = new FormData();
-  //   formData.append("title", "Post");
-  //   formData.append("content", content);
-
-  //   dispatch(postArticle(formData))
-  //     .unwrap()
-  //     .then((res) => console.log("SUCCESS:", res))
-  //     .catch((err) => console.log("ERROR:", err));
-  // };
   const handleCreatePost = (content, visibility, title) => {
     console.log("Post requested:", title, content);
 
@@ -182,7 +104,7 @@ const Home = () => {
                   content={post.content}
                   timestamp={post.createdAt || "Some time ago"}
                   likes={post.likeCount || 0}
-                  comments={post.comments?.length || 0}
+                  comments={post.comments || []}
                   shares={post.shares || 0}
                 />
               );
