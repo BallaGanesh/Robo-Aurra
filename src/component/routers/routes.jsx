@@ -10,6 +10,7 @@ import NotFound from './../ui/pages/NotFound';
 import NotificationsPage from './../ui/pages/notifications/NotificationPage';
 
 
+
 let routers = createBrowserRouter([{
     path:"/",
     element:<Register></Register>
@@ -35,7 +36,8 @@ let routers = createBrowserRouter([{
 }, {
     path:'/notifications',
     element:<NotificationsPage></NotificationsPage>
-}, {
+},
+ {
     // path:'*',
     // element:<NotFound></NotFound>
 }
