@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { FiMoreHorizontal } from "react-icons/fi";
 import { FaRegHeart } from "react-icons/fa6";
@@ -6,6 +6,7 @@ import { TbMessageCircle } from "react-icons/tb";
 import { FiShare2 } from "react-icons/fi";
 import { CiBookmark } from "react-icons/ci";
 import { FaRegBookmark } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 
 const PostCard = ({
     id,
@@ -17,14 +18,12 @@ const PostCard = ({
     shares,
 }) => {
  
-  const [data, setData] = useState({author});
+
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [currentLikes, setCurrentLikes] = useState(likes);
   
-  const handleRemove=() => {
-   setData((prev)=>prev.filter((item)=>item.id !== id));
-  };
+  
 
   const handleLike = () => {
     setIsLiked(!isLiked);
@@ -50,7 +49,7 @@ const PostCard = ({
         <div className="flex items-center gap-1 sm:gap-2">
           <span className="text-xs text-gray-500 text-muted-foreground">{timestamp}</span>
           <button className="icon-button text-muted-foreground hover:text-primary p-2 rounded-lg">
-            <FiMoreHorizontal className="text-2xl text-gray-500 rounded-full hover:rounded-full hover:bg-gray-200 p-0.5"  onClick={handleRemove}/>
+            <FiMoreHorizontal className="text-2xl text-gray-500 rounded-full hover:rounded-full hover:bg-gray-200 p-0.5" />
           </button>
         </div>
       </div>

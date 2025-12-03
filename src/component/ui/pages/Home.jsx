@@ -13,7 +13,7 @@ const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [posts, setPosts] = useState([]);
   const { posts } = useSelector((state) => state.articles);
-  // console.log(posts);
+  //  console.log(posts);
   const authData = JSON.parse(localStorage.getItem("user"));
   const loggedUser = authData?.user;
 

@@ -4,6 +4,7 @@ import Layout from "../Layout";
 
 import { IoCloseSharp } from "react-icons/io5";
 import { GoSearch } from "react-icons/go";
+import { useSelector } from "react-redux";
 
 
 
@@ -20,17 +21,17 @@ const Profile = () => {
     bio: "Passionate about design, code, and coffee ☕ | Building beautiful digital experiences",
   });
 
-  const user = {
-    id: "1",
-    name: "You",
-    username: "your_username",
-    avatar:
-      "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=400&fit=crop",
-    bio: "Passionate about design, code, and coffee ☕ | Building beautiful digital experiences",
-    posts: 24,
-    followers: 1543,
-    following: 342,
-  };
+  // const user = {
+  //   id: "1",
+  //   name: "You",
+  //   username: "your_username",
+  //   avatar:
+  //     "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=400&fit=crop",
+  //   bio: "Passionate about design, code, and coffee ☕ | Building beautiful digital experiences",
+  //   posts: 24,
+  //   followers: 1543,
+  //   following: 342,
+  // };
 
   const followers = [
     {
@@ -63,35 +64,47 @@ const Profile = () => {
     },
   ];
 
-  const posts = [
-    {
-      id: "1",
-      author: {
-        name: user.name,
-        username: user.username,
-        avatar: user.avatar,
-      },
-      content: "Just finished an amazing hiking trip! The views were absolutely stunning. Nothing beats nature and fresh air 🏔️✨",
-      timestamp: "2 hours ago",
-      likes: 324,
-      comments: 42,
-      shares: 18,
-    },
-    {
-      id: "2",
-      author: {
-        name: user.name,
-        username: user.username,
-        avatar: user.avatar,
-      },
-      content: "Coffee and code - the perfect combination for a productive morning 💻☕",
-      timestamp: "6 hours ago",
-      likes: 892,
-      comments: 124,
-      shares: 56,
-    },
-  ];
+  // const posts = [
+  //   {
+  //     id: "1",
+  //     author: {
+  //       name: user.name,
+  //       username: user.username,
+  //       avatar: user.avatar,
+  //     },
+  //     content: "Just finished an amazing hiking trip! The views were absolutely stunning. Nothing beats nature and fresh air 🏔️✨",
+  //     timestamp: "2 hours ago",
+  //     likes: 324,
+  //     comments: 42,
+  //     shares: 18,
+  //   },
+  //   {
+  //     id: "2",
+  //     author: {
+  //       name: user.name,
+  //       username: user.username,
+  //       avatar: user.avatar,
+  //     },
+  //     content: "Coffee and code - the perfect combination for a productive morning 💻☕",
+  //     timestamp: "6 hours ago",
+  //     likes: 892,
+  //     comments: 124,
+  //     shares: 56,
+  //   },
+  // ];
+  const {posts}= useSelector((state)=>state.articles);
+  console.log(posts);
+  
+ const auth = useSelector((state) => state.Auth);
 
+ 
+  const user = auth?.user ?? null;
+
+  const authData = JSON.parse(localStorage.getItem("user"));
+  const loggedUser = authData?.user;
+
+
+  
   const filteredFollowers = followers.filter(
     (f) =>
       f.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -181,8 +194,10 @@ const Profile = () => {
           <div className="flex flex-col md:flex-row items-start md:items-start gap-6 mb-6">
             {/* Avatar */}
             <img
-              src={user.avatar}
-              alt={user.name}
+              src={loggedUser?.profilePhoto
+                      ? `data:image/jpeg;base64,${loggedUser.profilePhoto}`
+                      : "/default-avatar.png"}
+              alt={loggedUser?.username || "Unknown User"}
               className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover"/>
 
             {/* User Info */}
@@ -190,8 +205,8 @@ const Profile = () => {
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
                 <div>
                   {/* <h1 className="text-2xl md:text-3xl font-bold">{user.name}</h1> */}
-                  <h1 className="text-2xl md:text-3xl font-bold">{user.name}</h1>
-                  <p className="text-muted-foreground text-lg">@{user.username}</p>
+                  <h1 className="text-2xl md:text-3xl font-bold">{loggedUser?.username || "Unknown User"}</h1>
+                  <p className="text-muted-foreground text-lg">@{loggedUser?.username || "Unknown User"}</p>
                 </div>
                 <div className="flex gap-2">
                   <button
@@ -278,10 +293,37 @@ const Profile = () => {
               ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
               : "space-y-4"
           }>
-          {posts.map((post) => (
-            <PostCard key={post.id} {...post} />
-          ))}
-        </div>
+          
+          {Array.isArray(posts) &&
+            posts.length > 0 &&
+            posts.map((post) => {
+              // handle cases where post.user is a string (just an ID)
+
+              const author = user && post.user && typeof post.user === "object"
+                ? 
+                 {
+                    name: loggedUser?.username || "Unknown User",
+                    email: loggedUser?.email || "unknown",
+                    avatar: loggedUser?.profilePhoto
+                      ? `data:image/jpeg;base64,${loggedUser.profilePhoto}`
+                      : "/default-avatar.png",
+                  }: null;
+              
+               
+              return (
+                <PostCard
+                  key={post._id || post.id}
+                  id={post._id || post.id}
+                  author={author}
+                  content={post.content}
+                  timestamp={post.createdAt || "Some time ago"}
+                  likes={post.likeCount || 0}
+                  comments={post.comments?.length || 0}
+                  shares={post.shares || 0}
+                />
+              );
+            })}
+        
       </div>
 
       {/* Modals */}
@@ -310,7 +352,9 @@ const Profile = () => {
             <div className="p-8 space-y-6">
               <div className="flex flex-col items-center gap-4">
                 <img
-                  src={user.avatar}
+                  src={loggedUser?.profilePhoto
+                      ? `data:image/jpeg;base64,${loggedUser.profilePhoto}`
+                      : "/default-avatar.png"}
                   alt="Profile avatar"
                   className="w-32 h-32 rounded-full object-cover border-4 border-primary/20"/>
                 <button className="rounded-full bg-muted text-foreground hover:bg-muted/70">
@@ -323,7 +367,7 @@ const Profile = () => {
                   <label className="block text-sm font-semibold">Name</label>
                   <input
                     type="text"
-                    value={editForm.name}
+                    value={loggedUser?.username || ""}
                     onChange={(e) =>
                       setEditForm({ ...editForm, name: e.target.value })
                     }
@@ -337,7 +381,7 @@ const Profile = () => {
                     <span className="px-4 py-3 bg-muted rounded-l-xl border border-border border-r-0 text-muted-foreground">@</span>
                     <input
                       type="text"
-                      value={editForm.username}
+                      value={loggedUser?.username || ""}
                       onChange={(e) =>
                         setEditForm({ ...editForm, username: e.target.value })
                       }
@@ -378,8 +422,10 @@ const Profile = () => {
           </div>
         </div>
       )}
+     </div> 
     </Layout>
   );
 };
+
 
 export default Profile;
