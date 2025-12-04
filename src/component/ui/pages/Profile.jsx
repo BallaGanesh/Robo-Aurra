@@ -194,7 +194,7 @@ const Profile = () => {
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Profile Header */}
         <div className="social-card p-6 md:p-8 mb-6">
-          <div className="flex flex-col md:flex-row items-start md:items-start gap-6 mb-6">
+          <div className="flex md:flex-row items-start md:items-start gap-6 mb-6">
             {/* Avatar */}
             <img
               src={loggedUser?.profilePhoto
@@ -205,13 +205,13 @@ const Profile = () => {
 
             {/* User Info */}
             <div className="flex-1">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+              <div className="flex  md:flex-row md:items-center md:justify-between gap-4 mb-4">
                 <div>
                   {/* <h1 className="text-2xl md:text-3xl font-bold">{user.name}</h1> */}
                   <h1 className="text-2xl md:text-3xl font-bold">{loggedUser?.username || "Unknown User"}</h1>
                   <p className="text-muted-foreground text-lg">@{loggedUser?.username || "Unknown User"}</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 md:justify-end items-end">
                   <button
                     onClick={() => setShowEditModal(true)}
                     className="rounded-full font-semibold bg-linear-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg px-6">
@@ -360,7 +360,7 @@ const Profile = () => {
                       : "/default-avatar.png"}
                   alt="Profile avatar"
                   className="w-32 h-32 rounded-full object-cover border-4 border-primary/20"/>
-                <button className="rounded-full bg-muted text-foreground hover:bg-muted/70">
+                <button className="rounded-full bg-muted text-foreground hover:bg-muted/70" >
                   Change Avatar
                 </button>
               </div>
