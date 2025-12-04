@@ -14,7 +14,6 @@ const CreatePostModal = ({ isOpen, onClose, onPost, userAvatar, userName }) => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.Auth);
   const user = auth?.user ?? null;
-  
 
   const handlePost = () => {
     if (content.trim()) {
@@ -106,7 +105,7 @@ const CreatePostModal = ({ isOpen, onClose, onPost, userAvatar, userName }) => {
               className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover"
             />
             <div>
-              <p className="font-semibold text-base sm:text-lg">{loggedUser?.username||"User"}</p>
+              <p className="font-semibold text-base sm:text-lg">{loggedUser?.username || "User"}</p>
 
               <select
                 value={visibility}
