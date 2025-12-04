@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 import Layout from "../Layout";
 import PostCard from "../PostCard";
-import CreatePostModal from "../Createpostmodal";
+import CreatePostModal from "../CreatePostModal";
 import { postArticle } from "../../features/articleSlice";
 import { useDispatch } from "react-redux";
 import { getAllPosts } from "../../features/articleSlice";

@@ -172,6 +172,11 @@ const PostCard = ({
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [currentLikes, setCurrentLikes] = useState(likes);
+  const [showComments, setShowComments] = useState(false);
+  const [commentsList, setCommentsList] = useState(
+    Array.isArray(comments) ? comments : []
+  );
+  const [commentText, setCommentText] = useState("");
   
   
 
@@ -225,7 +230,7 @@ const PostCard = ({
       </div>
 
         <span className="text-xs text-gray-500">{timestamp}</span>
-      </div>
+      
 
       {/* Content */}
       <div className="px-4 pb-4">{content}</div>
