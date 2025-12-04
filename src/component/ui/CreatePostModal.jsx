@@ -1,11 +1,20 @@
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
+import { useDispatch, useSelector } from "react-redux";
 
 const CreatePostModal = ({ isOpen, onClose, onPost, userAvatar, userName }) => {
   const [content, setContent] = useState("");
   const [visibility, setVisibility] = useState("public");
   const [title, setTitle] = useState("");
   // const [content, setContent] = useState("");
+
+  const authData = JSON.parse(localStorage.getItem("user"));
+  const loggedUser = authData?.user;
+
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.Auth);
+  const user = auth?.user ?? null;
+  
 
   const handlePost = () => {
     if (content.trim()) {
@@ -90,12 +99,14 @@ const CreatePostModal = ({ isOpen, onClose, onPost, userAvatar, userName }) => {
           {/* User Info */}
           <div className="flex items-center gap-3 sm:gap-4">
             <img
-              src={userAvatar}
-              alt={userName}
+              src={loggedUser?.profilePhoto
+                ? `data:image/jpeg;base64,${loggedUser.profilePhoto}`
+                : "/default-avatar.png"}
+              alt={loggedUser?.username || "User"}
               className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover"
             />
             <div>
-              <p className="font-semibold text-base sm:text-lg">{userName}</p>
+              <p className="font-semibold text-base sm:text-lg">{loggedUser?.username||"User"}</p>
 
               <select
                 value={visibility}
