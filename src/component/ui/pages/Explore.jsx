@@ -5,6 +5,7 @@ import PostCard from "../PostCard";
 import { CiSearch } from "react-icons/ci";
 import { IoMdGrid } from "react-icons/io";
 import { IoListOutline } from "react-icons/io5";
+import { useSelector } from "react-redux";
 
 const Explore = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -58,39 +59,47 @@ const Explore = () => {
     { name: "#StartupLife", posts: 128000 },
   ];
 
-  const trendingPosts = [
-    {
-      id: "1",
-      author: {
-        name: "Sarah Johnson",
-        username: "sarahj",
-        avatar:
-          "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
-      },
-      content:
-        "Just finished an amazing hiking trip! The views were absolutely stunning.",
-      timestamp: "2 hours ago",
-      likes: 5234,
-      comments: 342,
-      shares: 218,
-    },
-    {
-      id: "2",
-      author: {
-        name: "Alex Chen",
-        username: "alexchen",
-        avatar:
-          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
-      },
-      content:
-        "Excited to announce that I just launched my new project combining AI with creative design!",
-      timestamp: "4 hours ago",
-      likes: 8521,
-      comments: 1067,
-      shares: 2189,
-    },
-  ];
+  // const trendingPosts = [
+  //   {
+  //     id: "1",
+  //     author: {
+  //       name: "Sarah Johnson",
+  //       username: "sarahj",
+  //       avatar:
+  //         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
+  //     },
+  //     content:
+  //       "Just finished an amazing hiking trip! The views were absolutely stunning.",
+  //     timestamp: "2 hours ago",
+  //     likes: 5234,
+  //     comments: 342,
+  //     shares: 218,
+  //   },
+  //   {
+  //     id: "2",
+  //     author: {
+  //       name: "Alex Chen",
+  //       username: "alexchen",
+  //       avatar:
+  //         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+  //     },
+  //     content:
+  //       "Excited to announce that I just launched my new project combining AI with creative design!",
+  //     timestamp: "4 hours ago",
+  //     likes: 8521,
+  //     comments: 1067,
+  //     shares: 2189,
+  //   },
+  // ];
 
+const { posts } = useSelector((state) => state.articles);
+const authData = JSON.parse(localStorage.getItem("user"));
+  const loggedUser = authData?.user;
+
+ 
+  const auth = useSelector((state) => state.Auth);
+  const user = auth?.user ?? null;
+  
   const filteredCreators = creators.filter(
     (creator) =>
       creator.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -165,15 +174,59 @@ const Explore = () => {
 
             {viewMode === "grid" ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {trendingPosts.map((post) => (
-                  <PostCard key={post.id} {...post} />
-                ))}
+                {
+                Array.isArray(posts) &&
+                posts.length > 0 && posts.map((post) => {
+                  const author = user && post.user && typeof post.user === "object"
+                ? 
+                 {
+                    name: loggedUser?.username || "Unknown User",
+                    email: loggedUser?.email || "unknown",
+                    avatar: loggedUser?.profilePhoto
+                      ? `data:image/jpeg;base64,${loggedUser.profilePhoto}`
+                      : "/default-avatar.png",
+                  }: null;
+                  return (<PostCard
+                    key={post._id || post.id}
+                    id={post._id || post.id}
+                    author={author}
+                    content={post.content}
+                    timestamp={post.createdAt || "Some time ago"}
+                    likes={post.likeCount || 0}
+                    comments={post.comments || []}
+                    shares={post.shares || 0}
+                  />
+                  );
+                }
+                )}
               </div>
             ) : (
               <div className="space-y-4">
-                {trendingPosts.map((post) => (
-                  <PostCard key={post.id} {...post} />
-                ))}
+                {Array.isArray(posts) &&
+                posts.length > 0 && posts.map((post) => {
+                  const author = user && post.user && typeof post.user === "object"
+                ? 
+                 {
+                    name: loggedUser?.username || "Unknown User",
+                    email: loggedUser?.email || "unknown",
+                    avatar: loggedUser?.profilePhoto
+                      ? `data:image/jpeg;base64,${loggedUser.profilePhoto}`
+                      : "/default-avatar.png",
+                  }: null;
+                  return (<PostCard
+                    key={post._id || post.id}
+                    id={post._id || post.id}
+                    author={author}
+                    content={post.content}
+                    timestamp={post.createdAt || "Some time ago"}
+                    likes={post.likeCount || 0}
+                    comments={post.comments || []}
+                    shares={post.shares || 0}
+                  />
+                  );
+                }
+                )}
+               
               </div>
             )}
           </div>

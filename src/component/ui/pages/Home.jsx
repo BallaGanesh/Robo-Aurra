@@ -13,14 +13,14 @@ const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   const { posts } = useSelector((state) => state.articles);
-  //  console.log(posts);
+  
   const authData = JSON.parse(localStorage.getItem("user"));
   const loggedUser = authData?.user;
 
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.Auth);
   const user = auth?.user ?? null;
-  // console.log(user);
+
 
   
   useEffect(() => {
