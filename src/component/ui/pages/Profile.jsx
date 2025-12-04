@@ -93,15 +93,18 @@ const Profile = () => {
   //   },
   // ];
   const {posts}= useSelector((state)=>state.articles);
-  console.log(posts);
+  // console.log(posts);
   
  const auth = useSelector((state) => state.Auth);
 
  
   const user = auth?.user ?? null;
+  //console.log(user);
+  
 
   const authData = JSON.parse(localStorage.getItem("user"));
   const loggedUser = authData?.user;
+  // console.log(loggedUser);
 
 
   
@@ -227,7 +230,7 @@ const Profile = () => {
               {/* Stats */}
               <div className="flex gap-6">
                 <button className="hover:underline">
-                  <p className="font-bold">{user.posts}</p>
+                  <p className="font-bold">{posts.length}</p>
                   <p className="text-sm text-muted-foreground">Posts</p>
                 </button>
                 <button
@@ -236,7 +239,7 @@ const Profile = () => {
                     setSearchQuery("");
                   }}
                   className="hover:underline">
-                  <p className="font-bold">{(user.followers / 1000).toFixed(1)}K</p>
+                  <p className="font-bold">{(loggedUser.followers / 1000).toFixed(1)}K</p>
                   <p className="text-sm text-muted-foreground">Followers</p>
                 </button>
                 <button
@@ -245,7 +248,7 @@ const Profile = () => {
                     setSearchQuery("");
                   }}
                   className="hover:underline">
-                  <p className="font-bold">{(user.following / 1000).toFixed(1)}K</p>
+                  <p className="font-bold">{(loggedUser.following / 1000).toFixed(1)}K</p>
                   <p className="text-sm text-muted-foreground">Following</p>
                 </button>
               </div>

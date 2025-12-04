@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+
 
 //           <div className="min-w-0 flex-1">
 //             <p className="font-semibold text-foreground text-sm sm:text-base truncate">
@@ -156,7 +156,7 @@ import { FaRegHeart, FaHeart } from "react-icons/fa6";
 import { TbMessageCircle } from "react-icons/tb";
 import { FiShare2 } from "react-icons/fi";
 import { FaRegBookmark } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 const PostCard = ({
     id,
@@ -172,6 +172,11 @@ const PostCard = ({
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [currentLikes, setCurrentLikes] = useState(likes);
+  const [showComments, setShowComments] = useState(false);
+  const [commentText, setCommentText] = useState("");
+  const [commentsList, setCommentsList] = useState(
+    Array.isArray(comments) ? comments : []
+  );
   
   
 
@@ -223,41 +228,37 @@ const PostCard = ({
           </button>
         </div>
       </div>
-
-        <span className="text-xs text-gray-500">{timestamp}</span>
-      </div>
+      
 
       {/* Content */}
       <div className="px-4 pb-4">{content}</div>
 
       {/* Actions */}
       {/* <div className="px-4 py-3 border-t flex justify-around"> */}
-      <div className="px-2 sm:px-4 py-2 sm:py-3 border-t border-gray-300 border-border flex items-center justify-around gap-1 sm:gap-2">
+      <div className="px-2 sm:px-4 py-2 sm:py-3 border-t border-gray-300 border-border flex  items-center justify-around gap-1 sm:gap-2">
 
         {/* LIKE */}
-        <button onClick={handleLike}>
+        <button onClick={handleLike} className="flex gap-2">
           {isLiked ? <FaHeart className="text-red-500 text-xl" /> : <FaRegHeart className="text-xl" />}
           <span>{currentLikes}</span>
         </button>
 
         {/* COMMENTS */}
-        <button onClick={() => setShowComments(true)}>
+        <button onClick={() => setShowComments(true)} className="flex gap-2">
           <TbMessageCircle className="text-xl" />
-
-          
           <span>
             {Array.isArray(commentsList) ? commentsList.length : commentsList}
           </span>
         </button>
 
         {/* SHARE */}
-        <button>
+        <button className="flex gap-2">
           <FiShare2 className="text-xl" />
           <span>{shares}</span>
         </button>
 
         {/* SAVE */}
-        <button onClick={() => setIsSaved(!isSaved)}>
+        <button onClick={() => setIsSaved(!isSaved)} className="flex gap-2">
           <FaRegBookmark className="text-xl" />
         </button>
       </div>
