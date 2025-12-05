@@ -7,15 +7,17 @@ import Settings from './../ui/pages/Settings';
 import Profile from './../ui/pages/Profile';
 import Messages from "../ui/pages/Messages";
 import NotFound from './../ui/pages/NotFound';
+import LandingPg from "../ui/pages/LandingPg";
 import NotificationsPage from './../ui/pages/notifications/NotificationPage';
-
 
 
 let routers = createBrowserRouter([{
     path:"/",
-    element:<Register></Register>
-    // element:<Home></Home>
+    element:<LandingPg></LandingPg>
 }, {
+    path: '/Register',
+    element:<Register></Register>
+},{
     path:"/login",
     element:<Login></Login>
 }, {
