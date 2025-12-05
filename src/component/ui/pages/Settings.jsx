@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Layout from "../Layout";
-import Login from "./../../login/Login";
 
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { FiUser } from "react-icons/fi";
@@ -16,10 +15,8 @@ import { useNavigate } from "react-router-dom";
 const Settings = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isDarkMode, setIsDarkMode] = useState(
-    // document.documentElement.classList.contains("dark")
-    false
-  );
+
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const [settings, setSettings] = useState({
     emailNotifications: true,
@@ -37,13 +34,6 @@ const Settings = () => {
   const handleToggleTheme = () => {
     setIsDarkMode(!isDarkMode);
     dispatch(setChildValue(isDarkMode ? "dark" : "light"));
-    // if (isDarkMode) {
-    //   document.documentElement.classList.remove("dark");
-    //   localStorage.setItem("theme", "light");
-    // } else {
-    //   document.documentElement.classList.add("dark");
-    //   localStorage.setItem("theme", "dark");
-    // }
   };
 
   const handleToggleSetting = (key) => {
@@ -55,15 +45,13 @@ const Settings = () => {
       id: "emailNotifications",
       label: "Email Notifications",
       description: "Receive email updates about your account",
-      type: "toggle",
-      icon: <IoMdNotificationsOutline size={20} />,
+      icon: <IoMdNotificationsOutline className="w-5 h-5 md:w-6 md:h-6" />,
     },
     {
       id: "pushNotifications",
       label: "Push Notifications",
       description: "Get notified about activity on your posts",
-      type: "toggle",
-      icon: <IoMdNotificationsOutline size={20} />,
+      icon: <IoMdNotificationsOutline className="w-5 h-5 md:w-6 md:h-6" />,
     },
   ];
 
@@ -72,80 +60,84 @@ const Settings = () => {
       id: "privateAccount",
       label: "Private Account",
       description: "Only approved followers can see your posts",
-      type: "toggle",
-      icon: <GoLock size={20} />,
+      icon: <GoLock className="w-5 h-5 md:w-6 md:h-6" />,
     },
     {
       id: "allowMessages",
       label: "Allow Messages",
       description: "Allow anyone to send you direct messages",
-      type: "toggle",
-      icon: <FiUser size={20} />,
+      icon: <FiUser className="w-5 h-5 md:w-6 md:h-6" />,
     },
   ];
 
   const handleLogout = () => {
-    dispatch(setChildValue(null)); //clears redux state
-    localStorage.removeItem("token"); //clears token
+    dispatch(setChildValue(null));
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     alert("You have been logged out");
     navigate("/Login");
   };
 
   return (
     <Layout>
-      <div className="max-w-2xl mx-auto px-4 py-8">
+      <div className="max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto px-4 py-6 md:py-8">
+
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold w-28 mb-2 bg-linear-to-r from-purple-600 to-blue-400 text-transparent bg-clip-text">
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold w-fit bg-linear-to-r from-purple-600 to-blue-400 text-transparent bg-clip-text">
             Settings
           </h1>
-          <p className="text-muted-foreground">Manage your account preferences and settings</p>
+          <p className="text-sm md:text-base text-muted-foreground">
+            Manage your account preferences and settings
+          </p>
         </div>
 
         {/* Theme Section */}
-        <div className="social-card p-6 mb-6">
-          <div className="flex items-center justify-between mb-4">
+        <div className="social-card p-4 md:p-6 mb-6 border border-gray-300 rounded-2xl shadow-md hover:shadow-lg">
+          <div className="flex items-center justify-between mb-3 md:mb-4">
             <div className="flex items-center gap-3">
               {isDarkMode ? (
-                <AiOutlineSun size={24} className="text-blue-500" />
+                <AiOutlineSun className="w-6 h-6 text-blue-500" />
               ) : (
-                <IoMoonOutline size={24} className="text-purple-600" />
+                <IoMoonOutline className="w-6 h-6 text-purple-600" />
               )}
               <div>
-                <h3 className="font-semibold">Appearance</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="font-semibold text-lg md:text-xl">Appearance</h3>
+                <p className="text-xs md:text-sm text-gray-500">
                   {isDarkMode ? "Light" : "Dark"} mode
                 </p>
               </div>
             </div>
+
             <button
               onClick={handleToggleTheme}
-              className="rounded-full font-semibold bg-linear-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg px-6"
+              className="rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white px-4 py-2 md:px-6 font-semibold hover:shadow-lg transition"
             >
               {isDarkMode ? "Dark Mode" : "Light Mode"}
             </button>
           </div>
-          <p className="text-sm text-muted-foreground">
-            Toggle between light and dark themes for a comfortable viewing
-            experience
+
+          <p className="text-xs md:text-sm text-gray-500">
+            Toggle between light and dark themes for a comfortable viewing experience
           </p>
         </div>
 
         {/* Notification Settings */}
         <div className="mb-6">
-          <h2 className="text-xl font-bold mb-4">Notifications</h2>
+          <h2 className="text-lg md:text-xl font-bold mb-4">Notifications</h2>
+
           <div className="space-y-3">
-            {notificationSettings.map((setting) => (
+            {notificationSettings.map((item) => (
               <div
-                key={setting.id}
-                className="social-card p-4 flex items-center justify-between hover:bg-muted/30 transition-all"
+                key={item.id}
+                className="social-card p-3 md:p-4 flex items-center justify-between border border-gray-300 rounded-2xl shadow-md hover:bg-gray-100/40 transition"
               >
                 <div className="flex items-center gap-3">
-                  <div className="text-muted-foreground">{setting.icon}</div>
+                  <div className="text-gray-500">{item.icon}</div>
                   <div>
-                    <p className="font-semibold text-sm">{setting.label}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {setting.description}
+                    <p className="font-semibold text-sm md:text-base">{item.label}</p>
+                    <p className="text-xs md:text-sm text-gray-500">
+                      {item.description}
                     </p>
                   </div>
                 </div>
@@ -153,32 +145,33 @@ const Settings = () => {
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={settings[setting.id]}
-                    onChange={() => handleToggleSetting(setting.id)}
+                    checked={settings[item.id]}
+                    onChange={() => handleToggleSetting(item.id)}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-muted peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-linear-to-r from-blue-500 to-purple-600" />
+                  <div className="w-10 md:w-11 h-5 md:h-6 bg-muted peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:bg-linear-to-r from-blue-500 to-purple-600 after:content-[''] after:absolute after:h-4 md:after:h-5 after:w-4 md:after:w-5 after:bg-white after:rounded-full after:top-0.5 after:left-0.5 peer-checked:after:translate-x-full transition-all"></div>
                 </label>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Privacy Settings */}
+        {/* Privacy & Safety */}
         <div className="mb-6">
-          <h2 className="text-xl font-bold mb-4">Privacy & Safety</h2>
+          <h2 className="text-lg md:text-xl font-bold mb-4">Privacy & Safety</h2>
+
           <div className="space-y-3">
-            {privacySettings.map((setting) => (
+            {privacySettings.map((item) => (
               <div
-                key={setting.id}
-                className="social-card p-4 flex items-center justify-between hover:bg-muted/30 transition-all"
+                key={item.id}
+                className="social-card p-3 md:p-4 flex items-center justify-between border border-gray-300 rounded-2xl shadow-md hover:bg-gray-100/40 transition"
               >
                 <div className="flex items-center gap-3">
-                  <div className="text-muted-foreground">{setting.icon}</div>
+                  <div className="text-gray-500">{item.icon}</div>
                   <div>
-                    <p className="font-semibold text-sm">{setting.label}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {setting.description}
+                    <p className="font-semibold text-sm md:text-base">{item.label}</p>
+                    <p className="text-xs md:text-sm text-gray-500">
+                      {item.description}
                     </p>
                   </div>
                 </div>
@@ -186,45 +179,42 @@ const Settings = () => {
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={settings[setting.id]}
-                    onChange={() => handleToggleSetting(setting.id)}
+                    checked={settings[item.id]}
+                    onChange={() => handleToggleSetting(item.id)}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-muted peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-linear-to-r from-blue-500 to-purple-600" />
+                  <div className="w-10 md:w-11 h-5 md:h-6 bg-muted peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:bg-linear-to-r from-blue-500 to-purple-600 after:content-[''] after:absolute after:h-4 md:after:h-5 after:w-4 md:after:w-5 after:bg-white after:rounded-full after:top-0.5 after:left-0.5 peer-checked:after:translate-x-full transition-all"></div>
                 </label>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Account Settings */}
+        {/* Account Section */}
         <div className="mb-6">
-          <h2 className="text-xl font-bold mb-4">Account</h2>
+          <h2 className="text-lg md:text-xl font-bold mb-4">Account</h2>
+
           <div className="space-y-3">
-            <button className="social-card shadow-xl border border-gray-300 rounded-2xl p-4 w-full text-left flex items-center justify-between hover:bg-muted/30 transition-all">
+            <button className="social-card p-3 md:p-4 w-full text-left flex items-center justify-between border border-gray-300 rounded-2xl shadow-md hover:shadow-lg transition">
               <div className="flex items-center gap-3">
-                <FiUser size={20} className="text-muted-foreground" />
+                <FiUser className="w-5 h-5 md:w-6 md:h-6 text-gray-500" />
                 <div>
-                  <p className="font-semibold text-sm">Change Password</p>
-                  <p className="text-xs text-muted-foreground">
-                    Update your account password
-                  </p>
+                  <p className="font-semibold text-sm md:text-base">Change Password</p>
+                  <p className="text-xs md:text-sm text-gray-500">Update your account password</p>
                 </div>
               </div>
-              <CgChevronRight size={20} className="text-muted-foreground" />
+              <CgChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-500" />
             </button>
 
-            <button className="social-card p-4 w-full text-left flex items-center justify-between hover:bg-muted/30 transition-all">
+            <button className="social-card p-3 md:p-4 w-full text-left flex items-center justify-between border border-gray-300 rounded-2xl shadow-md hover:shadow-lg transition">
               <div className="flex items-center gap-3">
-                <GoLock size={20} className="text-muted-foreground" />
+                <GoLock className="w-5 h-5 md:w-6 md:h-6 text-gray-500" />
                 <div>
-                  <p className="font-semibold text-sm">Download Your Data</p>
-                  <p className="text-xs text-muted-foreground">
-                    Get a copy of your account data
-                  </p>
+                  <p className="font-semibold text-sm md:text-base">Download Your Data</p>
+                  <p className="text-xs md:text-sm text-gray-500">Get a copy of your account data</p>
                 </div>
               </div>
-              <CgChevronRight size={20} className="text-muted-foreground" />
+              <CgChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-500" />
             </button>
           </div>
         </div>
@@ -232,31 +222,26 @@ const Settings = () => {
         {/* Logout */}
         <div className="mb-8">
           <button
-            className="bg-red-500 w-full h-12 rounded-full font-semibold text-lg bg-destructive text-white hover:bg-destructive/90 flex items-center justify-center gap-2"
-            onClick={() => {handleLogout}}
+            onClick={handleLogout}
+            className="bg-red-500 w-full h-10 md:h-12 rounded-full font-semibold text-lg text-white hover:bg-red-600 flex items-center justify-center gap-2 shadow-md"
           >
-            <FiLogOut size={20} />
+            <FiLogOut className="w-5 h-5 md:w-6 md:h-6" />
             Log Out
           </button>
         </div>
 
         {/* Footer */}
-        <div className="text-center py-8 border-t border-border">
-          <p className="text-sm text-muted-foreground mb-2">AURRA v1.0</p>
-          <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
-            <button className="hover:text-foreground transition-colors">
-              Terms of Service
-            </button>
+        <div className="text-center py-6 border-t border-gray-300">
+          <p className="text-xs md:text-sm text-gray-500 mb-2">AURRA v1.0</p>
+          <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
+            <button>Terms</button>
             <span>•</span>
-            <button className="hover:text-foreground transition-colors">
-              Privacy Policy
-            </button>
+            <button>Privacy</button>
             <span>•</span>
-            <button className="hover:text-foreground transition-colors">
-              Help Center
-            </button>
+            <button>Help</button>
           </div>
         </div>
+
       </div>
     </Layout>
   );
