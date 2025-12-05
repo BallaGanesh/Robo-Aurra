@@ -157,6 +157,10 @@ import { TbMessageCircle } from "react-icons/tb";
 import { FiShare2 } from "react-icons/fi";
 import { FaRegBookmark } from "react-icons/fa";
 import axios from "axios";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 const PostCard = ({
     id,
@@ -222,15 +226,14 @@ const PostCard = ({
           </div>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
-          <span className="text-xs text-gray-500 text-muted-foreground">{timestamp}</span>
+          <span className="text-xs text-gray-500 text-muted-foreground">{dayjs(timestamp).fromNow()}</span>
           <button className="icon-button text-muted-foreground hover:text-primary p-2 rounded-lg">
             <FiMoreHorizontal className="text-2xl text-gray-500 rounded-full hover:rounded-full hover:bg-gray-200 p-0.5" />
           </button>
         </div>
       </div>
 
-        <span className="text-xs text-gray-500">{timestamp}</span>
-      
+        
 
       {/* Content */}
       <div className="px-4 pb-4">{content}</div>
@@ -291,15 +294,17 @@ const PostCard = ({
             </div>
 
             <div>
-              {commentsList.length > 0 ? (
-                commentsList.map((c) => (
-                  <p key={c._id} className="border-b py-2">{c.text}</p>
-                ))
-              ) : (
-                <p className="text-gray-500">No comments yet.</p>
-              )}
+               {Array.isArray(commentsList) && commentsList.length > 0 ? (
+              commentsList.map((c, index) => (
+                <p key={index} className="border-b py-2 text-gray-800">
+                  {c?.text}
+                </p>
+              ))
+            ) : (
+              <p className="text-gray-500">No comments yet.</p>
+            )}
             </div>
-
+                 
           </div>
         </div>
       )}
