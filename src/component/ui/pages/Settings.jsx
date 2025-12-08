@@ -8,15 +8,18 @@ import { IoMoonOutline } from "react-icons/io5";
 import { CgChevronRight } from "react-icons/cg";
 import { FiLogOut } from "react-icons/fi";
 import { GoLock } from "react-icons/go";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setChildValue } from "../../features/auth/childSlice";
 import { useNavigate } from "react-router-dom";
+import { setIsDarkMode } from "../../features/auth/childSlice";
 
 const Settings = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [isDarkMode, setIsDarkMode] = useState(false);
+const {isDarkMode}=useSelector((state)=>state.child);
+
+
 
   const [settings, setSettings] = useState({
     emailNotifications: true,
@@ -32,7 +35,7 @@ const Settings = () => {
   });
 
   const handleToggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
+     dispatch(setIsDarkMode(!isDarkMode));
     dispatch(setChildValue(isDarkMode ? "dark" : "light"));
   };
 
@@ -97,14 +100,14 @@ const Settings = () => {
           <div className="flex items-center justify-between mb-3 md:mb-4">
             <div className="flex items-center gap-3">
               {isDarkMode ? (
-                <AiOutlineSun className="w-6 h-6 text-blue-500" />
-              ) : (
                 <IoMoonOutline className="w-6 h-6 text-purple-600" />
+              ) : (
+                <AiOutlineSun className="w-6 h-6 text-blue-500" />
               )}
               <div>
                 <h3 className="font-semibold text-lg md:text-xl">Appearance</h3>
                 <p className="text-xs md:text-sm text-gray-500">
-                  {isDarkMode ? "Light" : "Dark"} mode
+                  {isDarkMode ? "Dark" : "Light"} mode
                 </p>
               </div>
             </div>
@@ -113,7 +116,7 @@ const Settings = () => {
               onClick={handleToggleTheme}
               className="rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white px-4 py-2 md:px-6 font-semibold hover:shadow-lg transition"
             >
-              {isDarkMode ? "Dark Mode" : "Light Mode"}
+              {isDarkMode ? "Light Mode" : "Dark Mode"}
             </button>
           </div>
 

@@ -6,11 +6,9 @@ const CreatePostModal = ({ isOpen, onClose, onPost, userAvatar, userName }) => {
   const [content, setContent] = useState("");
   const [visibility, setVisibility] = useState("public");
   const [title, setTitle] = useState("");
-  // const [content, setContent] = useState("");
 
   const authData = JSON.parse(localStorage.getItem("user"));
-  const loggedUser = authData?.user;
-
+  const loggedUser = authData;
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.Auth);
   const user = auth?.user ?? null;
@@ -51,49 +49,7 @@ const CreatePostModal = ({ isOpen, onClose, onPost, userAvatar, userName }) => {
           </button>
         </div>
 
-        {/* Content */}
-        {/* <div className="p-4 sm:p-6 space-y-4"> */}
-        {/* User Info */}
-        {/* <div className="flex items-center gap-3 sm:gap-4">
-            <img
-              src={userAvatar}
-              alt={userName}
-              className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover"
-            />
-            <div>
-              <p className="font-semibold text-base sm:text-lg">{userName}</p>
-
-              <select
-                value={visibility}
-                onChange={(e) => setVisibility(e.target.value)}
-                className="
-                  bg-gray-200 text-muted-foreground text-sm rounded 
-                  px-2 py-1 cursor-pointer border border-gray-300
-                  focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none
-                "
-              >
-                <option value="public">🌐 Public</option>
-                <option value="friends">👥 Friends</option>
-                <option value="private">🔒 Private</option>
-              </select>
-            </div>
-          </div> */}
-
-        {/* Text Input */}
-        {/* <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Share your article or thoughts..."
-            className="
-              w-full border-0 text-lg sm:text-xl text-foreground 
-              placeholder-muted-foreground resize-none 
-              focus:outline-none min-h-32 sm:min-h-40
-            "
-          />
-        </div> */}
-
-        {/* content trial */}
-        {/* Content */}
+       
         <div className="p-4 sm:p-6 space-y-4">
           {/* User Info */}
           <div className="flex items-center gap-3 sm:gap-4">
