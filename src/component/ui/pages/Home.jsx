@@ -20,7 +20,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.Auth);
   const user = auth?.user ?? null;
-  console.log(user)
+  
 
 
   useEffect(() => {
@@ -78,7 +78,7 @@ const Home = () => {
       <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground mb-3">
         Welcome back,{" "}
         <span className="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          {user?.user.username}
+          {user?.username}
         </span>
         👋
       </h1>

@@ -11,7 +11,7 @@ export const postArticle = createAsyncThunk(
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "https://robo-1-qqhu.onrender.com/api/articles",
+        "https://robo-zv8u.onrender.com/api/articles",
         formData,
         {
           headers: {
@@ -40,7 +40,7 @@ export const getAllPosts = createAsyncThunk(
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        "https://robo-1-qqhu.onrender.com/api/articles",
+        "https://robo-zv8u.onrender.com/api/articles",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -65,7 +65,7 @@ export const toggleLike = createAsyncThunk(
     try {
       const token = JSON.parse(localStorage.getItem("user"))?.token;
       const response = await axios.put(
-        `https://robo-1-qqhu.onrender.com/api/articles/${articleId}/like`,
+        `https://robo-zv8u.onrender.com/api/articles/${articleId}/like`,
         {},
         {
           headers: {
@@ -94,7 +94,7 @@ export const addComment = createAsyncThunk(
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        `https://robo-1-qqhu.onrender.com/api/articles/${articleId}/comment`,
+        `https://robo-zv8u.onrender.com/api/articles/${articleId}/comment`,
         { text: commentText }, // ← MUST BE EXACTLY "text"
         {
           headers: {

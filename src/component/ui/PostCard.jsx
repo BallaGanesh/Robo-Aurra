@@ -159,6 +159,7 @@ import { FaRegBookmark } from "react-icons/fa";
 import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useSelector } from "react-redux";
 
 dayjs.extend(relativeTime);
 
@@ -182,7 +183,11 @@ const PostCard = ({
   );
   const [commentText, setCommentText] = useState("");
   
+   const auth = useSelector((state) => state.Auth);
+  const user = auth?.user ?? null;
   
+  
+
 
   const handleLike = async () => {
     setIsLiked(!isLiked);
@@ -197,7 +202,7 @@ const PostCard = ({
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        `https://robo-1-qqhu.onrender.com/api/articles/${postId}/comment`,
+        `https://robo-zv8u.onrender.com//api/articles/${postId}/comment`,
         { text: commentText },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -218,11 +223,13 @@ const PostCard = ({
       {/* Post header */}
       <div className="p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <img src={author?.avatar || "/default-avatar.png"} className="w-10 h-10 rounded-full" />
+          <img src={user?.profilePhoto
+                ? `data:image/jpeg;base64,${user.profilePhoto}`
+                : "/default-avatar.png"} className="w-10 h-10 rounded-full" />
 
           <div>
-            <p className="font-semibold">{author?.name || "Unknown User"}</p>
-            <p className="text-xs text-gray-500">@{author?.name || "unknown"}</p>
+            <p className="font-semibold">{user?.username || "Unknown User"}</p>
+            <p className="text-xs text-gray-500">@{user?.username || "unknown"}</p>
           </div>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">

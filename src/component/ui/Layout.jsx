@@ -19,10 +19,11 @@ const Layout = ({ children }) => {
 
 
   const user = auth?.user ?? null;
-   const{profilePhoto,username,email} =user.user;
   
-   const valueFromChild=useSelector((state)=>state.child.valueFromChild);
-   //console.log(valueFromChild);
+  
+   const{profilePhoto,username,email} =user;
+  
+   const {valueFromChild}=useSelector((state)=>state.child);
    
 
    const lightMode={
@@ -48,7 +49,7 @@ const Layout = ({ children }) => {
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
-    <div className="flex h-screen bg-background text-foreground ">
+    <div className="flex h-screen bg-background text-foreground " style={`${valueFromChild}`==='light'?darkMode:lightMode}>
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex md:w-64 lg:w-56 border-r border-gray-300 border-border bg-card flex-col sticky top-0 shadow-lg">
         {/* Logo */}
