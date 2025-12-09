@@ -59,42 +59,23 @@ const Explore = () => {
     { name: "#StartupLife", posts: 128000 },
   ];
 
-  // const trendingPosts = [
-  //   {
-  //     id: "1",
-  //     author: {
-  //       name: "Sarah Johnson",
-  //       username: "sarahj",
-  //       avatar:
-  //         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
-  //     },
-  //     content:
-  //       "Just finished an amazing hiking trip! The views were absolutely stunning.",
-  //     timestamp: "2 hours ago",
-  //     likes: 5234,
-  //     comments: 342,
-  //     shares: 218,
-  //   },
-  //   {
-  //     id: "2",
-  //     author: {
-  //       name: "Alex Chen",
-  //       username: "alexchen",
-  //       avatar:
-  //         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
-  //     },
-  //     content:
-  //       "Excited to announce that I just launched my new project combining AI with creative design!",
-  //     timestamp: "4 hours ago",
-  //     likes: 8521,
-  //     comments: 1067,
-  //     shares: 2189,
-  //   },
-  // ];
 
 const { posts } = useSelector((state) => state.articles);
 const authData = JSON.parse(localStorage.getItem("user"));
   const loggedUser = authData?.user;
+
+  const {valueFromChild}=useSelector((state)=>state.child);
+   
+
+   const lightMode={
+    backgroundColor:"white",
+    color:"black",
+   
+   }
+   const darkMode={
+    backgroundColor:"black",
+    color:"gray",
+    }
 
  
   const auth = useSelector((state) => state.Auth);
@@ -109,7 +90,7 @@ const authData = JSON.parse(localStorage.getItem("user"));
   return (
     <Layout>
       {/* Header */}
-      <div className="sticky top-0 z-30 bg-card border-b border-border bg-white">
+      <div className="sticky top-0 z-30 bg-card border-b border-border bg-white" style={`${valueFromChild}`==='light'?darkMode:lightMode}>
         <div className="max-w-6xl mx-auto px-4 py-4">
           <h1 className="text-3xl font-bold gradient-text mb-4 bg-linear-to-r  from-purple-600 to-blue-500 w-25 bg-clip-text text-transparent">Explore</h1>
 

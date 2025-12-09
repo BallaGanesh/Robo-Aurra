@@ -5,6 +5,11 @@ import { TbMessageCircle } from "react-icons/tb";
 import { FiShare2 } from "react-icons/fi";
 import { FaRegBookmark } from "react-icons/fa";
 import axios from "axios";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import { useSelector } from "react-redux";
+
+dayjs.extend(relativeTime);
 
 const PostCard = ({
     id,
@@ -26,7 +31,11 @@ const PostCard = ({
   );
   const [commentText, setCommentText] = useState("");
   
+   const auth = useSelector((state) => state.Auth);
+  const user = auth?.user ?? null;
   
+  
+
 
   const handleLike = async () => {
     setIsLiked(!isLiked);
@@ -62,23 +71,24 @@ const PostCard = ({
       {/* Post header */}
       <div className="p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <img src={author?.avatar || "/default-avatar.png"} className="w-10 h-10 rounded-full" />
+          <img src={user?.profilePhoto
+                ? `data:image/jpeg;base64,${user.profilePhoto}`
+                : "/default-avatar.png"} className="w-10 h-10 rounded-full" />
 
           <div>
-            <p className="font-semibold">{author?.name || "Unknown User"}</p>
-            <p className="text-xs text-gray-500">@{author?.name || "unknown"}</p>
+            <p className="font-semibold">{user?.username || "Unknown User"}</p>
+            <p className="text-xs text-gray-500">@{user?.username || "unknown"}</p>
           </div>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
-          <span className="text-xs text-gray-500 text-muted-foreground">{timestamp}</span>
+          <span className="text-xs text-gray-500 text-muted-foreground">{dayjs(timestamp).fromNow()}</span>
           <button className="icon-button text-muted-foreground hover:text-primary p-2 rounded-lg">
             <FiMoreHorizontal className="text-2xl text-gray-500 rounded-full hover:rounded-full hover:bg-gray-200 p-0.5" />
           </button>
         </div>
       </div>
 
-        <span className="text-xs text-gray-500">{timestamp}</span>
-      
+        
 
       {/* Content */}
       <div className="px-4 pb-4">{content}</div>
@@ -149,7 +159,7 @@ const PostCard = ({
               <p className="text-gray-500">No comments yet.</p>
             )}
             </div>
-
+                 
           </div>
         </div>
       )}

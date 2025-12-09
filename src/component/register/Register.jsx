@@ -1,3 +1,5 @@
+
+
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../features/auth/AuthSlice";
@@ -16,7 +18,7 @@ import { LuX } from "react-icons/lu";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register = () => {
-  const nagivate = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.Auth);
 
@@ -38,10 +40,6 @@ const Register = () => {
     confirmPassword: "",
     profilePhoto: null,
   });
-
-  // ======================
-  // HANDLER FUNCTIONS
-  // ======================
 
   const handleBoxClick = () => {
     fileInputRef.current.click();
@@ -67,7 +65,10 @@ const Register = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "password") {
-      let { validateAll, getAllValidationErrorMessage } = validatePassword(value, 8);
+      let { validateAll, getAllValidationErrorMessage } = validatePassword(
+        value,
+        8
+      );
       validateAll()
         ? setErrorMessage("")
         : setErrorMessage(getAllValidationErrorMessage);
@@ -76,13 +77,14 @@ const Register = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ====== Password Handlers ======
   const handlePasswordChange = (e) => {
     const value = e.target.value;
     setFormData({ ...formData, password: value });
 
-    // password validation
-    const { validateAll, getAllValidationErrorMessage } = validatePassword(value, 8);
+    const { validateAll, getAllValidationErrorMessage } = validatePassword(
+      value,
+      8
+    );
     if (value.trim() === "") {
       setPasswordError("");
       setIsPasswordValid(null);
@@ -96,7 +98,9 @@ const Register = () => {
   };
 
   const handleConfirmPasswordChange = (e) => {
-    setFormData({...formData, confirmPassword: e.target.value,
+    setFormData({
+      ...formData,
+      confirmPassword: e.target.value,
     });
     setIsPasswordMatched(null);
     setConfirmPasswordError("");
@@ -120,7 +124,8 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let { username, email, password, confirmPassword, profilePhoto } = formData;
+    let { username, email, password, confirmPassword, profilePhoto } =
+      formData;
 
     if (!username || !email || !password || !confirmPassword || !profilePhoto) {
       toast.error("Please fill all the fields");
@@ -130,23 +135,19 @@ const Register = () => {
       toast.error("Passwords do not match");
       return;
     }
-    console.log(formData);
 
     (async () => {
       try {
-        // build FormData for multipart upload
         const payload = new FormData();
         payload.append("username", username);
         payload.append("email", email);
         payload.append("password", password);
         if (profilePhoto) payload.append("profilePhoto", profilePhoto);
 
-        // unwrap will throw on rejection and return payload on success
-        const data = await dispatch(registerUser(payload)).unwrap();
-        console.log("register result:", data);
+        await dispatch(registerUser(payload)).unwrap();
         toast.success("Registration successful!");
 
-        nagivate("/login");
+        navigate("/login");
       } catch (err) {
         toast.error(err || "Something went wrong during registration");
       }
@@ -154,242 +155,280 @@ const Register = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
-      <div className="hidden md:block w-full md:w-[65%] bg-linear-to-br from-cyan-400 to-purple-500 fixed left-0 h-full">
-        <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-cyan-400/10 to-purple-500/10 backdrop-blur-sm"></div>
-        <div className="relative z-10 flex flex-col justify-center items-center h-full p-5">
-          <img
-            src="logo.png"
-            alt="Logo"
-            className="w-35 h-35 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-100 lg:h-100 object-contain mx-auto"/>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-light text-white mb-4 transition-all duration-300">
-            Welcome To Our Platform
-          </h1>
+    <div className="min-h-screen bg-linear-to-br from-cyan-400 to-purple-600">
+      {/* TOP NAVIGATION */}
+      <div className="sticky top-0 z-40 bg-white/90 backdrop-blur-sm border-b border-gray-200">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-linear-to-r from-blue-500 to-purple-600">
+              <img src="/Only logo-aurra.png" alt="AURRA" />
+            </div>
+            <span className="hidden sm:inline text-xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              AURRA
+            </span>
+          </Link>
 
-          <p className="mt-4 text-lg sm:text-xl md:text-2xl text-white max-w-sm mx-auto leading-relaxed">
-            Join thousands of users who are already experiencing the future of productivity.
+          <p className="text-sm text-muted-foreground">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-blue-600 hover:underline font-semibold"
+            >
+              Sign In
+            </Link>
           </p>
         </div>
       </div>
 
-      <div className="flex flex-col w-full md:w-[35%] bg-white md:ml-[65%] min-h-screen h-full">
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col rounded-lg sm:rounded-2xl shadow-sm sm:shadow-blue-400 justify-start w-full max-w-[420px] mx-auto md:my-8 md:shadow-xl md:rounded-2xl p-4 sm:p-6 md:p-8 bg-white">
-          <h2 className="text-2xl sm:text-3xl font-light text-center mb-2 text-gray-800 transition-all duration-300">
-            Create your account
-          </h2>
-          <p className="text-center text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6">
-            Already have an account?{" "}
-            <Link 
-              to="/login" 
-              className="text-[#155DFC] hover:underline font-medium">
-              Sign in
-            </Link>
-          </p>
-
-          <div className="flex justify-center mb-4">
-            <div className="relative w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-300">
-              {preview ? (
-                <img src={preview} alt="Preview" className="object-cover w-full h-full" />
-              ) : (
-                <CgProfile className="text-gray-400" size={50} />
-              )}
-            </div>
-          </div>
-
-          <div className="space-y-4 sm:space-y-5">
-            <div className="space-y-1 sm:space-y-1.5">
-              <h3 className="flex gap-2 items-center text-sm sm:text-base">
-                <FiUser className="text-[#155DFC] text-lg sm:text-xl" />
-                Full Name
-              </h3>
-              <input
-                type="text"
-                name="username"
-                placeholder="e.g. John Doe"
-                value={formData.username}
-                onChange={handleChange}
-                required
-                className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all duration-300"/>
-            </div>
-
-            {/* Email ADDRESS */}
-            <div className="space-y-1 sm:space-y-1.5">
-              <h3 className="flex gap-2 items-center text-sm sm:text-base">
-                <MdOutlineEmail className="text-[#155DFC] text-lg sm:text-xl font-light" />
-                Email Address
-              </h3>
-              <input
-                type="email"
-                name="email"
-                placeholder="e.g. johndoe@example.com"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all duration-300"
-              />
-            </div>
-
-            {/* PASSWORD */}
-            <div className="space-y-1 sm:space-y-1.5 relative">
-              <h3 className="flex gap-2 items-center text-sm sm:text-base">
-                <GoLock className="text-[#155DFC] text-lg sm:text-xl" />
-                Password
-              </h3>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  placeholder="Enter a strong password"
-                  value={formData.password}
-                  onChange={handlePasswordChange}
-                  required
-                  className={`w-full px-3 sm:px-4 py-2 pr-10 text-sm sm:text-base border rounded-lg focus:outline-none focus:ring-2 transition-all duration-300
-                    ${
-                      isPasswordValid === null
-                        ? "border-gray-300 focus:ring-indigo-400" : isPasswordValid
-                        ? "border-green-500 focus:ring-green-400" : "border-red-500 focus:ring-red-400"
-                    }`}/>
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700">
-                  {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
-                </button>
-              </div>
-
-              {passwordError && (
-                <p className="text-xs sm:text-sm text-red-600 mt-1">*{passwordError}</p>
-              )}
-            </div>
-
-            {/* CONFIRM PASSWORD */}
-            <div className="space-y-1 sm:space-y-1.5 mt-2 relative">
-              <h3 className="flex gap-2 items-center text-sm sm:text-base">
-                <GoLock className="text-[#155DFC] text-lg sm:text-xl" />
-                Confirm Password
-              </h3>
-              <div className="relative">
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  name="confirmPassword"
-                  placeholder="Re-enter your password"
-                  value={formData.confirmPassword}
-                  onChange={handleConfirmPasswordChange}
-                  onBlur={handleConfirmPasswordBlur}
-                  required
-                  className={`w-full px-3 sm:px-4 py-2 pr-10 text-sm sm:text-base border rounded-lg focus:outline-none focus:ring-2 transition-all duration-300
-                    ${
-                      isPasswordMatched === false
-                        ? "border-red-500 focus:ring-red-400"
-                        : isPasswordMatched === true
-                        ? "border-green-500 focus:ring-green-400"
-                        : "border-gray-300 focus:ring-indigo-400"
-                    }`}/>
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700">
-                  {showConfirmPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
-                </button>
-              </div>
-
-              {confirmPasswordError && (
-                <p className="text-xs sm:text-sm text-red-600 mt-1">*{confirmPasswordError}</p>
-              )}
-            </div>
-
-            {/* UPLOAD PROFILE */}
-            <div className="w-full max-w-md mx-auto">
-              <label className="block text-gray-700 font-medium mb-2">Profile Image</label>
-
-              <div className="flex gap-4 items-center">
-                {/* Upload Box */}
-                <div
-                  onClick={handleBoxClick}
-                  className="flex flex-col justify-center items-center border-2 border-dashed border-blue-400 bg-white rounded-md w-90 h-32 cursor-pointer hover:bg-blue-50 transition-all duration-300">
-                  <LuUpload className="text-blue-500 text-2xl mb-1" />
-                  <p className="text-blue-500 text-sm font-medium">Click to change</p>
-                </div>
-
-                {/* Image Preview */}
-                {profileImage && (
-                  <div className="relative inline-block ">
-                    <img
-                      src={profileImage}
-                      alt="Uploaded"
-                      className="w-32 h-32 object-cover rounded-md border"/>
-                    <button
-                      onClick={handleRemoveImage}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600">
-                      <LuX size={18} />
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* Hidden File Input */}
-              <input
-                type="file"
-                accept="image/*"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                className="hidden"
-                name="profilePhoto"/>
-            </div>
-          </div>
-
-          <div className="flex items-center mt-4">
-            <input type="checkbox" required className="w-4 h-4 mr-2 accent-indigo-500" />
-            <p className="text-xs sm:text-sm text-gray-600">
-              I agree to the{" "}
-              <a href="#" className="text-indigo-600 hover:underline font-medium">Terms of Service</a>
-              {" "}and{" "}
-              <a href="#" className="text-indigo-600 hover:underline font-medium">Privacy Policy</a>.
+      {/* MAIN CONTENT */}
+      <div className="flex items-center justify-center min-h-[calc(100vh-80px)] px-4 py-8 md:py-12">
+        <div className="w-full max-w-md">
+          {/* HEADER */}
+          <div className="text-center mb-8">
+            <h1 className="text-4xl md:text-4xl font-medium text-white mb-2">
+              Create Account
+            </h1>
+            <p className="text-white/80">
+              Join our platform to continue
             </p>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full relative overflow-hidden bg-linear-to-r from-cyan-400 to-purple-500 text-white py-2.5 sm:py-3 mt-6 rounded-lg 
-              transition-all duration-300 ease-in-out transform text-sm sm:text-base font-medium
-              hover:scale-[1.02] hover:from-purple-500 hover:to-cyan-400 active:scale-95 focus:outline-none shadow-lg`}>
-            <span className="relative z-10 flex justify-center gap-3 items-center">
-              <span>{loading ? "Creating Account..." : "Create Account"}</span>
-              <GoArrowRight className="text-lg sm:text-xl" />
-            </span>
+          {/* FORM CARD (your form untouched inside) */}
+          <form
+            onSubmit={handleSubmit}
+            className="bg-white rounded-2xl shadow-lg p-6 md:p-8 space-y-6"
+          >
+            {/* ERROR */}
+            {error && (
+              <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
+                <p className="text-red-600 text-sm font-medium">{error}</p>
+              </div>
+            )}
 
-            <span className="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity"></span>
-          </button>
+            <div className="flex justify-center mb-4">
+              <div className="relative w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-300">
+                {preview ? (
+                  <img src={preview} alt="Preview" className="object-cover w-full h-full" />
+                ) : (
+                  <CgProfile className="text-gray-400" size={50} />
+                )}
+              </div>
+            </div>
 
-          <div className="flex items-center justify-center my-4 sm:my-5">
-            <div className="border-t flex-1"></div>
-            <p className="mx-4 text-xs sm:text-sm text-gray-500">Or continue with</p>
-            <div className="border-t flex-1"></div>
-          </div>
+            <div className="space-y-4 sm:space-y-5">
+              <div className="space-y-1 sm:space-y-1.5">
+                <h3 className="flex gap-2 items-center text-sm sm:text-base">
+                  <FiUser className="text-[#155DFC] text-lg sm:text-xl" />
+                  Full Name
+                </h3>
+                <input
+                  type="text"
+                  name="username"
+                  placeholder="e.g. John Doe"
+                  value={formData.username}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all duration-300"
+                />
+              </div>
 
-          <button
-            type="button"
-            className="flex items-center justify-center w-full border border-gray-300 py-2 sm:py-2.5 rounded-full hover:bg-gray-50 transition-colors duration-300 text-sm sm:text-base">
-            <img
-              src="https://www.svgrepo.com/show/355037/google.svg"
-              alt="Google"
-              className="w-4 h-4 sm:w-5 sm:h-5 mr-2"/>
-            Continue with Google
-          </button>
-          {error && (
-            <p className="text-center text-red-500 text-sm mt-2">{error}</p>
-          )}
-        </form>
+              <div className="space-y-1 sm:space-y-1.5">
+                <h3 className="flex gap-2 items-center text-sm sm:text-base">
+                  <MdOutlineEmail className="text-[#155DFC] text-lg sm:text-xl font-light" />
+                  Email Address
+                </h3>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="e.g. johndoe@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all duration-300"
+                />
+              </div>
 
-        <p className="text-[10px] sm:text-xs text-gray-500 mt-4 sm:mt-6 text-center">
-          © {new Date().getFullYear()} AURRA. All rights reserved.
-        </p>
+              <div className="space-y-1 sm:space-y-1.5 relative">
+                <h3 className="flex gap-2 items-center text-sm sm:text-base">
+                  <GoLock className="text-[#155DFC] text-lg sm:text-xl" />
+                  Password
+                </h3>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="Enter a strong password"
+                    value={formData.password}
+                    onChange={handlePasswordChange}
+                    required
+                    className={`w-full px-3 sm:px-4 py-2 pr-10 text-sm sm:text-base border rounded-lg focus:outline-none focus:ring-2 transition-all duration-300
+                      ${
+                        isPasswordValid === null
+                          ? "border-gray-300 focus:ring-indigo-400"
+                          : isPasswordValid
+                          ? "border-green-500 focus:ring-green-400"
+                          : "border-red-500 focus:ring-red-400"
+                      }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                  </button>
+                </div>
+
+                {passwordError && (
+                  <p className="text-xs sm:text-sm text-red-600 mt-1">*{passwordError}</p>
+                )}
+              </div>
+
+              <div className="space-y-1 sm:space-y-1.5 mt-2 relative">
+                <h3 className="flex gap-2 items-center text-sm sm:text-base">
+                  <GoLock className="text-[#155DFC] text-lg sm:text-xl" />
+                  Confirm Password
+                </h3>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    placeholder="Re-enter your password"
+                    value={formData.confirmPassword}
+                    onChange={handleConfirmPasswordChange}
+                    onBlur={handleConfirmPasswordBlur}
+                    required
+                    className={`w-full px-3 sm:px-4 py-2 pr-10 text-sm sm:text-base border rounded-lg focus:outline-none focus:ring-2 transition-all duration-300
+                      ${
+                        isPasswordMatched === false
+                          ? "border-red-500 focus:ring-red-400"
+                          : isPasswordMatched === true
+                          ? "border-green-500 focus:ring-green-400"
+                          : "border-gray-300 focus:ring-indigo-400"
+                      }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+                  >
+                    {showConfirmPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                  </button>
+                </div>
+
+                {confirmPasswordError && (
+                  <p className="text-xs sm:text-sm text-red-600 mt-1">*{confirmPasswordError}</p>
+                )}
+              </div>
+
+              {/* UPLOAD FILE */}
+              <div className="w-full max-w-md mx-auto">
+                <label className="block text-gray-700 font-medium mb-2">
+                  Profile Image
+                </label>
+
+                <div className="flex gap-4 items-center">
+                  <div
+                    onClick={handleBoxClick}
+                    className="flex flex-col justify-center items-center border-2 border-dashed border-blue-400 bg-white rounded-md w-90 h-32 cursor-pointer hover:bg-blue-50 transition-all duration-300"
+                  >
+                    <LuUpload className="text-blue-500 text-2xl mb-1" />
+                    <p className="text-blue-500 text-sm font-medium">
+                      Click to change
+                    </p>
+                  </div>
+
+                  {profileImage && (
+                    <div className="relative inline-block">
+                      <img
+                        src={profileImage}
+                        alt="Uploaded"
+                        className="w-32 h-32 object-cover rounded-md border"
+                      />
+                      <button
+                        onClick={handleRemoveImage}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                      >
+                        <LuX size={18} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  className="hidden"
+                  name="profilePhoto"
+                />
+              </div>
+            </div>
+
+            {/* CHECKBOX */}
+            <div className="flex items-center mt-4">
+              <input
+                type="checkbox"
+                required
+                className="w-4 h-4 mr-2 accent-indigo-500"
+              />
+              <p className="text-xs sm:text-sm text-gray-600">
+                I agree to the{" "}
+                <a href="#" className="text-indigo-600 hover:underline font-medium">
+                  Terms of Service
+                </a>{" "}
+                and{" "}
+                <a href="#" className="text-indigo-600 hover:underline font-medium">
+                  Privacy Policy
+                </a>
+                .
+              </p>
+            </div>
+
+            {/* BUTTON */}
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full relative overflow-hidden bg-linear-to-r from-cyan-400 to-purple-500 text-white py-2.5 sm:py-3 mt-6 rounded-lg transition-all duration-300 ease-in-out transform text-sm sm:text-base font-medium hover:scale-[1.02] hover:from-purple-500 hover:to-cyan-400 active:scale-95 focus:outline-none shadow-lg`}
+            >
+              <span className="relative z-10 flex justify-center gap-3 items-center">
+                <span>{loading ? "Creating Account..." : "Create Account"}</span>
+                <GoArrowRight className="text-lg sm:text-xl" />
+              </span>
+              <span className="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity"></span>
+            </button>
+
+            <div className="flex items-center justify-center my-4 sm:my-5">
+              <div className="border-t flex-1"></div>
+              <p className="mx-4 text-xs sm:text-sm text-gray-500">
+                Or continue with
+              </p>
+              <div className="border-t flex-1"></div>
+            </div>
+
+            <button
+              type="button"
+              className="flex items-center justify-center w-full border border-gray-300 py-2 sm:py-2.5 rounded-full hover:bg-gray-50 transition-colors duration-300 text-sm sm:text-base"
+            >
+              <img
+                src="https://www.svgrepo.com/show/355037/google.svg"
+                alt="Google"
+                className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
+              />
+              Continue with Google
+            </button>
+          </form>
+
+          {/* FOOTER */}
+          <p className="text-center text-xs text-white/70 mt-4">
+            © {new Date().getFullYear()} AURRA. All rights reserved.
+          </p>
+        </div>
       </div>
     </div>
   );
 };
 
 export default Register;
+
