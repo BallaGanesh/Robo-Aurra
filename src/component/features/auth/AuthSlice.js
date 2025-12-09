@@ -10,11 +10,15 @@ export const registerUser = createAsyncThunk(
   "api/users/register",
   async (formData, thunkAPI) => {
     try {
-      const response = await axios.post(
-        "https://robo-zv8u.onrender.com/api/users/register",
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      // Example endpoint — replace with your backend API
+      const response = await axios.post("https://robo-zv8u.onrender.com/api/users/register", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log(response);
+      // return only response.data so components receive a normalized payload
+      return response.data;
+    } catch (error) {
+      console.log(error);
 
       return response.data; // contains { user, token }
     } catch (error) {
@@ -29,12 +33,10 @@ export const loginUser = createAsyncThunk(
   "api/users/login",
   async (formData, thunkAPI) => {
     try {
-      const response = await axios.post(
-        "https://robo-zv8u.onrender.com/api/users/login",
-        formData
-      );
-
-      return response.data; // contains { user, token }
+      // Example endpoint — replace with your backend API
+      const response = await axios.post("https://robo-zv8u.onrender.com/api/users/login", formData);
+      console.log(response);
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Login failed"

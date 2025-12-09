@@ -4,6 +4,23 @@ import Layout from "../Layout";
 
 import { IoCloseSharp } from "react-icons/io5";
 import { GoSearch } from "react-icons/go";
+import { useSelector } from "react-redux";
+
+import { useDispatch } from "react-redux";
+import FollowModal from "./FollowModal";
+import {
+  sendFollowRequest,
+  acceptFollowRequest,
+  rejectFollowRequest,
+} from "../../features/followSlice";
+// import { socket } from "../../../Socket/socket";
+import { useContext } from "react";
+import { SocketProvider } from "./../../../Socket/SocketProvider";
+import { SocketContext } from "./../../../Socket/SocketProvider";
+
+
+
+
 import { IoIosList } from "react-icons/io";
 import { BsGrid } from "react-icons/bs";
 import { FiMessageSquare } from "react-icons/fi";
@@ -18,11 +35,119 @@ const Profile = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
 
+  // ⭐ NEW STATE FOR FOLLOW REQUEST MODAL
+  const [showFollowModal, setShowFollowModal] = useState(false);
+  const [followUsername, setFollowUsername] = useState("");
+  const { socket } = useContext(SocketContext);
+
   const [editForm, setEditForm] = useState({
     name: "",
     username: "",
     bio: "Passionate about design, code, and coffee ☕ | Building beautiful digital experiences",
   });
+
+  const dispatch = useDispatch();
+
+  // ⭐ NEW FUNCTION TO HANDLE SEND REQUEST
+  // const handleSendRequest = async () => {
+  //   if (!followUsername.trim()) {
+  //     alert("Please enter a username");
+  //     return;
+  //   }
+
+  //   try {
+  //     await dispatch(sendFollowRequest(followUsername)).unwrap();
+  //     alert("Follow request sent!");
+
+  //     setFollowUsername("");        
+  //     setShowFollowModal(false);    
+  //   } catch (err) {
+  //     alert(err || "Failed to send follow request.");
+  //   }
+  // };
+
+  // ----------
+  // working version
+  // -----------
+//  const handleSendRequest = async () => {
+//   if (!followUsername.trim()) {
+//     alert("Please enter a username");
+//     return;
+//   }
+
+//   try {
+//     // 1️⃣ Send API request
+//     await dispatch(sendFollowRequest(followUsername)).unwrap();
+
+//     // 2️⃣ Emit realtime notification
+//     socket.emit("send--followRequestReceived", {
+//       fromUser: loggedUser?.username,   // who is sending
+//       toUser: followUsername            // who will receive
+//     });
+
+//     alert("Follow request sent!");
+
+//     setFollowUsername("");
+//     setShowFollowModal(false);
+
+//   } catch (err) {
+//     alert(err || "Failed to send follow request.");
+//   }
+// };
+
+// const handleSendRequest = async () => {
+//   if (!followUsername.trim()) {
+//     alert("Please enter a username");
+//     return;
+//   }
+
+//   try {
+//     await dispatch(sendFollowRequest(followUsername)).unwrap();
+
+//     alert("Follow request sent!");
+
+//     setFollowUsername("");
+//     setShowFollowModal(false);
+//   } catch (err) {
+//     alert(err || "Failed to send follow request.");
+//   }
+// };
+
+const handleSendRequest = async () => {
+  if (!followUsername.trim()) {
+    alert("Please enter a username");
+    return;
+  }
+
+  try {
+    // Step 1: API call
+    await dispatch(sendFollowRequest(followUsername)).unwrap();
+
+    const socket = getSocket();
+
+    // Step 2: Emit event to backend for real-time logic
+    if (socket && socket.connected) {
+      socket.emit("sendFollowRequest", {
+        from: loggedUser.username,
+        fromId: loggedUser._id,
+        toUsername: followUsername
+      });
+
+      console.log("📤 Socket event sent: sendFollowRequest");
+    }
+
+    alert("Follow request sent!");
+    setFollowUsername("");
+    setShowFollowModal(false);
+
+  } catch (err) {
+    // alert(err || "Failed to send follow request.");
+    console.log(err);
+    
+  }
+};
+
+
 
   const followers = [
     {
@@ -60,6 +185,7 @@ const Profile = () => {
   ];
 
   const { posts } = useSelector((state) => state.articles);
+
   const auth = useSelector((state) => state.Auth);
   const user = auth?.user ?? null;
 
@@ -101,6 +227,36 @@ const Profile = () => {
               <IoCloseSharp size={24} />
             </button>
           </div>
+
+{/* FOLLOW REQUEST INPUT + BUTTON */}
+<div className="p-4 border-b border-border bg-white">
+
+  <input
+    type="text"
+    placeholder="Enter username"
+    value={followUsername}
+    onChange={(e) => setFollowUsername(e.target.value)}
+    className="w-full p-3 bg-gray-200 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 mb-3"
+  />
+
+  <button
+    onClick={() => {
+      if (!followUsername.trim()) {
+        alert("Enter username first");
+        return;
+      }
+
+      dispatch(sendFollowRequest(followUsername));
+      setFollowUsername("");
+      setShowFollowerModal(false);
+    }}
+    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 font-semibold"
+  >
+    Send Follow Request
+  </button>
+
+</div>
+
 
           {/* Search */}
           <div className="p-4 border-b">
@@ -191,6 +347,15 @@ const Profile = () => {
                   Edit Profile
                 </button>
               </div>
+
+{/* follow button */}
+<button
+  onClick={() => setShowFollowModal(true)}
+  className="rounded-full font-semibold bg-linear-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg px-6"
+>
+  Follow
+</button>
+
 
               {/* Bio */}
               <p className="text-gray-700 mb-4 text-sm md:text-base wrap-break-words">
@@ -409,8 +574,19 @@ const Profile = () => {
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+     </div> 
+     {/* follow modal */}
+     {showFollowModal && (
+  <FollowModal
+    targetUsername={followUsername}
+    setTargetUsername={setFollowUsername}
+    onClose={() => setShowFollowModal(false)}
+    onSend={handleSendRequest}
+  />
+)}
+
     </Layout>
   );
 };
