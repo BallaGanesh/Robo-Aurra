@@ -1,155 +1,3 @@
-
-
-//           <div className="min-w-0 flex-1">
-//             <p className="font-semibold text-foreground text-sm sm:text-base truncate">
-//               {author?.name || "Unknown User"}
-//             </p>
-//             <p className=" text-gray-500 text-xs sm:text-sm text-muted-foreground truncate">
-//               @{author?.name || "unknown"}
-//             </p>
-//           </div>
-//         </div>
-//         <div className="flex items-center gap-1 sm:gap-2">
-//           <span className="text-xs text-gray-500 text-muted-foreground">
-//             {timestamp}
-//           </span>
-//           <button className="icon-button text-muted-foreground hover:text-primary p-2 rounded-lg">
-//             <FiMoreHorizontal
-//               className="text-2xl text-gray-500 rounded-full hover:rounded-full hover:bg-gray-200 p-0.5"
-//               onClick={handleRemove}
-//             />
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Post Content */}
-//       <div className="px-3 sm:px-4 pb-3 sm:pb-4">
-//         <p className="text-foreground leading-relaxed tracking-wide mb-3 text-md sm:text-base">
-//           {content}
-//         </p>
-//       </div>
-
-//       {/* Action Buttons */}
-//       <div className="px-2 sm:px-4 py-2 sm:py-3 border-t border-gray-300 border-border flex items-center justify-around gap-1 sm:gap-2">
-//         <button
-//           onClick={handleLike}
-//           className="flex items-center justify-center flex-1"
-//         >
-//           <div className=" group flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 rounded-lg text-l sm:text-sm text-gray-500 hover:bg-gray-100 transition-colors">
-//             {isLiked ? (
-//               <FaHeart className="text-xl text-red-500" />
-//             ) : (
-//               <FaRegHeart className="text-xl group-hover:text-red-500" />
-//             )}
-//             <span className="hidden sm:inline group-hover:text-red-500">
-//               {currentLikes}
-//             </span>
-//             <span className="sm:hidden group-hover:text-red-500">
-//               {currentLikes}
-//             </span>
-//           </div>
-//         </button>
-//         <button
-//           onClick={() => setShowComments(true)}
-//           className="flex items-center justify-center flex-1"
-//         >
-//           <div className=" group flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 rounded-lg text-l sm:text-sm text-gray-500 hover:bg-gray-100 transition-colors">
-//             <TbMessageCircle className="text-xl group-hover:text-blue-500" />
-//             <span className="hidden sm:inline group-hover:text-blue-500">
-//               {comments}
-//             </span>
-//             <span className="sm:hidden group-hover:text-blue-500">
-//               {comments}
-//             </span>
-//           </div>
-//         </button>
-//         <div className="px-4 pb-3">
-//           <div className="flex items-center gap-2"></div>
-//         </div>
-
-//         <button className="flex items-center justify-center flex-1">
-//           <div className=" group flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 rounded-lg text-l sm:text-sm text-gray-500  hover:bg-gray-100 transition-colors ">
-//             <FiShare2 className="text-xl group-hover:text-green-500" />
-//             <span className="hidden sm:inline group-hover:text-green-500">
-//               {shares}
-//             </span>
-//             <span className="sm:hidden group-hover:text-green-500">
-//               {shares}
-//             </span>
-//           </div>
-//         </button>
-
-//         <button
-//           onClick={() => setIsSaved(!isSaved)}
-//           className="flex items-center justify-center flex-1"
-//         >
-//           <div className=" group flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 rounded-lg text-l sm:text-sm text-gray-500  hover:bg-gray-100 transition-colors ">
-//             <FaRegBookmark className="text-xl group-hover:text-amber-500" />
-//             <span className="hidden sm:inline group-hover:text-amber-500">
-//               Save
-//             </span>
-//             {/* <span className="sm:hidden group-hover:text-amber-500">Save</span> */}
-//           </div>
-//         </button>
-//       </div>
-//       {showComments && (
-//         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-//           <div className="bg-white w-full max-w-md p-4 rounded-xl shadow-lg">
-//             {/* Close Button */}
-//             <button
-//               onClick={() => setShowComments(false)}
-//               className="text-gray-500 float-right text-xl"
-//             >
-//               ✖
-//             </button>
-
-//             <h3 className="text-lg font-semibold mb-3">Comments</h3>
-
-//             {/* Post content */}
-//             <p className="text-sm text-gray-700 mb-4">{content}</p>
-
-//             {/* Input Section */}
-//             <div className="flex gap-2 mb-4">
-//               <input
-//                 type="text"
-//                 value={commentText}
-//                 onChange={(e) => setCommentText(e.target.value)}
-//                 placeholder="Write a comment..."
-//                 className="flex-1 border px-3 py-2 rounded-lg"
-//               />
-
-//               <button
-//                 onClick={() => handleAddComment(id)}
-//                 className="bg-blue-500 text-white px-3 py-2 rounded-lg"
-//               >
-//                 Post
-//               </button>
-//             </div>
-
-//             {/* Comments List */}
-//             <div className="max-h-48 overflow-y-auto pr-2">
-//               {commentsList?.length > 0 ? (
-//                 commentsList.map((c, index) => (
-//                   <p key={index} className="border-b py-2 text-gray-800">
-//                     {c.text}
-//                   </p>
-//                 ))
-//               ) : (
-//                 <p className="text-gray-500">No comments yet.</p>
-//               )}
-//             </div>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default PostCard;
-
-
-
-
 import { useState } from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { FaRegHeart, FaHeart } from "react-icons/fa6";
@@ -193,7 +41,7 @@ const PostCard = ({
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        `https://robo-1-qqhu.onrender.com/api/articles/${postId}/comment`,
+        `https://robo-zv8u.onrender.com/api/articles/${postId}/comment`,
         { text: commentText },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -291,13 +139,15 @@ const PostCard = ({
             </div>
 
             <div>
-              {commentsList.length > 0 ? (
-                commentsList.map((c) => (
-                  <p key={c._id} className="border-b py-2">{c.text}</p>
-                ))
-              ) : (
-                <p className="text-gray-500">No comments yet.</p>
-              )}
+              {Array.isArray(commentsList) && commentsList.length > 0 ? (
+              commentsList.map((c, index) => (
+                <p key={index} className="border-b py-2 text-gray-800">
+                  {c?.text}
+                </p>
+              ))
+            ) : (
+              <p className="text-gray-500">No comments yet.</p>
+            )}
             </div>
 
           </div>

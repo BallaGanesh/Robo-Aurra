@@ -6,6 +6,21 @@ import { IoCloseSharp } from "react-icons/io5";
 import { GoSearch } from "react-icons/go";
 import { useSelector } from "react-redux";
 
+import { useDispatch } from "react-redux";
+import FollowModal from "./FollowModal";
+import {
+  sendFollowRequest,
+  acceptFollowRequest,
+  rejectFollowRequest,
+} from "../../features/followSlice";
+// import { socket } from "../../../Socket/socket";
+import { useContext } from "react";
+import { SocketProvider } from "./../../../Socket/SocketProvider";
+import { SocketContext } from "./../../../Socket/SocketProvider";
+
+
+
+
 
 
 const Profile = () => {
@@ -15,23 +30,120 @@ const Profile = () => {
   const [showFollowingModal, setShowFollowingModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
+
+  // ⭐ NEW STATE FOR FOLLOW REQUEST MODAL
+  const [showFollowModal, setShowFollowModal] = useState(false);
+  const [followUsername, setFollowUsername] = useState("");
+  const { socket } = useContext(SocketContext);
+
   const [editForm, setEditForm] = useState({
     name: "You",
     username: "your_username",
     bio: "Passionate about design, code, and coffee ☕ | Building beautiful digital experiences",
   });
 
-  // const user = {
-  //   id: "1",
-  //   name: "You",
-  //   username: "your_username",
-  //   avatar:
-  //     "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=400&fit=crop",
-  //   bio: "Passionate about design, code, and coffee ☕ | Building beautiful digital experiences",
-  //   posts: 24,
-  //   followers: 1543,
-  //   following: 342,
+  const dispatch = useDispatch();
+
+  // ⭐ NEW FUNCTION TO HANDLE SEND REQUEST
+  // const handleSendRequest = async () => {
+  //   if (!followUsername.trim()) {
+  //     alert("Please enter a username");
+  //     return;
+  //   }
+
+  //   try {
+  //     await dispatch(sendFollowRequest(followUsername)).unwrap();
+  //     alert("Follow request sent!");
+
+  //     setFollowUsername("");        
+  //     setShowFollowModal(false);    
+  //   } catch (err) {
+  //     alert(err || "Failed to send follow request.");
+  //   }
   // };
+
+  // ----------
+  // working version
+  // -----------
+//  const handleSendRequest = async () => {
+//   if (!followUsername.trim()) {
+//     alert("Please enter a username");
+//     return;
+//   }
+
+//   try {
+//     // 1️⃣ Send API request
+//     await dispatch(sendFollowRequest(followUsername)).unwrap();
+
+//     // 2️⃣ Emit realtime notification
+//     socket.emit("send--followRequestReceived", {
+//       fromUser: loggedUser?.username,   // who is sending
+//       toUser: followUsername            // who will receive
+//     });
+
+//     alert("Follow request sent!");
+
+//     setFollowUsername("");
+//     setShowFollowModal(false);
+
+//   } catch (err) {
+//     alert(err || "Failed to send follow request.");
+//   }
+// };
+
+// const handleSendRequest = async () => {
+//   if (!followUsername.trim()) {
+//     alert("Please enter a username");
+//     return;
+//   }
+
+//   try {
+//     await dispatch(sendFollowRequest(followUsername)).unwrap();
+
+//     alert("Follow request sent!");
+
+//     setFollowUsername("");
+//     setShowFollowModal(false);
+//   } catch (err) {
+//     alert(err || "Failed to send follow request.");
+//   }
+// };
+
+const handleSendRequest = async () => {
+  if (!followUsername.trim()) {
+    alert("Please enter a username");
+    return;
+  }
+
+  try {
+    // Step 1: API call
+    await dispatch(sendFollowRequest(followUsername)).unwrap();
+
+    const socket = getSocket();
+
+    // Step 2: Emit event to backend for real-time logic
+    if (socket && socket.connected) {
+      socket.emit("sendFollowRequest", {
+        from: loggedUser.username,
+        fromId: loggedUser._id,
+        toUsername: followUsername
+      });
+
+      console.log("📤 Socket event sent: sendFollowRequest");
+    }
+
+    alert("Follow request sent!");
+    setFollowUsername("");
+    setShowFollowModal(false);
+
+  } catch (err) {
+    // alert(err || "Failed to send follow request.");
+    console.log(err);
+    
+  }
+};
+
+
 
   const followers = [
     {
@@ -64,50 +176,14 @@ const Profile = () => {
     },
   ];
 
-  // const posts = [
-  //   {
-  //     id: "1",
-  //     author: {
-  //       name: user.name,
-  //       username: user.username,
-  //       avatar: user.avatar,
-  //     },
-  //     content: "Just finished an amazing hiking trip! The views were absolutely stunning. Nothing beats nature and fresh air 🏔️✨",
-  //     timestamp: "2 hours ago",
-  //     likes: 324,
-  //     comments: 42,
-  //     shares: 18,
-  //   },
-  //   {
-  //     id: "2",
-  //     author: {
-  //       name: user.name,
-  //       username: user.username,
-  //       avatar: user.avatar,
-  //     },
-  //     content: "Coffee and code - the perfect combination for a productive morning 💻☕",
-  //     timestamp: "6 hours ago",
-  //     likes: 892,
-  //     comments: 124,
-  //     shares: 56,
-  //   },
-  // ];
-  const {posts}= useSelector((state)=>state.articles);
-  // console.log(posts);
-  
- const auth = useSelector((state) => state.Auth);
+  const { posts } = useSelector((state) => state.articles);
 
- 
+  const auth = useSelector((state) => state.Auth);
   const user = auth?.user ?? null;
-  //console.log(user);
-  
 
   const authData = JSON.parse(localStorage.getItem("user"));
   const loggedUser = authData?.user;
-  // console.log(loggedUser);
 
-
-  
   const filteredFollowers = followers.filter(
     (f) =>
       f.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -128,6 +204,7 @@ const Profile = () => {
         <div
           className="bg-card rounded-2xl max-w-md w-full max-h-[80vh] overflow-hidden animate-scale-in flex flex-col"
           onClick={(e) => e.stopPropagation()}>
+          
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-border sticky top-0 bg-card z-10 bg-white">
             <h2 className="text-xl font-bold">{title}</h2>
@@ -140,6 +217,36 @@ const Profile = () => {
               <IoCloseSharp size={24} />
             </button>
           </div>
+
+{/* FOLLOW REQUEST INPUT + BUTTON */}
+<div className="p-4 border-b border-border bg-white">
+
+  <input
+    type="text"
+    placeholder="Enter username"
+    value={followUsername}
+    onChange={(e) => setFollowUsername(e.target.value)}
+    className="w-full p-3 bg-gray-200 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 mb-3"
+  />
+
+  <button
+    onClick={() => {
+      if (!followUsername.trim()) {
+        alert("Enter username first");
+        return;
+      }
+
+      dispatch(sendFollowRequest(followUsername));
+      setFollowUsername("");
+      setShowFollowerModal(false);
+    }}
+    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 font-semibold"
+  >
+    Send Follow Request
+  </button>
+
+</div>
+
 
           {/* Search */}
           <div className="p-4 border-b border-border bg-white">
@@ -223,6 +330,15 @@ const Profile = () => {
                   </button>
                 </div>
               </div>
+
+{/* follow button */}
+<button
+  onClick={() => setShowFollowModal(true)}
+  className="rounded-full font-semibold bg-linear-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg px-6"
+>
+  Follow
+</button>
+
 
               {/* Bio */}
               <p className="text-foreground mb-4">{user.bio}</p>
@@ -426,6 +542,16 @@ const Profile = () => {
         </div>
       )}
      </div> 
+     {/* follow modal */}
+     {showFollowModal && (
+  <FollowModal
+    targetUsername={followUsername}
+    setTargetUsername={setFollowUsername}
+    onClose={() => setShowFollowModal(false)}
+    onSend={handleSendRequest}
+  />
+)}
+
     </Layout>
   );
 };

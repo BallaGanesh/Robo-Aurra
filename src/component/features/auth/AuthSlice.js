@@ -10,7 +10,7 @@ export const registerUser = createAsyncThunk(
   async (formData, thunkAPI) => {
     try {
       // Example endpoint — replace with your backend API
-      const response = await axios.post("https://robo-1-qqhu.onrender.com/api/users/register", formData, {
+      const response = await axios.post("https://robo-zv8u.onrender.com/api/users/register", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log(response);
@@ -31,7 +31,7 @@ export const loginUser = createAsyncThunk(
   async (formData, thunkAPI) => {
     try {
       // Example endpoint — replace with your backend API
-      const response = await axios.post("https://robo-1-qqhu.onrender.com/api/users/login", formData);
+      const response = await axios.post("https://robo-zv8u.onrender.com/api/users/login", formData);
       console.log(response);
       return response.data;
     } catch (error) {
