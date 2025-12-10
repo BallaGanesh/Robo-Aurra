@@ -12,16 +12,14 @@ import { useSelector } from "react-redux";
 dayjs.extend(relativeTime);
 
 const PostCard = ({
-    id,
-    author,
-    content,
-    timestamp,
-    likes,
-    comments,
-    shares,
+  id,
+  author,
+  content,
+  timestamp,
+  likes,
+  comments,
+  shares,
 }) => {
- 
-
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [currentLikes, setCurrentLikes] = useState(likes);
@@ -30,12 +28,9 @@ const PostCard = ({
     Array.isArray(comments) ? comments : []
   );
   const [commentText, setCommentText] = useState("");
-  
-   const auth = useSelector((state) => state.Auth);
-  const user = auth?.user ?? null;
-  
-  
 
+  const auth = useSelector((state) => state.Auth);
+  const user = auth?.user ?? null;
 
   const handleLike = async () => {
     setIsLiked(!isLiked);
@@ -55,56 +50,64 @@ const PostCard = ({
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // FIX 3 — use backend response
       setCommentsList((prev) => [...prev, response.data.comment]);
       setCommentText("");
-
     } catch (error) {
       console.error("Comment error:", error);
     }
   };
 
   return (
-    // <div className="social-card bg-card rounded-2xl border shadow-md hover:shadow-xl transition-all">
     <div className="social-card bg-card rounded-2xl border border-gray-300 border-border shadow-md hover:shadow-xl transition-all overflow-hidden">
-
       {/* Post header */}
       <div className="p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <img src={user?.profilePhoto
+          <img
+            src={
+              user?.profilePhoto
                 ? `data:image/jpeg;base64,${user.profilePhoto}`
-                : "/default-avatar.png"} className="w-10 h-10 rounded-full" />
+                : "/default-avatar.png"
+            }
+            className="w-10 h-10 rounded-full"
+          />
 
           <div>
             <p className="font-semibold">{user?.username || "Unknown User"}</p>
-            <p className="text-xs text-gray-500">@{user?.username || "unknown"}</p>
+            <p className="text-xs text-gray-500">
+              @{user?.username || "unknown"}
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
-          <span className="text-xs text-gray-500 text-muted-foreground">{dayjs(timestamp).fromNow()}</span>
+          <span className="text-xs text-gray-500 text-muted-foreground">
+            {dayjs(timestamp).fromNow()}
+          </span>
           <button className="icon-button text-muted-foreground hover:text-primary p-2 rounded-lg">
             <FiMoreHorizontal className="text-2xl text-gray-500 rounded-full hover:rounded-full hover:bg-gray-200 p-0.5" />
           </button>
         </div>
       </div>
 
-        
-
       {/* Content */}
       <div className="px-4 pb-4">{content}</div>
 
       {/* Actions */}
-      {/* <div className="px-4 py-3 border-t flex justify-around"> */}
-      <div className="px-2 sm:px-4 py-2 sm:py-3 border-t border-gray-300 border-border flex  items-center justify-around gap-1 sm:gap-2">
-
+      <div className="px-2 sm:px-4 py-2 sm:py-3 border-t border-gray-300 border-border flex items-center justify-around gap-1 sm:gap-2">
         {/* LIKE */}
         <button onClick={handleLike} className="flex gap-2">
-          {isLiked ? <FaHeart className="text-red-500 text-xl" /> : <FaRegHeart className="text-xl" />}
+          {isLiked ? (
+            <FaHeart className="text-red-500 text-xl" />
+          ) : (
+            <FaRegHeart className="text-xl" />
+          )}
           <span>{currentLikes}</span>
         </button>
 
         {/* COMMENTS */}
-        <button onClick={() => setShowComments(true)} className="flex gap-2">
+        <button
+          onClick={() => setShowComments(!showComments)}
+          className="flex gap-2"
+        >
           <TbMessageCircle className="text-xl" />
           <span>
             {Array.isArray(commentsList) ? commentsList.length : commentsList}
@@ -123,47 +126,48 @@ const PostCard = ({
         </button>
       </div>
 
-      {/* COMMENT MODAL */}
+      {/* ✅ INLINE ATTACHED COMMENT SECTION (FIXED) */}
       {showComments && (
-        <div className="fixed inset-0 backdrop-blur-md bg-black/20 flex justify-center items-center z-50">
+        <div className="border-t border-gray-200 px-4 py-3 bg-gray-50">
+          {/* Add Comment */}
+          <div className="flex gap-2 mb-3">
+            <input
+              className="border border-gray-300 rounded-lg p-2 flex-1 text-sm focus:outline-none"
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              placeholder="Add a comment..."
+            />
+            <button
+              className="bg-blue-500 text-white px-4 rounded-lg text-sm"
+              onClick={() => handleAddComment(id)}
+            >
+              Post
+            </button>
+            <button
+              onClick={() => setShowComments(false)}
+              className="text-gray-500 text-sm px-2"
+            >
+              ✖
+            </button>
+          </div>
 
-          <div className="bg-white p-4 rounded-lg w-full max-w-md">
-
-            <button onClick={() => setShowComments(false)} className="float-right text-xl">✖</button>
-
-            <h3 className="text-lg font-semibold mb-4">Comments</h3>
-
-            <div className="flex mb-4">
-              <input
-                className="border p-2 flex-1"
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-                placeholder="Add a comment..."
-              />
-              <button
-                className="bg-blue-500 text-white px-3 py-2 ml-2 rounded"
-                onClick={() => handleAddComment(id)}
-              >
-                Post
-              </button>
-            </div>
-
-            <div>
-              {Array.isArray(commentsList) && commentsList.length > 0 ? (
+          {/* Comment List */}
+          <div className="space-y-2 max-h-40 overflow-y-auto">
+            {Array.isArray(commentsList) && commentsList.length > 0 ? (
               commentsList.map((c, index) => (
-                <p key={index} className="border-b py-2 text-gray-800">
+                <div
+                  key={index}
+                  className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800"
+                >
                   {c?.text}
-                </p>
+                </div>
               ))
             ) : (
-              <p className="text-gray-500">No comments yet.</p>
+              <p className="text-gray-500 text-sm">No comments yet.</p>
             )}
-            </div>
-                 
           </div>
         </div>
       )}
-
     </div>
   );
 };
