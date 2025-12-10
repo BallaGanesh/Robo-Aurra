@@ -3,7 +3,11 @@
 * {
     scrollbar-width: thin;
     scrollbar-color: rgba(100,100,100,0.4) transparent;
-} 
+}
+
+::-webkit-scrollbar{
+  display: none;
+}
 
 body {
   font-family: "Source Sans Pro", sans-serif;

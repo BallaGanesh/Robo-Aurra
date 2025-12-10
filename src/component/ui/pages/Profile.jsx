@@ -24,8 +24,8 @@ import { SocketContext } from "./../../../Socket/SocketProvider";
 import { IoIosList } from "react-icons/io";
 import { BsGrid } from "react-icons/bs";
 import { FiMessageSquare } from "react-icons/fi";
+import { getSocket } from "../../../Socket/socket";
 
-import { useSelector } from "react-redux";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("posts");
@@ -49,70 +49,7 @@ const Profile = () => {
 
   const dispatch = useDispatch();
 
-  // ⭐ NEW FUNCTION TO HANDLE SEND REQUEST
-  // const handleSendRequest = async () => {
-  //   if (!followUsername.trim()) {
-  //     alert("Please enter a username");
-  //     return;
-  //   }
-
-  //   try {
-  //     await dispatch(sendFollowRequest(followUsername)).unwrap();
-  //     alert("Follow request sent!");
-
-  //     setFollowUsername("");        
-  //     setShowFollowModal(false);    
-  //   } catch (err) {
-  //     alert(err || "Failed to send follow request.");
-  //   }
-  // };
-
-  // ----------
-  // working version
-  // -----------
-//  const handleSendRequest = async () => {
-//   if (!followUsername.trim()) {
-//     alert("Please enter a username");
-//     return;
-//   }
-
-//   try {
-//     // 1️⃣ Send API request
-//     await dispatch(sendFollowRequest(followUsername)).unwrap();
-
-//     // 2️⃣ Emit realtime notification
-//     socket.emit("send--followRequestReceived", {
-//       fromUser: loggedUser?.username,   // who is sending
-//       toUser: followUsername            // who will receive
-//     });
-
-//     alert("Follow request sent!");
-
-//     setFollowUsername("");
-//     setShowFollowModal(false);
-
-//   } catch (err) {
-//     alert(err || "Failed to send follow request.");
-//   }
-// };
-
-// const handleSendRequest = async () => {
-//   if (!followUsername.trim()) {
-//     alert("Please enter a username");
-//     return;
-//   }
-
-//   try {
-//     await dispatch(sendFollowRequest(followUsername)).unwrap();
-
-//     alert("Follow request sent!");
-
-//     setFollowUsername("");
-//     setShowFollowModal(false);
-//   } catch (err) {
-//     alert(err || "Failed to send follow request.");
-//   }
-// };
+  
 
 const handleSendRequest = async () => {
   if (!followUsername.trim()) {

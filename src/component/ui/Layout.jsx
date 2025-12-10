@@ -60,7 +60,7 @@ const Layout = ({ children }) => {
             <div className="w-12 h-12  rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300">
               <img src="/Only logo-aurra.png"/>
             </div>
-            <span className="text-3xl font-bold gradient-text hidden lg:inline bg-linear-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-3xl font-bold gradient-text hidden md:inline bg-linear-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
               AURRA
             </span>
           </Link>
@@ -100,7 +100,7 @@ const Layout = ({ children }) => {
                 onClick={() => profilePhoto && setOpenPreview(true)}/>
              
             </div>
-            <div className="hidden lg:block">
+            <div className="hidden md:block">
               <p className="text-sm font-semibold">{username ?? 'Guest'}</p>
               <p className="text-xs text-muted-foreground">{email ?? ''}</p>
             </div>
