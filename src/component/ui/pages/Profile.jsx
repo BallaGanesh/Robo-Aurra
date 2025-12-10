@@ -34,6 +34,7 @@ const Profile = () => {
   const [showFollowingModal, setShowFollowingModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
+  const [openPreview, setOpenPreview] = useState(false)
 
   // ⭐ NEW STATE FOR FOLLOW REQUEST MODAL
   const [showFollowModal, setShowFollowModal] = useState(false);
@@ -208,12 +209,10 @@ const handleSendRequest = async () => {
         onClick={() => {
           setShowFollowerModal(false);
           setShowFollowingModal(false);
-        }}
-      >
+        }}>
         <div
           className="bg-white rounded-2xl w-full max-w-md max-h-[85vh] overflow-hidden animate-scale-in flex flex-col"
-          onClick={(e) => e.stopPropagation()}
-        >
+          onClick={(e) => e.stopPropagation()}>
           {/* Header */}
           <div className="flex items-center justify-between p-4 md:p-6 border-b">
             <h2 className="text-lg md:text-xl font-bold">{title}</h2>
@@ -222,8 +221,7 @@ const handleSendRequest = async () => {
                 setShowFollowerModal(false);
                 setShowFollowingModal(false);
               }}
-              className="text-muted-foreground"
-            >
+              className="text-muted-foreground">
               <IoCloseSharp size={24} />
             </button>
           </div>
@@ -270,8 +268,7 @@ const handleSendRequest = async () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search..."
-                className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-100 border focus:ring-2 focus:ring-primary"
-              />
+                className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-100 border focus:ring-2 focus:ring-primary"/>
             </div>
           </div>
 
@@ -280,13 +277,11 @@ const handleSendRequest = async () => {
             {filteredFollowers.map((follower) => (
               <div
                 key={follower.id}
-                className="p-4 border-b flex items-center justify-between hover:bg-gray-100 transition"
-              >
+                className="p-4 border-b flex items-center justify-between hover:bg-gray-100 transition">
                 <div className="flex items-center gap-3">
                   <img
                     src={follower.avatar}
-                    className="w-10 h-10 rounded-full object-cover"
-                  />
+                    className="w-10 h-10 rounded-full object-cover"/>
                   <div>
                     <p className="font-semibold text-sm">{follower.name}</p>
                     <p className="text-xs text-gray-500">
@@ -300,8 +295,7 @@ const handleSendRequest = async () => {
                     follower.isFollowing
                       ? "bg-gray-200 text-gray-700"
                       : "bg-linear-to-r from-blue-500 to-purple-600 text-white"
-                  }`}
-                >
+                  }`}>
                   {follower.isFollowing ? "Following" : "Follow"}
                 </button>
               </div>
@@ -314,9 +308,9 @@ const handleSendRequest = async () => {
 
   return (
     <Layout>
-      <div className="w-full max-w-4xl mx-auto px-4 py-6 md:py-10">
+      <div className = "max-w-6xl mx-auto  px-4 py-6 md:py-10">
         {/* Profile Header */}
-        <div className="social-card p-5 md:p-8 mb-6 rounded-2xl shadow">
+        <div className="social-card p-5 md:p-8 mb-6 rounded-2xl shadow-lg ">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-6 text-center md:text-left">
             {/* Avatar */}
             <img
@@ -325,25 +319,20 @@ const handleSendRequest = async () => {
                   ? `data:image/jpeg;base64,${loggedUser.profilePhoto}`
                   : "/default-avatar.png"
               }
-              className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover"
-            />
+              className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover cursor-pointer"
+              onClick = {() => loggedUser?.profilePhoto && setOpenPreview(true)}/>
 
             {/* User Info */}
-            <div className="flex-1 w-full">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+            <div className="flex-1 w-full ">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 ">
                 <div>
-                  <h1 className="text-2xl md:text-3xl font-bold break-all">
-                    {loggedUser?.username || "Unknown User"}
-                  </h1>
-                  <p className="text-gray-500 text-sm md:text-base">
-                    @{loggedUser?.username}
-                  </p>
+                  <h1 className="text-2xl md:text-3xl font-bold break-all ml-5">{loggedUser?.username || "Unknown User"}</h1>
+                  <p className="text-gray-500 ml-5 text-sm md:text-base">@{loggedUser?.username}</p>
                 </div>
 
                 <button
                   onClick={() => setShowEditModal(true)}
-                  className="rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white px-6 py-2 text-sm font-semibold"
-                >
+                  className="rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white px-6 py-2 text-sm font-semibold">
                   Edit Profile
                 </button>
               </div>
@@ -358,12 +347,10 @@ const handleSendRequest = async () => {
 
 
               {/* Bio */}
-              <p className="text-gray-700 mb-4 text-sm md:text-base wrap-break-words">
-                {user.bio}
-              </p>
+              <p className="text-gray-700 mb-4 text-sm md:text-base wrap-break-words">{user.bio}</p>
 
               {/* Stats */}
-              <div className="flex gap-6 justify-center md:justify-start text-center">
+              <div className="flex gap-10 justify-center md:justify-start text-center ml-5">
                 <button className="hover:underline">
                   <p className="font-bold">{posts.length}</p>
                   <p className="text-sm text-gray-500">Posts</p>
@@ -374,11 +361,9 @@ const handleSendRequest = async () => {
                     setShowFollowerModal(true);
                     setSearchQuery("");
                   }}
-                  className="hover:underline"
-                >
-                  <p className="font-bold">
-                    {(loggedUser.followers.length / 1000).toFixed(1)}K
-                  </p>
+                  className="hover:underline">
+                  <p className="font-bold">{loggedUser.followers.length}</p>
+                  {/* <p className="font-bold">{(loggedUser.followers.length / 1000).toFixed(1)}K</p> */}
                   <p className="text-sm text-gray-500">Followers</p>
                 </button>
 
@@ -387,11 +372,9 @@ const handleSendRequest = async () => {
                     setShowFollowingModal(true);
                     setSearchQuery("");
                   }}
-                  className="hover:underline"
-                >
-                  <p className="font-bold">
-                    {(loggedUser.following.length / 1000).toFixed(1)}K
-                  </p>
+                  className="hover:underline">
+                  <p className="font-bold">{loggedUser.followers.length}</p>
+                  {/* <p className="font-bold">{(loggedUser.following.length / 1000).toFixed(1)}K</p> */}
                   <p className="text-sm text-gray-500">Following</p>
                 </button>
               </div>
@@ -413,8 +396,7 @@ const handleSendRequest = async () => {
                 viewMode === "grid"
                   ? "bg-blue-100 text-blue-600"
                   : "text-gray-500 hover:text-gray-800"
-              }`}
-            >
+              }`}>
               <BsGrid size={20} />
             </button>
 
@@ -424,8 +406,7 @@ const handleSendRequest = async () => {
                 viewMode === "list"
                   ? "bg-blue-100 text-blue-600"
                   : "text-gray-500 hover:text-gray-800"
-              }`}
-            >
+              }`}>
               <IoIosList size={20} />
             </button>
           </div>
@@ -437,8 +418,7 @@ const handleSendRequest = async () => {
             viewMode === "grid"
               ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
               : "space-y-4"
-          }
-        >
+          }>
           {Array.isArray(posts) &&
             posts.map((post) => {
               const author =
@@ -461,8 +441,7 @@ const handleSendRequest = async () => {
                   timestamp={post.createdAt || "Some time ago"}
                   likes={post.likeCount || 0}
                   comments={post.comments?.length || 0}
-                  shares={post.shares || 0}
-                />
+                  shares={post.shares || 0}/>
               );
             })}
         </div>
@@ -475,19 +454,16 @@ const handleSendRequest = async () => {
         {showEditModal && (
           <div
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 md:p-4"
-            onClick={() => setShowEditModal(false)}
-          >
+            onClick={() => setShowEditModal(false)}>
             <div
               className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto animate-scale-in"
-              onClick={(e) => e.stopPropagation()}
-            >
+              onClick={(e) => e.stopPropagation()}>
               {/* Header */}
               <div className="flex items-center justify-between p-4 md:p-6 border-b">
                 <h2 className="text-lg md:text-xl font-bold">Edit Profile</h2>
                 <button
                   onClick={() => setShowEditModal(false)}
-                  className="text-gray-500 hover:text-gray-800"
-                >
+                  className="text-gray-500 hover:text-gray-800">
                   <IoCloseSharp size={24} />
                 </button>
               </div>
@@ -502,8 +478,7 @@ const handleSendRequest = async () => {
                         ? `data:image/jpeg;base64,${loggedUser.profilePhoto}`
                         : "/default-avatar.png"
                     }
-                    className="w-28 h-28 rounded-full object-cover"
-                  />
+                    className="w-28 h-28 rounded-full object-cover"/>
                   <button className="px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300">
                     Change Avatar
                   </button>
@@ -518,8 +493,7 @@ const handleSendRequest = async () => {
                     onChange={(e) =>
                       setEditForm({ ...editForm, name: e.target.value })
                     }
-                    className="w-full px-4 py-3 rounded-xl bg-gray-100 border focus:ring-2 focus:ring-primary"
-                  />
+                    className="w-full px-4 py-3 rounded-xl bg-gray-100 border focus:ring-2 focus:ring-primary"/>
                 </div>
 
                 {/* Username */}
@@ -535,8 +509,7 @@ const handleSendRequest = async () => {
                       onChange={(e) =>
                         setEditForm({ ...editForm, username: e.target.value })
                       }
-                      className="flex-1 px-4 py-3 rounded-r-xl bg-gray-100 border focus:ring-2 focus:ring-primary"
-                    />
+                      className="flex-1 px-4 py-3 rounded-r-xl bg-gray-100 border focus:ring-2 focus:ring-primary"/>
                   </div>
                 </div>
 
@@ -549,8 +522,7 @@ const handleSendRequest = async () => {
                       setEditForm({ ...editForm, bio: e.target.value })
                     }
                     rows={4}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-100 border focus:ring-2 focus:ring-primary resize-none"
-                  />
+                    className="w-full px-4 py-3 rounded-xl bg-gray-100 border focus:ring-2 focus:ring-primary resize-none"/>
                   <p className="text-xs text-gray-500 text-right">
                     {editForm.bio.length}/150
                   </p>
@@ -560,37 +532,38 @@ const handleSendRequest = async () => {
                 <div className="flex gap-3 pt-4">
                   <button
                     onClick={() => setShowEditModal(false)}
-                    className="flex-1 py-3 rounded-full bg-gray-200 hover:bg-gray-300"
-                  >
+                    className="flex-1 py-3 rounded-full bg-gray-200 hover:bg-gray-300">
                     Cancel
                   </button>
                   <button
                     onClick={() => setShowEditModal(false)}
-                    className="flex-1 py-3 rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white"
-                  >
+                    className="flex-1 py-3 rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white">
                     Save Changes
                   </button>
                 </div>
               </div>
             </div>
           </div>
+        )}
+      </div>
+
+      {/* onclick profile Image large preview */}
+      {openPreview && loggedUser?.profilePhoto && (
+        <div
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-999999"
+          onClick={() => setOpenPreview(false)}>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative animate-zoomIn">
+            <img
+              src={`data:image/jpeg;base64,${loggedUser.profilePhoto}`}
+              alt="preview"
+              className="max-w-[90vw] max-h-[90vh] rounded-xl shadow-2xl"/>
+          </div>
         </div>
       )}
-     </div> 
-     {/* follow modal */}
-     {showFollowModal && (
-  <FollowModal
-    targetUsername={followUsername}
-    setTargetUsername={setFollowUsername}
-    onClose={() => setShowFollowModal(false)}
-    onSend={handleSendRequest}
-  />
-)}
-
     </Layout>
   );
 };
 
 export default Profile;
-
-
