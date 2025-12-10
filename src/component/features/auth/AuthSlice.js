@@ -18,10 +18,6 @@ export const registerUser = createAsyncThunk(
       // return only response.data so components receive a normalized payload
       return response.data;
     } catch (error) {
-      console.log(error);
-
-      return response.data; // contains { user, token }
-    } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Registration failed"
       );
@@ -57,6 +53,10 @@ const authSlice = createSlice({
   },
 
   reducers: {
+    clearTokenOnRefresh: (state) => {
+      state.token = null;
+      localStorage.removeItem("token");
+    },
     logoutUser: (state) => {
       state.user = null;
       state.token = null;
@@ -111,7 +111,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { logoutUser } = authSlice.actions;
+export const { logoutUser,clearTokenOnRefresh } = authSlice.actions;
 export default authSlice.reducer;
 
 
