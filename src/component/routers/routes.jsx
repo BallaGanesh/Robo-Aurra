@@ -40,8 +40,8 @@ let routers = createBrowserRouter([{
     element:<NotificationsPage></NotificationsPage>
 },
  {
-    // path:'*',
-    // element:<NotFound></NotFound>
+    path:'*',
+    element:<NotFound></NotFound>
 }
 ])
 
