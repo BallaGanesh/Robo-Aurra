@@ -46,8 +46,8 @@ let routers = createBrowserRouter([{
   
 },
  {
-    // path:'*',
-    // element:<NotFound></NotFound>
+    path:'*',
+    element:<NotFound></NotFound>
 }
 ])
 

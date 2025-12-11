@@ -4,28 +4,22 @@ import Layout from "../Layout";
 
 import { IoCloseSharp } from "react-icons/io5";
 import { GoSearch } from "react-icons/go";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
-import { useDispatch } from "react-redux";
 import FollowModal from "./FollowModal";
 import {
   sendFollowRequest,
   acceptFollowRequest,
   rejectFollowRequest,
 } from "../../features/followSlice";
-// import { socket } from "../../../Socket/socket";
+
 import { useContext } from "react";
-import { SocketProvider } from "./../../../Socket/SocketProvider";
+
 import { SocketContext } from "./../../../Socket/SocketProvider";
-
-
-
-
 import { IoIosList } from "react-icons/io";
 import { BsGrid } from "react-icons/bs";
 import { FiMessageSquare } from "react-icons/fi";
-import { getSocket } from "../../../Socket/socket";
-
+import { NotificationContext } from "../../../Notifications/NotificationProvider";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("posts");
@@ -34,11 +28,10 @@ const Profile = () => {
   const [showFollowingModal, setShowFollowingModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
-  const [openPreview, setOpenPreview] = useState(false)
-
-  // ⭐ NEW STATE FOR FOLLOW REQUEST MODAL
+  const { addNotification } = useContext(NotificationContext);
   const [showFollowModal, setShowFollowModal] = useState(false);
   const [followUsername, setFollowUsername] = useState("");
+
   const { socket } = useContext(SocketContext);
 
   const [editForm, setEditForm] = useState({
@@ -49,96 +42,80 @@ const Profile = () => {
 
   const dispatch = useDispatch();
 
-  
-
-const handleSendRequest = async () => {
-  if (!followUsername.trim()) {
-    alert("Please enter a username");
-    return;
-  }
-
-  try {
-    // Step 1: API call
-    await dispatch(sendFollowRequest(followUsername)).unwrap();
-
-    const socket = getSocket();
-
-    // Step 2: Emit event to backend for real-time logic
-    if (socket && socket.connected) {
-      socket.emit("sendFollowRequest", {
-        from: loggedUser.username,
-        fromId: loggedUser._id,
-        toUsername: followUsername
-      });
-
-      console.log("📤 Socket event sent: sendFollowRequest");
-    }
-
-    alert("Follow request sent!");
-    setFollowUsername("");
-    setShowFollowModal(false);
-
-  } catch (err) {
-    // alert(err || "Failed to send follow request.");
-    console.log(err);
-    
-  }
-};
-
-
-
-  const followers = [
-    {
-      id: "1",
-      name: "Sarah Johnson",
-      username: "sarahj",
-      avatar:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
-      isFollowing: true,
-    },
-    {
-      id: "2",
-      name: "Alex Chen",
-      username: "alexchen",
-      avatar:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
-      isFollowing: false,
-    },
-    {
-      id: "3",
-      name: "Emma Davis",
-      username: "emmadavis",
-      avatar:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop",
-      isFollowing: true,
-    },
-    {
-      id: "4",
-      name: "Michael Park",
-      username: "mpark",
-      avatar:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
-      isFollowing: false,
-    },
-  ];
-
-  const { posts } = useSelector((state) => state.articles);
-
   const auth = useSelector((state) => state.Auth);
   const user = auth?.user ?? null;
+
+  const posts = useSelector((state) => state.articles.posts);
 
   const authData = JSON.parse(localStorage.getItem("user"));
   const loggedUser = authData;
 
-  const filteredFollowers = followers.filter(
-    (f) =>
-      f.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      f.username.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // ❗ BACKEND REAL FOLLOWERS & FOLLOWING
+  const followersList = loggedUser?.followers || [];
+  const followingList = loggedUser?.following || [];
 
+  // ❗ YOUR OLD DUMMY LIST (kept but commented)
+  /*
+  const followers = [
+    { id: "1", name: "Sarah Johnson", username: "sarahj", avatar: "...", isFollowing: true },
+    { id: "2", name: "Alex Chen", username: "alexchen", avatar: "...", isFollowing: false },
+    ...
+  ];
+  */
+  //  filter posts by logged-in user
+  const userPosts = Array.isArray(posts)
+    ? posts.filter((post) => post.user?._id === loggedUser?._id)
+    : [];
+
+  // handle send follow request
+  const handleSendRequest = async () => {
+    if (!followUsername.trim()) {
+      alert("Please enter a username");
+      return;
+    }
+
+    try {
+      await dispatch(sendFollowRequest(followUsername)).unwrap();
+
+      if (socket && socket.connected) {
+        socket.emit("sendFollowRequest", {
+          from: loggedUser.username,
+          fromId: loggedUser._id,
+          toUsername: followUsername,
+        });
+      }
+
+      setFollowUsername("");
+      setShowFollowModal(false);
+    } catch (err) {
+      console.log(err);
+
+      if (
+        err === "Follow request already sent" ||
+        err?.message?.includes("already")
+      ) {
+        addNotification({
+          type: "follow",
+          from: loggedUser.username,
+          fromId: loggedUser._id,
+          timestamp: "Just now",
+        });
+
+        setFollowUsername("");
+        setShowFollowModal(false);
+      }
+    }
+  };
+
+  // 🔥 MODAL — NOW USES REAL BACKEND FOLLOWERS
   const FollowerModal = ({ isFollowing }) => {
-    const list = isFollowing ? followers : followers;
+    const list = isFollowing ? followingList : followersList;
     const title = isFollowing ? "Following" : "Followers";
+
+    const filtered = list.filter((f) => {
+      const username = f.username || "";
+      return username.toLowerCase().includes(searchQuery.toLowerCase());
+    });
 
     return (
       <div
@@ -152,7 +129,10 @@ const handleSendRequest = async () => {
           onClick={(e) => e.stopPropagation()}>
           {/* Header */}
           <div className="flex items-center justify-between p-4 md:p-6 border-b">
-            <h2 className="text-lg md:text-xl font-bold">{title}</h2>
+            <h2 className="text-lg md:text-xl font-bold">
+              {title}
+              {!isFollowing && " (accepted your request)"}
+            </h2>
             <button
               onClick={() => {
                 setShowFollowerModal(false);
@@ -162,36 +142,6 @@ const handleSendRequest = async () => {
               <IoCloseSharp size={24} />
             </button>
           </div>
-
-{/* FOLLOW REQUEST INPUT + BUTTON */}
-<div className="p-4 border-b border-border bg-white">
-
-  <input
-    type="text"
-    placeholder="Enter username"
-    value={followUsername}
-    onChange={(e) => setFollowUsername(e.target.value)}
-    className="w-full p-3 bg-gray-200 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 mb-3"
-  />
-
-  <button
-    onClick={() => {
-      if (!followUsername.trim()) {
-        alert("Enter username first");
-        return;
-      }
-
-      dispatch(sendFollowRequest(followUsername));
-      setFollowUsername("");
-      setShowFollowerModal(false);
-    }}
-    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 font-semibold"
-  >
-    Send Follow Request
-  </button>
-
-</div>
-
 
           {/* Search */}
           <div className="p-4 border-b">
@@ -211,32 +161,47 @@ const handleSendRequest = async () => {
 
           {/* List */}
           <div className="flex-1 overflow-y-auto">
-            {filteredFollowers.map((follower) => (
-              <div
-                key={follower.id}
-                className="p-4 border-b flex items-center justify-between hover:bg-gray-100 transition">
-                <div className="flex items-center gap-3">
-                  <img
-                    src={follower.avatar}
-                    className="w-10 h-10 rounded-full object-cover"/>
-                  <div>
-                    <p className="font-semibold text-sm">{follower.name}</p>
-                    <p className="text-xs text-gray-500">
-                      @{follower.username}
-                    </p>
-                  </div>
-                </div>
+            {filtered.length === 0 ? (
+              <p className="p-4 text-gray-500 text-sm">No {title} found.</p>
+            ) : (
+              filtered.map((follower) => (
+                <div
+                  key={follower._id}
+                  className="p-4 border-b flex items-center justify-between hover:bg-gray-100 transition"
+                >
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={
+                        follower.profilePhoto
+                          ? `data:image/jpeg;base64,${follower.profilePhoto}`
+                          : "/default-avatar.png"
+                      }
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
 
-                <button
-                  className={`rounded-full text-xs px-4 py-1 font-semibold ${
-                    follower.isFollowing
-                      ? "bg-gray-200 text-gray-700"
-                      : "bg-linear-to-r from-blue-500 to-purple-600 text-white"
-                  }`}>
-                  {follower.isFollowing ? "Following" : "Follow"}
-                </button>
-              </div>
-            ))}
+                    {/* Your requested format: username + @username */}
+                    <div>
+                      <p className="font-semibold text-sm">
+                        {follower.username}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        @{follower.username}
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    className={`rounded-full text-xs px-4 py-1 font-semibold ${
+                      isFollowing
+                        ? "bg-gray-200 text-gray-700"
+                        : "bg-blue-500 text-white"
+                    }`}
+                  >
+                    {isFollowing ? "Following" : "Follower"}
+                  </button>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
@@ -274,22 +239,23 @@ const handleSendRequest = async () => {
                 </button>
               </div>
 
-{/* follow button */}
-<button
-  onClick={() => setShowFollowModal(true)}
-  className="rounded-full font-semibold bg-linear-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg px-6"
->
-  Follow
-</button>
-
+              {/* Follow Button */}
+              <button
+                onClick={() => setShowFollowModal(true)}
+                className="rounded-full font-semibold bg-linear-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg px-6"
+              >
+                Follow
+              </button>
 
               {/* Bio */}
-              <p className="text-gray-700 mb-4 text-sm md:text-base wrap-break-words">{user.bio}</p>
+              <p className="text-gray-700 mb-4 text-sm md:text-base wrap-break-words">
+                {user?.bio}
+              </p>
 
               {/* Stats */}
               <div className="flex gap-10 justify-center md:justify-start text-center ml-5">
                 <button className="hover:underline">
-                  <p className="font-bold">{posts.length}</p>
+                  <p className="font-bold">{posts?.length || 0}</p>
                   <p className="text-sm text-gray-500">Posts</p>
                 </button>
 
@@ -298,9 +264,9 @@ const handleSendRequest = async () => {
                     setShowFollowerModal(true);
                     setSearchQuery("");
                   }}
-                  className="hover:underline">
-                  <p className="font-bold">{loggedUser.followers.length}</p>
-                  {/* <p className="font-bold">{(loggedUser.followers.length / 1000).toFixed(1)}K</p> */}
+                  className="hover:underline"
+                >
+                  <p className="font-bold">{followersList.length}</p>
                   <p className="text-sm text-gray-500">Followers</p>
                 </button>
 
@@ -309,9 +275,9 @@ const handleSendRequest = async () => {
                     setShowFollowingModal(true);
                     setSearchQuery("");
                   }}
-                  className="hover:underline">
-                  <p className="font-bold">{loggedUser.followers.length}</p>
-                  {/* <p className="font-bold">{(loggedUser.following.length / 1000).toFixed(1)}K</p> */}
+                  className="hover:underline"
+                >
+                  <p className="font-bold">{followingList.length}</p>
                   <p className="text-sm text-gray-500">Following</p>
                 </button>
               </div>
@@ -349,45 +315,43 @@ const handleSendRequest = async () => {
           </div>
         </div>
 
-        {/* Posts */}
+        {/* Posts Grid */}
         <div
           className={
             viewMode === "grid"
               ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
               : "space-y-4"
-          }>
-          {Array.isArray(posts) &&
-            posts.map((post) => {
-              const author =
-                user && post.user && typeof post.user === "object"
-                  ? {
-                      name: loggedUser?.username,
-                      email: loggedUser?.email,
-                      avatar: loggedUser?.profilePhoto
-                        ? `data:image/jpeg;base64,${loggedUser.profilePhoto}`
-                        : "/default-avatar.png",
-                    }
-                  : null;
+          }
+        >
+          {userPosts.map((post) => {
+            const postUser = post.user;
 
-              return (
-                <PostCard
-                  key={post._id || post.id}
-                  id={post._id || post.id}
-                  author={author}
-                  content={post.content}
-                  timestamp={post.createdAt || "Some time ago"}
-                  likes={post.likeCount || 0}
-                  comments={post.comments?.length || 0}
-                  shares={post.shares || 0}/>
-              );
-            })}
+            const author = {
+              name: postUser.username,
+              avatar: postUser.profilePhoto
+                ? `data:image/jpeg;base64,${postUser.profilePhoto}`
+                : "/default-avatar.png",
+            };
+
+            return (
+              <PostCard
+                key={post._id}
+                id={post._id}
+                author={author}
+                content={post.content}
+                timestamp={post.createdAt}
+                likes={post.likeCount || 0}
+                comments={post.comments?.length || 0}
+              />
+            );
+          })}
         </div>
 
         {/* Modals */}
         {showFollowerModal && <FollowerModal />}
         {showFollowingModal && <FollowerModal isFollowing />}
 
-        {/* EDIT PROFILE MODAL */}
+        {/* Edit Profile Modal */}
         {showEditModal && (
           <div
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 md:p-4"
@@ -484,20 +448,14 @@ const handleSendRequest = async () => {
         )}
       </div>
 
-      {/* onclick profile Image large preview */}
-      {openPreview && loggedUser?.profilePhoto && (
-        <div
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-999999"
-          onClick={() => setOpenPreview(false)}>
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative animate-zoomIn">
-            <img
-              src={`data:image/jpeg;base64,${loggedUser.profilePhoto}`}
-              alt="preview"
-              className="max-w-[90vw] max-h-[90vh] rounded-xl shadow-2xl"/>
-          </div>
-        </div>
+      {/* Follow Modal */}
+      {showFollowModal && (
+        <FollowModal
+          targetUsername={followUsername}
+          setTargetUsername={setFollowUsername}
+          onClose={() => setShowFollowModal(false)}
+          onSend={handleSendRequest}
+        />
       )}
     </Layout>
   );

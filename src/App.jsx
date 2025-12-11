@@ -1,3 +1,7 @@
+import { RouterProvider } from "react-router-dom";
+import routers from "./component/routers/routes";
+import { SocketProvider } from "./Socket/SocketProvider";
+import { NotificationProvider } from "./Notifications/NotificationProvider";
 
 
 import React, { useEffect } from "react";
@@ -15,11 +19,15 @@ const App = () => {
   }, []);
   return (
     <SocketProvider>
-      <RouterProvider router={routers} />
+      <NotificationProvider>
+        <RouterProvider router={routers} />
+      </NotificationProvider>
     </SocketProvider>
   );
 };
 
 export default App;
+
+
 
 
