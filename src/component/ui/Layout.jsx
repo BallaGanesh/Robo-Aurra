@@ -60,7 +60,7 @@ const Layout = ({ children }) => {
             <div className="w-12 h-12  rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300">
               <img src="/Only logo-aurra.png"/>
             </div>
-            <span className="text-3xl font-bold gradient-text hidden lg:inline bg-linear-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-3xl font-bold gradient-text hidden md:inline bg-linear-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
               AURRA
             </span>
           </Link>
@@ -97,40 +97,10 @@ const Layout = ({ children }) => {
                 }
                 alt={username ?? 'avatar'}
                 className="size-full cursor-pointer rounded-full"
-                onClick={() => profilePhoto && setOpenPreview(true)}
-              />
-              
-              {/* opening Preview */}
-              {openPreview && profilePhoto && (
-                <div
-                  className="fixed inset-0 bg-black/70 backdrop-blur-sm flex justify-center items-center z-999999999 !important"
-                  onClick={() => setOpenPreview(false)}
-                >
-                  <div
-                    onClick={(e) => e.stopPropagation()}
-                    className="animate-zoomIn relative"
-                  >
-                    {/* Close Button */}
-                    <button
-                      onClick={() => setOpenPreview(false)}
-                      className="absolute -top-4 -right-4 bg-white text-black rounded-full px-2 py-1 shadow-lg hover:bg-gray-200"
-                    >
-                      ✕
-                    </button>
-
-                    {/* Enlarged Image */}
-                    <img
-                      src={`data:image/jpeg;base64,${profilePhoto}`}
-                      alt=""
-                      className="max-w-[90vw] max-h-[90vh] rounded-xl shadow-xl"
-                    />
-                  </div>
-                </div>
-              )}
-
-
+                onClick={() => profilePhoto && setOpenPreview(true)}/>
+             
             </div>
-            <div className="hidden lg:block">
+            <div className="hidden md:block">
               <p className="text-sm font-semibold">{username ?? 'Guest'}</p>
               <p className="text-xs text-muted-foreground">{email ?? ''}</p>
             </div>
@@ -161,7 +131,7 @@ const Layout = ({ children }) => {
                 isActive(path)
                   ? "text-blue-500 scale-110 "
                   : "text-muted-foreground hover:text-foreground"
-              }`}>
+                }`}>
               <Icon size={25} />
               <span className="text-xs font-medium mt-1 truncate">{label}</span>
             </Link>
@@ -170,9 +140,25 @@ const Layout = ({ children }) => {
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto md:mt-0 pt-20 md:pt-0 pb-24 md:pb-0 transition-all">
-        <div className="w-full  mx-auto">{children}</div>
+      <main className="flex-1 overflow-y-auto md:mt-0 pt-20 md:pt-0 pb-24 md:pb-0 transition-all w-full">
+        <div className="w-full ">{children}</div>
       </main>
+
+      {/* opening Preview */}
+      {openPreview && profilePhoto && (
+        <div
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-999999"
+        onClick={() => setOpenPreview(false)}>
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="relative animate-zoomIn">
+          <img
+            src={`data:image/jpeg;base64,${profilePhoto}`}
+            alt="preview"
+            className="max-w-[90vw] max-h-[90vh] rounded-xl shadow-2xl"/>
+        </div>
+      </div>
+    )}
     </div>
   );
 }

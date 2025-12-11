@@ -6,22 +6,45 @@ const storedUser = localStorage.getItem("user");
 
 // -------------------- ASYNC THUNKS -------------------- //
 
+// export const registerUser = createAsyncThunk(
+//   "api/users/register",
+//   async (formData, thunkAPI) => {
+//     try {
+//       // Example endpoint — replace with your backend API
+//       const response = await axios.post("https://robo-zv8u.onrender.com/api/users/register", formData, {
+//         headers: { "Content-Type": "multipart/form-data" },
+//       });
+//       console.log(response);
+//       // return only response.data so components receive a normalized payload
+//       return response.data;
+//     } catch (error) {
+//       console.log(error);
+
+//       return response.data; // contains { user, token }
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(
+//         error.response?.data?.message || "Registration failed"
+//       );
+//     }
+//   }
+// );
+
 export const registerUser = createAsyncThunk(
   "api/users/register",
   async (formData, thunkAPI) => {
     try {
+
       const response = await axios.post(
+        // Example endpoint — replace with your backend API
         "https://robo-zv8u.onrender.com/api/users/register",
         formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
 
       console.log(response);
-
-      return response.data; // { user, token }
     } catch (error) {
-      console.log(error);
-
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Registration failed"
       );
@@ -58,6 +81,10 @@ const authSlice = createSlice({
   },
 
   reducers: {
+    clearTokenOnRefresh: (state) => {
+      state.token = null;
+      localStorage.removeItem("token");
+    },
     logoutUser: (state) => {
       state.user = null;
       state.token = null;
@@ -112,7 +139,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { logoutUser } = authSlice.actions;
+export const { logoutUser,clearTokenOnRefresh } = authSlice.actions;
 export default authSlice.reducer;
 
 

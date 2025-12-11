@@ -123,12 +123,10 @@ const Profile = () => {
         onClick={() => {
           setShowFollowerModal(false);
           setShowFollowingModal(false);
-        }}
-      >
+        }}>
         <div
           className="bg-white rounded-2xl w-full max-w-md max-h-[85vh] overflow-hidden animate-scale-in flex flex-col"
-          onClick={(e) => e.stopPropagation()}
-        >
+          onClick={(e) => e.stopPropagation()}>
           {/* Header */}
           <div className="flex items-center justify-between p-4 md:p-6 border-b">
             <h2 className="text-lg md:text-xl font-bold">
@@ -140,7 +138,7 @@ const Profile = () => {
                 setShowFollowerModal(false);
                 setShowFollowingModal(false);
               }}
-            >
+              className="text-muted-foreground">
               <IoCloseSharp size={24} />
             </button>
           </div>
@@ -157,8 +155,7 @@ const Profile = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search..."
-                className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-100 border focus:ring-2 focus:ring-primary"
-              />
+                className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-100 border focus:ring-2 focus:ring-primary"/>
             </div>
           </div>
 
@@ -213,9 +210,9 @@ const Profile = () => {
 
   return (
     <Layout>
-      <div className="w-full max-w-4xl mx-auto px-4 py-6 md:py-10">
+      <div className = "max-w-6xl mx-auto  px-4 py-6 md:py-10">
         {/* Profile Header */}
-        <div className="social-card p-5 md:p-8 mb-6 rounded-2xl shadow">
+        <div className="social-card p-5 md:p-8 mb-6 rounded-2xl shadow-lg ">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-6 text-center md:text-left">
             {/* Avatar */}
             <img
@@ -224,25 +221,20 @@ const Profile = () => {
                   ? `data:image/jpeg;base64,${loggedUser.profilePhoto}`
                   : "/default-avatar.png"
               }
-              className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover"
-            />
+              className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover cursor-pointer"
+              onClick = {() => loggedUser?.profilePhoto && setOpenPreview(true)}/>
 
             {/* User Info */}
-            <div className="flex-1 w-full">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+            <div className="flex-1 w-full ">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 ">
                 <div>
-                  <h1 className="text-2xl md:text-3xl font-bold break-all">
-                    {loggedUser?.username || "Unknown User"}
-                  </h1>
-                  <p className="text-gray-500 text-sm md:text-base">
-                    @{loggedUser?.username}
-                  </p>
+                  <h1 className="text-2xl md:text-3xl font-bold break-all ml-5">{loggedUser?.username || "Unknown User"}</h1>
+                  <p className="text-gray-500 ml-5 text-sm md:text-base">@{loggedUser?.username}</p>
                 </div>
 
                 <button
                   onClick={() => setShowEditModal(true)}
-                  className="rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white px-6 py-2 text-sm font-semibold"
-                >
+                  className="rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white px-6 py-2 text-sm font-semibold">
                   Edit Profile
                 </button>
               </div>
@@ -261,7 +253,7 @@ const Profile = () => {
               </p>
 
               {/* Stats */}
-              <div className="flex gap-6 justify-center md:justify-start text-center">
+              <div className="flex gap-10 justify-center md:justify-start text-center ml-5">
                 <button className="hover:underline">
                   <p className="font-bold">{posts?.length || 0}</p>
                   <p className="text-sm text-gray-500">Posts</p>
@@ -307,8 +299,7 @@ const Profile = () => {
                 viewMode === "grid"
                   ? "bg-blue-100 text-blue-600"
                   : "text-gray-500 hover:text-gray-800"
-              }`}
-            >
+              }`}>
               <BsGrid size={20} />
             </button>
 
@@ -318,8 +309,7 @@ const Profile = () => {
                 viewMode === "list"
                   ? "bg-blue-100 text-blue-600"
                   : "text-gray-500 hover:text-gray-800"
-              }`}
-            >
+              }`}>
               <IoIosList size={20} />
             </button>
           </div>
@@ -365,19 +355,16 @@ const Profile = () => {
         {showEditModal && (
           <div
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 md:p-4"
-            onClick={() => setShowEditModal(false)}
-          >
+            onClick={() => setShowEditModal(false)}>
             <div
               className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto animate-scale-in"
-              onClick={(e) => e.stopPropagation()}
-            >
+              onClick={(e) => e.stopPropagation()}>
               {/* Header */}
               <div className="flex items-center justify-between p-4 md:p-6 border-b">
                 <h2 className="text-lg md:text-xl font-bold">Edit Profile</h2>
                 <button
                   onClick={() => setShowEditModal(false)}
-                  className="text-gray-500 hover:text-gray-800"
-                >
+                  className="text-gray-500 hover:text-gray-800">
                   <IoCloseSharp size={24} />
                 </button>
               </div>
@@ -392,8 +379,7 @@ const Profile = () => {
                         ? `data:image/jpeg;base64,${loggedUser.profilePhoto}`
                         : "/default-avatar.png"
                     }
-                    className="w-28 h-28 rounded-full object-cover"
-                  />
+                    className="w-28 h-28 rounded-full object-cover"/>
                   <button className="px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300">
                     Change Avatar
                   </button>
@@ -408,8 +394,7 @@ const Profile = () => {
                     onChange={(e) =>
                       setEditForm({ ...editForm, name: e.target.value })
                     }
-                    className="w-full px-4 py-3 rounded-xl bg-gray-100 border focus:ring-2 focus:ring-primary"
-                  />
+                    className="w-full px-4 py-3 rounded-xl bg-gray-100 border focus:ring-2 focus:ring-primary"/>
                 </div>
 
                 {/* Username */}
@@ -425,8 +410,7 @@ const Profile = () => {
                       onChange={(e) =>
                         setEditForm({ ...editForm, username: e.target.value })
                       }
-                      className="flex-1 px-4 py-3 rounded-r-xl bg-gray-100 border focus:ring-2 focus:ring-primary"
-                    />
+                      className="flex-1 px-4 py-3 rounded-r-xl bg-gray-100 border focus:ring-2 focus:ring-primary"/>
                   </div>
                 </div>
 
@@ -439,8 +423,7 @@ const Profile = () => {
                       setEditForm({ ...editForm, bio: e.target.value })
                     }
                     rows={4}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-100 border focus:ring-2 focus:ring-primary resize-none"
-                  />
+                    className="w-full px-4 py-3 rounded-xl bg-gray-100 border focus:ring-2 focus:ring-primary resize-none"/>
                   <p className="text-xs text-gray-500 text-right">
                     {editForm.bio.length}/150
                   </p>
@@ -450,14 +433,12 @@ const Profile = () => {
                 <div className="flex gap-3 pt-4">
                   <button
                     onClick={() => setShowEditModal(false)}
-                    className="flex-1 py-3 rounded-full bg-gray-200 hover:bg-gray-300"
-                  >
+                    className="flex-1 py-3 rounded-full bg-gray-200 hover:bg-gray-300">
                     Cancel
                   </button>
                   <button
                     onClick={() => setShowEditModal(false)}
-                    className="flex-1 py-3 rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white"
-                  >
+                    className="flex-1 py-3 rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white">
                     Save Changes
                   </button>
                 </div>

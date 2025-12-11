@@ -32,6 +32,7 @@ const PostCard = ({
 
   const auth = useSelector((state) => state.Auth);
   const loggedUser = auth?.user ?? null;
+  const user = auth?.user ?? null;
 
   // LIKE
   const handleLike = () => {
@@ -140,7 +141,10 @@ const PostCard = ({
         </button>
 
         {/* COMMENTS */}
-        <button onClick={() => setShowComments(true)} className="flex gap-2">
+        <button
+          onClick={() => setShowComments(!showComments)}
+          className="flex gap-2"
+        >
           <TbMessageCircle className="text-xl" />
           <span>{commentsList.length}</span>
         </button>
@@ -200,7 +204,7 @@ const PostCard = ({
                 ) : null
               )
             ) : (
-              <p className="text-gray-500">No comments yet.</p>
+              <p className="text-gray-500 text-sm">No comments yet.</p>
             )}
           </div>
         </div>
