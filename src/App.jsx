@@ -3,15 +3,13 @@ import { NotificationProvider } from "./Notifications/NotificationProvider";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { clearTokenOnRefresh } from "./component/features/auth/AuthSlice";
-import { SocketProvider } from "./Socket/SocketProvider";
-import { RouterProvider } from "react-router-dom";
-import routers from './component/routers/routes';
+import toast from "react-hot-toast";
 
 const App = () => {
   const dispatch=useDispatch();
   useEffect(() => {
-    // Removes token on page refresh
     dispatch(clearTokenOnRefresh());
+    toast.error("Token cleared on refresh page")
   }, []);
   return (
     <SocketProvider>
