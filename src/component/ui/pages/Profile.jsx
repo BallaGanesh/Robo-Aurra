@@ -1,24 +1,22 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import PostCard from "../PostCard";
 import Layout from "../Layout";
+import FollowModal from "./FollowModal";
 
 import { IoCloseSharp } from "react-icons/io5";
 import { GoSearch } from "react-icons/go";
-import { useSelector, useDispatch } from "react-redux";
+import { IoIosList } from "react-icons/io";
+import { BsGrid } from "react-icons/bs";
+import { FiMessageSquare } from "react-icons/fi";
 
-import FollowModal from "./FollowModal";
+import { useSelector, useDispatch } from "react-redux";
 import {
   sendFollowRequest,
   acceptFollowRequest,
   rejectFollowRequest,
 } from "../../features/followSlice";
 
-import { useContext } from "react";
-
 import { SocketContext } from "./../../../Socket/SocketProvider";
-import { IoIosList } from "react-icons/io";
-import { BsGrid } from "react-icons/bs";
-import { FiMessageSquare } from "react-icons/fi";
 import { NotificationContext } from "../../../Notifications/NotificationProvider";
 
 const Profile = () => {
@@ -50,7 +48,7 @@ const Profile = () => {
    
   const loggedUser = user;
 
-  // ❗ BACKEND REAL FOLLOWERS & FOLLOWING
+  // !! BACKEND REAL FOLLOWERS & FOLLOWING
   const followersList = loggedUser?.followers || [];
   const followingList = loggedUser?.following || [];
 
@@ -104,7 +102,7 @@ const Profile = () => {
     }
   };
 
-  // 🔥 MODAL — NOW USES REAL BACKEND FOLLOWERS
+  //  MODAL — NOW USES REAL BACKEND FOLLOWERS
   const FollowerModal = ({ isFollowing }) => {
     const list = isFollowing ? followingList : followersList;
     const title = isFollowing ? "Following" : "Followers";
@@ -125,7 +123,7 @@ const Profile = () => {
           className="bg-white rounded-2xl w-full max-w-md max-h-[85vh] overflow-hidden animate-scale-in flex flex-col"
           onClick={(e) => e.stopPropagation()}>
           {/* Header */}
-          <div className="flex items-center justify-between p-4 md:p-6 border-b">
+          <div className="flex items-center justify-between p-4 md:p-6 border-b border-gray-300">
             <h2 className="text-lg md:text-xl font-bold">
               {title}
               {!isFollowing && " (accepted your request)"}
@@ -141,18 +139,17 @@ const Profile = () => {
           </div>
 
           {/* Search */}
-          <div className="p-4 border-b">
+          <div className="p-4 border-b border-gray-300">
             <div className="relative">
               <GoSearch
                 size={18}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600"
-              />
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600"/>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search..."
-                className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-100 border focus:ring-2 focus:ring-primary"/>
+                className="w-full pl-10 pr-4 py-2 rounded-full outline-none focus:outline-none focus:ring-0 bg-gray-100 border  focus:ring-primary"/>
             </div>
           </div>
 
@@ -164,8 +161,7 @@ const Profile = () => {
               filtered.map((follower) => (
                 <div
                   key={follower._id}
-                  className="p-4 border-b flex items-center justify-between hover:bg-gray-100 transition"
-                >
+                  className="p-4 border-b flex items-center justify-between hover:bg-gray-100 transition">
                   <div className="flex items-center gap-3">
                     <img
                       src={
@@ -173,17 +169,11 @@ const Profile = () => {
                           ? `data:image/jpeg;base64,${follower.profilePhoto}`
                           : "/default-avatar.png"
                       }
-                      className="w-10 h-10 rounded-full object-cover"
-                    />
+                      className="w-10 h-10 rounded-full object-cover"/>
 
-                    {/* Your requested format: username + @username */}
                     <div>
-                      <p className="font-semibold text-sm">
-                        {follower.username}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        @{follower.username}
-                      </p>
+                      <p className="font-semibold text-sm">{follower.username}</p>
+                      <p className="text-xs text-gray-500">@{follower.username}</p>
                     </div>
                   </div>
 
@@ -192,8 +182,7 @@ const Profile = () => {
                       isFollowing
                         ? "bg-gray-200 text-gray-700"
                         : "bg-blue-500 text-white"
-                    }`}
-                  >
+                    }`}>
                     {isFollowing ? "Following" : "Follower"}
                   </button>
                 </div>
@@ -209,7 +198,7 @@ const Profile = () => {
     <Layout>
       <div className = "max-w-6xl mx-auto  px-4 py-6 md:py-10">
         {/* Profile Header */}
-        <div className="social-card p-5 md:p-8 mb-6 rounded-2xl shadow-lg ">
+        <div className="social-card p-5 md:p-8 mb-6 rounded-2xl shadow-xl ">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-6 text-center md:text-left">
             {/* Avatar */}
             <img
@@ -222,8 +211,8 @@ const Profile = () => {
               onClick = {() => loggedUser?.profilePhoto && setOpenPreview(true)}/>
 
             {/* User Info */}
-            <div className="flex-1 w-full ">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 ">
+            <div className="flex-1 w-full flex flex-col">
+              <div className="flex flex-col  md:flex-row md:items-center md:justify-between gap-4 mb-4 ">
                 <div>
                   <h1 className="text-2xl md:text-3xl font-bold break-all ml-5">{loggedUser?.username || "Unknown User"}</h1>
                   <p className="text-gray-500 ml-5 text-sm md:text-base">@{loggedUser?.username}</p>
@@ -231,7 +220,7 @@ const Profile = () => {
 
                 <button
                   onClick={() => setShowEditModal(true)}
-                  className="rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white px-6 py-2 text-sm font-semibold">
+                  className="rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white px-6 py-2 text-md font-semibold">
                   Edit Profile
                 </button>
               </div>
@@ -239,15 +228,12 @@ const Profile = () => {
               {/* Follow Button */}
               <button
                 onClick={() => setShowFollowModal(true)}
-                className="rounded-full font-semibold bg-linear-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg px-6"
-              >
-                Follow
+                className="rounded-full w-35 p-1.5 self-end font-semibold bg-linear-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg px-6">
+                Search Users
               </button>
 
               {/* Bio */}
-              <p className="text-gray-700 mb-4 text-sm md:text-base wrap-break-words">
-                {user?.bio}
-              </p>
+              <p className="text-gray-700 mb-4 text-sm md:text-base wrap-break-words">{user?.bio}</p>
 
               {/* Stats */}
               <div className="flex gap-10 justify-center md:justify-start text-center ml-5">
@@ -261,8 +247,7 @@ const Profile = () => {
                     setShowFollowerModal(true);
                     setSearchQuery("");
                   }}
-                  className="hover:underline"
-                >
+                  className="hover:underline">
                   <p className="font-bold">{followersList.length}</p>
                   <p className="text-sm text-gray-500">Followers</p>
                 </button>
@@ -272,8 +257,7 @@ const Profile = () => {
                     setShowFollowingModal(true);
                     setSearchQuery("");
                   }}
-                  className="hover:underline"
-                >
+                  className="hover:underline">
                   <p className="font-bold">{followingList.length}</p>
                   <p className="text-sm text-gray-500">Following</p>
                 </button>
@@ -318,8 +302,7 @@ const Profile = () => {
             viewMode === "grid"
               ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
               : "space-y-4"
-          }
-        >
+          }>
           {userPosts.map((post) => {
             const postUser = post.user;
             
@@ -341,8 +324,7 @@ const Profile = () => {
                 content={post.content}
                 timestamp={post.createdAt}
                 likes={post.likeCount || 0}
-                comments={post.comments?.length || 0}
-              />
+                comments={post.comments?.length || 0}/>
             );
           })}
         </div>
@@ -424,9 +406,7 @@ const Profile = () => {
                     }
                     rows={4}
                     className="w-full px-4 py-3 rounded-xl bg-gray-100 border focus:ring-2 focus:ring-primary resize-none"/>
-                  <p className="text-xs text-gray-500 text-right">
-                    {editForm.bio.length}/150
-                  </p>
+                  <p className="text-xs text-gray-500 text-right">{editForm.bio.length}/150</p>
                 </div>
 
                 {/* Buttons */}
@@ -454,8 +434,7 @@ const Profile = () => {
           targetUsername={followUsername}
           setTargetUsername={setFollowUsername}
           onClose={() => setShowFollowModal(false)}
-          onSend={handleSendRequest}
-        />
+          onSend={handleSendRequest}/>
       )}
     </Layout>
   );

@@ -1,8 +1,11 @@
-import {createRoot} from "react-dom/client"
-import App from "./App"
-import "./style/style.css"
-import { Provider } from "react-redux"
-import { store } from './component/store/store';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import { GoogleOAuthProvider } from "react-oauth-google";
+
+import App from "./App";
+import "./style/style.css";
+import { store } from "./component/store/store";
 import { Toaster } from "react-hot-toast";
 import { GoogleOAuthProvider } from "react-oauth-google";
 

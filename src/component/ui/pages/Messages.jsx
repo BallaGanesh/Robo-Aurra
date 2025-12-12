@@ -129,9 +129,9 @@ const Messages = () => {
 
         {/* SIDEBAR — SHOW ON DESKTOP OR WHEN NO CHAT SELECTED ON MOBILE */}
         {(selectedChatId === null || window.innerWidth >= 768) && (
-          <div className="w-full md:w-80 border-r border-border flex flex-col bg-card md:block">
+          <div className="w-full md:w-80 border-r border-gray-300 border-border flex flex-col bg-card md:block">
             {/* Header */}
-            <div className="p-4 border-b">
+            <div className="p-4 border-b border-gray-300">
               <h1 className="text-2xl md:text-3xl font-bold mb-4 bg-linear-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
                 Messages
               </h1>
@@ -142,8 +142,7 @@ const Messages = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search..."
-                  className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-200 text-sm focus:ring-2 focus:ring-primary"
-                />
+                  className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-200 text-sm outline-none focus:outline-none focus:ring-0  focus:ring-primary"/>
               </div>
             </div>
 
@@ -153,15 +152,13 @@ const Messages = () => {
                 <button
                   key={chat.id}
                   onClick={() => setSelectedChatId(chat.id)}
-                  className={`w-full p-4 flex gap-3 border-b hover:bg-gray-100 text-left ${
+                  className={`w-full p-4 flex gap-3 border-b border-gray-300 hover:bg-gray-100 text-left ${
                     selectedChatId === chat.id ? "bg-primary/10" : ""
-                  }`}
-                >
+                  }`}>
                   <div className="relative">
                     <img
                       src={chat.user.avatar}
-                      className="w-12 h-12 rounded-full"
-                    />
+                      className="w-12 h-12 rounded-full"/>
                     {chat.user.isOnline && (
                       <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-white" />
                     )}
@@ -173,15 +170,12 @@ const Messages = () => {
                       <span
                         className={`text-xs ${
                           chat.unread ? "text-primary" : "text-gray-500"
-                        }`}
-                      >
+                        }`}>
                         {chat.lastMessageTime}
                       </span>
                     </div>
 
-                    <p className="text-sm text-gray-500 truncate">
-                      {chat.lastMessage}
-                    </p>
+                    <p className="text-sm text-gray-500 truncate">{chat.lastMessage}</p>
                   </div>
 
                   {chat.unread && (
@@ -198,7 +192,7 @@ const Messages = () => {
           <div className="flex flex-1 flex-col bg-background">
 
             {/* HEADER */}
-            <div className="p-4 border-b flex items-center gap-3 bg-card">
+            <div className="p-4 border-b border-gray-300 flex items-center gap-3 bg-card">
 
               {/* Mobile Back Button */}
               <button
@@ -258,7 +252,7 @@ const Messages = () => {
             </div>
 
             {/* INPUT AREA */}
-            <div className="p-4 border-t bg-card flex items-center gap-3">
+            <div className="p-4 border-t border-gray-300 bg-card flex items-center gap-3">
               <button className="text-blue-500">
                 <FaPlus size={22} />
               </button>
@@ -269,13 +263,11 @@ const Messages = () => {
                 onChange={(e) => setMessageInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
                 placeholder="Aa"
-                className="flex-1 px-4 py-3 rounded-full bg-gray-200 focus:ring-2 focus:ring-primary"
-              />
+                className="flex-1 px-4 py-3 rounded-full bg-gray-200 focus:ring-2 focus:ring-primary"/>
 
               <button
                 onClick={handleSendMessage}
-                className="rounded-full bg-linear-to-r from-blue-500 to-purple-600 p-3 text-white"
-              >
+                className="rounded-full bg-linear-to-r from-blue-500 to-purple-600 p-3 text-white">
                 <FiSend size={22} />
               </button>
             </div>
