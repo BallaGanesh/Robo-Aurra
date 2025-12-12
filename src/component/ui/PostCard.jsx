@@ -13,8 +13,8 @@ dayjs.extend(relativeTime);
 
 const PostCard = ({
   id,
-  author,    // 👈 username + avatar
-  title,      // 👈 NEW: article title
+  author,    //  username + avatar
+  title,      //  NEW: article title
   content,
   timestamp,
   likes,
@@ -59,6 +59,22 @@ const PostCard = ({
       );
 
       const newComment = response.data.comment || response.data;
+<<<<<<< HEAD
+
+      // FIX: Add username locally so UI updates instantly
+      
+      // setCommentsList((prev) => [
+      //   ...prev,
+      //   {
+      //     text: newComment.text,
+      //     user: {
+      //       username: loggedUser?.username,
+      //       profilePhoto: loggedUser?.profilePhoto,
+      //     },
+      //   },
+      // ]);
+=======
+>>>>>>> 518ff696f7d9bce246d56ed3ae0506203b80ec3a
       setCommentsList((prev) => [
   ...prev,
   {
@@ -78,7 +94,7 @@ const PostCard = ({
   };
 
   return (
-    <div className="social-card bg-card rounded-2xl border shadow-md hover:shadow-xl transition-all overflow-hidden">
+    <div className="social-card bg-card rounded-2xl border border-gray-300 shadow-md hover:shadow-xl transition-all overflow-hidden">
 
       {/* ------------ HEADER ------------ */}
       <div className="p-4 flex items-center justify-between">
@@ -86,21 +102,23 @@ const PostCard = ({
           <img
             src={author?.avatar ? author.avatar : "/default-avatar.png"}
             className="w-10 h-10 rounded-full"
-            alt="profile"
-          />
+            alt="profile"/>
 
           <div>
+<<<<<<< HEAD
+            <p className="font-semibold">{author?.name || "Unknown User"}</p>
+            <p className="text-xs text-gray-500">@{author?.name?.toLowerCase() || "unknown"}</p>
+=======
             <p className="font-semibold">{author.name || "Unknown User"}</p>
             <p className="text-xs text-gray-500">
               @{author?.name?.toLowerCase() || "unknown"}
             </p>
+>>>>>>> 518ff696f7d9bce246d56ed3ae0506203b80ec3a
           </div>
         </div>
 
         <div className="flex items-center gap-1">
-          <span className="text-xs text-gray-500">
-            {dayjs(timestamp).fromNow()}
-          </span>
+          <span className="text-xs text-gray-500">{dayjs(timestamp).fromNow()}</span>
           <button className="icon-button hover:bg-gray-200 p-2 rounded-lg">
             <FiMoreHorizontal className="text-2xl text-gray-500" />
           </button>
@@ -118,7 +136,7 @@ const PostCard = ({
       <div className="px-4 pb-4">{content}</div>
 
       {/* ------------ ACTIONS ------------ */}
-      <div className="px-4 py-3 border-t flex justify-around">
+      <div className="px-4 py-3 border-t border-gray-300 flex justify-around">
         {/* LIKE */}
         <button onClick={handleLike} className="flex gap-2">
           {isLiked ? (
@@ -132,8 +150,7 @@ const PostCard = ({
         {/* COMMENTS */}
         <button
           onClick={() => setShowComments(!showComments)}
-          className="flex gap-2"
-        >
+          className="flex gap-2">
           <TbMessageCircle className="text-xl" />
           <span>{commentsList.length}</span>
         </button>
@@ -152,52 +169,50 @@ const PostCard = ({
 
       {/* ------------ COMMENT POPUP ------------ */}
       {showComments && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur flex justify-center items-center z-50">
-          <div className="bg-white p-4 rounded-lg w-full max-w-md">
+      <div className="px-4 pb-4 mt-2">
 
-            <button
-              onClick={() => setShowComments(false)}
-              className="float-right text-xl"
-            >
-              ✖
-            </button>
+        {/* COMMENT BOX */}
+        <div className="border border-gray-400 rounded-xl bg-white shadow-sm max-h-72 flex flex-col overflow-hidden">
 
-            <h3 className="text-lg font-semibold mb-4">Comments</h3>
-
-            {/* INPUT */}
-            <div className="flex mb-4">
-              <input
-                className="border p-2 flex-1"
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-                placeholder="Add a comment..."
-              />
-              <button
-                className="bg-blue-500 text-white px-3 py-2 ml-2 rounded"
-                onClick={() => handleAddComment(id)}
-              >
-                Post
-              </button>
-            </div>
-
-            {/* COMMENTS LIST */}
+          {/* COMMENTS SCROLL AREA */}
+          <div className="flex-1 overflow-y-auto p-3 space-y-4">
             {commentsList.length > 0 ? (
-              commentsList.map((c, index) =>
-                c?.text ? (
-                  <div key={index} className="border-b py-2">
-                    <p className="font-semibold text-sm">
-                      {c.user?.username || "Anonymous"}
-                    </p>
-                    <p>{c.text}</p>
+              commentsList.map((c, index) => (
+                <div key={index} className="flex gap-3 items-start">
+                  {/* Avatar */}
+                  <img
+                    src={c.user?.profilePhoto || "/default-avatar.png"}
+                    className="w-8 h-8 rounded-full object-cover"/>
+
+                  <div>
+                    <p className="font-semibold text-sm">{c.user?.username || "Anonymous"}</p>
+                    <p className="text-gray-700 text-sm">{c.text}</p>
                   </div>
-                ) : null
-              )
+                </div>
+              ))
             ) : (
-              <p className="text-gray-500 text-sm">No comments yet.</p>
+              <p className="text-gray-500 text-sm text-center py-4">No comments yet.</p>
             )}
           </div>
+
+          {/* STICKY INPUT BAR */}
+          <div className="border-t px-3 py-2 bg-white flex items-center gap-2 sticky bottom-0">
+            <input
+              className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm outline-none"
+              placeholder="Add a comment..."
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}/>
+
+            <button
+              className="bg-blue-600 text-white text-sm px-4 py-2 rounded-full"
+              onClick={() => handleAddComment(id)}>
+              Post
+            </button>
+          </div>
         </div>
+      </div>
       )}
+
     </div>
   );
 };

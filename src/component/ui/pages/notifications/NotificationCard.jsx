@@ -66,8 +66,8 @@ const NotificationCard = ({ notification, onDelete, onAccept, onReject, isNew })
     <div
       className={`social-card p-4 ${
         isNew ? "bg-primary/5 border-primary/20" : "hover:bg-muted/30"
-      } transition-all`}
-    >
+      } transition-all`}>
+
       <div className="flex items-start gap-4 bg-indigo-50 p-3 rounded-2xl shadow-md border-2 border-indigo-100 hover:shadow-xl">
         <div className="shrink-0 mt-1">{getIcon(notification.type)}</div>
 
@@ -75,8 +75,7 @@ const NotificationCard = ({ notification, onDelete, onAccept, onReject, isNew })
           <img
             src={avatar}
             alt={name}
-            className="w-10 h-10 rounded-full object-cover mb-3"
-          />
+            className="w-10 h-10 rounded-full object-cover mb-3"/>
 
           <p className="font-semibold text-xl">{name}</p>
           <p className="text-sm text-muted-foreground text-gray-500">@{username}</p>
@@ -102,15 +101,13 @@ const NotificationCard = ({ notification, onDelete, onAccept, onReject, isNew })
             <div className="flex gap-3 mt-4">
               <button
                 onClick={onAccept}
-                className="flex-1 py-2 rounded-full text-white bg-green-600 hover:bg-green-700 font-semibold"
-              >
+                className="flex-1 py-2 rounded-full text-white bg-green-600 hover:bg-green-700 font-semibold">
                 Accept
               </button>
 
               <button
                 onClick={onReject}
-                className="flex-1 py-2 rounded-full text-white bg-red-500 hover:bg-red-600 font-semibold"
-              >
+                className="flex-1 py-2 rounded-full text-white bg-red-500 hover:bg-red-600 font-semibold">
                 Reject
               </button>
             </div>
@@ -119,8 +116,7 @@ const NotificationCard = ({ notification, onDelete, onAccept, onReject, isNew })
 
         <button
           onClick={() => onDelete(notification.id)}
-          className="icon-button text-muted-foreground hover:text-foreground text-gray-500 m-1.5 p-2 text-xl hover:rounded-full hover:bg-gray-300 hover:text-black"
-        >
+          className="icon-button text-muted-foreground hover:text-foreground text-gray-500 m-1.5 p-2 text-xl hover:rounded-full hover:bg-gray-300 hover:text-black">
           <FiTrash2 className="size-6" />
         </button>
       </div>

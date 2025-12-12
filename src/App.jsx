@@ -1,16 +1,17 @@
 
 import { NotificationProvider } from "./Notifications/NotificationProvider";
+<<<<<<< HEAD
+
+=======
+>>>>>>> 518ff696f7d9bce246d56ed3ae0506203b80ec3a
 import React, { useEffect } from "react";
-import { RouterProvider } from "react-router-dom";
-import routers from "./component/routers/routes";
-import { SocketProvider } from "./Socket/SocketProvider";
 import { useDispatch } from "react-redux";
 import { clearTokenOnRefresh } from "./component/features/auth/AuthSlice";
 
 const App = () => {
   const dispatch=useDispatch();
   useEffect(() => {
-    // Remove token on page refresh
+    // Removes token on page refresh
     dispatch(clearTokenOnRefresh());
   }, []);
   return (
@@ -23,7 +24,3 @@ const App = () => {
 };
 
 export default App;
-
-
-
-
