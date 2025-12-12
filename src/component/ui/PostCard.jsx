@@ -59,22 +59,6 @@ const PostCard = ({
       );
 
       const newComment = response.data.comment || response.data;
-<<<<<<< HEAD
-
-      // FIX: Add username locally so UI updates instantly
-      
-      // setCommentsList((prev) => [
-      //   ...prev,
-      //   {
-      //     text: newComment.text,
-      //     user: {
-      //       username: loggedUser?.username,
-      //       profilePhoto: loggedUser?.profilePhoto,
-      //     },
-      //   },
-      // ]);
-=======
->>>>>>> 518ff696f7d9bce246d56ed3ae0506203b80ec3a
       setCommentsList((prev) => [
   ...prev,
   {
@@ -105,15 +89,10 @@ const PostCard = ({
             alt="profile"/>
 
           <div>
-<<<<<<< HEAD
-            <p className="font-semibold">{author?.name || "Unknown User"}</p>
-            <p className="text-xs text-gray-500">@{author?.name?.toLowerCase() || "unknown"}</p>
-=======
             <p className="font-semibold">{author.name || "Unknown User"}</p>
             <p className="text-xs text-gray-500">
               @{author?.name?.toLowerCase() || "unknown"}
             </p>
->>>>>>> 518ff696f7d9bce246d56ed3ae0506203b80ec3a
           </div>
         </div>
 

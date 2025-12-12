@@ -1,6 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const storedToken = localStorage.getItem("token");
+const storedUser = localStorage.getItem("user");
+
+// BASE URL (your backend)
+const API_URL = "https://robo-zv8u.onrender.com";
+
 export const registerUser = createAsyncThunk(
   "api/users/register",
   async (formData, thunkAPI) => {
@@ -38,7 +44,7 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-// ⭐⭐⭐ -------------------- GOOGLE LOGIN -------------------- ⭐⭐⭐
+// -------------------- GOOGLE LOGIN ---------------------
 // This receives the ID TOKEN from Google popup
 export const googleLogin = createAsyncThunk(
   "api/users/google-login",
@@ -66,8 +72,8 @@ export const googleLogin = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: null, 
-    token: null,
+    user: storedUser ? JSON.parse(storedUser) : null, 
+    token:  storedToken || null,
     loading: false,
     error: null,
   },

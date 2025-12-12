@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 518ff696f7d9bce246d56ed3ae0506203b80ec3a
 import React, { useContext, useEffect } from "react";
 import Layout from "../../Layout";
 import NotificationCard from "../notifications/NotificationCard";
@@ -21,14 +17,8 @@ const NotificationsPage = () => {
   const { socket } = useContext(SocketContext);
   const { notifications, removeNotification } = useContext(NotificationContext);
 
-<<<<<<< HEAD
   //  Use the same user object that profile uses
   const storedUser = JSON.parse(localStorage.getItem("user") || "null");
-=======
-  // ✅ Use the same user object that profile uses
-  const auth= useSelector((state)=>state.Auth)
-  const storedUser=auth?.user;
->>>>>>> 518ff696f7d9bce246d56ed3ae0506203b80ec3a
   const backendPending = storedUser?.pendingRequests || [];
 
   //  Map backend pendingRequests → NotificationCard format
@@ -79,7 +69,7 @@ const NotificationsPage = () => {
 
   const handleAccept = async (notification) => {
     try {
-      if (!notification?.follfollowerIdowerId) {
+      if (!notification?.followerId) {
         console.warn("handleAccept: missing followerId", notification);
         return;
       }

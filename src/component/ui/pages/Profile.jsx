@@ -172,12 +172,8 @@ const Profile = () => {
                       className="w-10 h-10 rounded-full object-cover"/>
 
                     <div>
-                      <p className="font-semibold text-sm">
-                        {follower.username}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        @{follower.username}
-                      </p>
+                      <p className="font-semibold text-sm">{follower.username}</p>
+                      <p className="text-xs text-gray-500">@{follower.username}</p>
                     </div>
                   </div>
 
