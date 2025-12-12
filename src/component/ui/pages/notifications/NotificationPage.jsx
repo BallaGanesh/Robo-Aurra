@@ -18,8 +18,8 @@ const NotificationsPage = () => {
   const { notifications, removeNotification } = useContext(NotificationContext);
 
   //  Use the same user object that profile uses
-  const storedUser = JSON.parse(localStorage.getItem("user") || "null");
-  const backendPending = storedUser?.pendingRequests || [];
+  const {user} = useSelector((state)=>state.Auth)
+  const backendPending = user?.pendingRequests || [];
 
   //  Map backend pendingRequests → NotificationCard format
   const backendMapped = backendPending.map((req) => ({
@@ -53,11 +53,11 @@ const NotificationsPage = () => {
 
   // Debug
   useEffect(() => {
-    console.log("User from global state:", storedUser);
+    console.log("User from global state:", user);
     console.log("Backend pending:", backendPending);
     console.log("Socket follow:", socketFollow);
     console.log("Merged requests:", mergedFollowRequests);
-  }, [storedUser, backendPending.length, notifications.length]);
+  }, [user, backendPending.length, notifications.length]);
 
   useEffect(() => {
     if (!socket) {
