@@ -43,7 +43,6 @@ let routers = createBrowserRouter([{
 },{
     path:'/notifications',
     element:<PrivateRoute><NotificationsPage></NotificationsPage></PrivateRoute>
-  
 },
  {
     path:'*',
