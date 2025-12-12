@@ -33,6 +33,7 @@ const PostCard = ({
   const auth = useSelector((state) => state.Auth);
   const loggedUser = auth?.user ?? null;
   const user = auth?.user ?? null;
+ 
 
   // LIKE
   const handleLike = () => {
@@ -45,7 +46,7 @@ const PostCard = ({
     if (!commentText.trim()) return;
 
     try {
-      const token = localStorage.getItem("token");
+      const token = auth.token;
 
       const response = await axios.post(
         `https://robo-zv8u.onrender.com/api/articles/${postId}/comment`,
@@ -58,6 +59,7 @@ const PostCard = ({
       );
 
       const newComment = response.data.comment || response.data;
+<<<<<<< HEAD
 
       // FIX: Add username locally so UI updates instantly
       
@@ -71,6 +73,8 @@ const PostCard = ({
       //     },
       //   },
       // ]);
+=======
+>>>>>>> 518ff696f7d9bce246d56ed3ae0506203b80ec3a
       setCommentsList((prev) => [
   ...prev,
   {
@@ -101,8 +105,15 @@ const PostCard = ({
             alt="profile"/>
 
           <div>
+<<<<<<< HEAD
             <p className="font-semibold">{author?.name || "Unknown User"}</p>
             <p className="text-xs text-gray-500">@{author?.name?.toLowerCase() || "unknown"}</p>
+=======
+            <p className="font-semibold">{author.name || "Unknown User"}</p>
+            <p className="text-xs text-gray-500">
+              @{author?.name?.toLowerCase() || "unknown"}
+            </p>
+>>>>>>> 518ff696f7d9bce246d56ed3ae0506203b80ec3a
           </div>
         </div>
 

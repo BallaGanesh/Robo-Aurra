@@ -45,24 +45,21 @@ const Profile = () => {
 
   const posts = useSelector((state) => state.articles.posts);
 
-  const authData = JSON.parse(localStorage.getItem("user"));
-  const loggedUser = authData;
+   
+  const loggedUser = user;
 
   // !! BACKEND REAL FOLLOWERS & FOLLOWING
   const followersList = loggedUser?.followers || [];
   const followingList = loggedUser?.following || [];
 
-  // !! YOUR OLD DUMMY LIST (kept but commented)
-  /*
-  const followers = [
-    { id: "1", name: "Sarah Johnson", username: "sarahj", avatar: "...", isFollowing: true },
-    { id: "2", name: "Alex Chen", username: "alexchen", avatar: "...", isFollowing: false },
-    ...
-  ];
-  */
   //  filter posts by logged-in user
   const userPosts = Array.isArray(posts)
-    ? posts.filter((post) => post.user?._id === loggedUser?._id)
+    ? posts.filter((post) => post.user?._id === loggedUser?._id).map((post)=>({
+      ...post,user:{
+        ...post.user,
+        username:loggedUser?.username||""
+      }
+    }))
     : [];
 
   // handle send follow request
@@ -312,6 +309,9 @@ const Profile = () => {
           }>
           {userPosts.map((post) => {
             const postUser = post.user;
+            
+            // console.log(postUser);
+            
 
             const author = {
               name: postUser.username,

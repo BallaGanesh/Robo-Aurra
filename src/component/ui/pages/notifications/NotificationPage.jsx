@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> 518ff696f7d9bce246d56ed3ae0506203b80ec3a
 import React, { useContext, useEffect } from "react";
 import Layout from "../../Layout";
 import NotificationCard from "../notifications/NotificationCard";
@@ -5,7 +9,7 @@ import NotificationCard from "../notifications/NotificationCard";
 import { SocketContext } from "../../../../Socket/SocketProvider";
 import { NotificationContext } from "../../../../Notifications/NotificationProvider";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   acceptFollowRequest,
   rejectFollowRequest,
@@ -17,8 +21,14 @@ const NotificationsPage = () => {
   const { socket } = useContext(SocketContext);
   const { notifications, removeNotification } = useContext(NotificationContext);
 
+<<<<<<< HEAD
   //  Use the same user object that profile uses
   const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+=======
+  // ✅ Use the same user object that profile uses
+  const auth= useSelector((state)=>state.Auth)
+  const storedUser=auth?.user;
+>>>>>>> 518ff696f7d9bce246d56ed3ae0506203b80ec3a
   const backendPending = storedUser?.pendingRequests || [];
 
   //  Map backend pendingRequests → NotificationCard format
@@ -53,7 +63,7 @@ const NotificationsPage = () => {
 
   // Debug
   useEffect(() => {
-    console.log("User from localStorage:", storedUser);
+    console.log("User from global state:", storedUser);
     console.log("Backend pending:", backendPending);
     console.log("Socket follow:", socketFollow);
     console.log("Merged requests:", mergedFollowRequests);
