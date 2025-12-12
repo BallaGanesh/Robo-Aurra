@@ -16,16 +16,9 @@ const Layout = ({ children }) => {
   const [zoom, setZoom] = useState(1);
 
   const auth = useSelector((state)=>state.Auth);
-
-
   const user = auth?.user ?? null;
-  
-  
    const{profilePhoto,username,email} =user;
-  
    const {valueFromChild}=useSelector((state)=>state.child);
-   
-
    const lightMode={
     backgroundColor:"white",
     color:"black",

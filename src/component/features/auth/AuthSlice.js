@@ -1,39 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const storedToken = localStorage.getItem("token");
-const storedUser = localStorage.getItem("user");
-
-// -------------------- ASYNC THUNKS -------------------- //
-
-// export const registerUser = createAsyncThunk(
-//   "api/users/register",
-//   async (formData, thunkAPI) => {
-//     try {
-//       // Example endpoint — replace with your backend API
-//       const response = await axios.post("https://robo-zv8u.onrender.com/api/users/register", formData, {
-//         headers: { "Content-Type": "multipart/form-data" },
-//       });
-//       console.log(response);
-//       // return only response.data so components receive a normalized payload
-//       return response.data;
-//     } catch (error) {
-//       console.log(error);
-
-//       return response.data; // contains { user, token }
-//     } catch (error) {
-//       return thunkAPI.rejectWithValue(
-//         error.response?.data?.message || "Registration failed"
-//       );
-//     }
-//   }
-// );
-
 export const registerUser = createAsyncThunk(
   "api/users/register",
   async (formData, thunkAPI) => {
     try {
-
       const response = await axios.post(
         // Example endpoint — replace with your backend API
         "https://robo-zv8u.onrender.com/api/users/register",
@@ -42,8 +13,8 @@ export const registerUser = createAsyncThunk(
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
       console.log(response);
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Registration failed"
@@ -74,8 +45,8 @@ export const loginUser = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: storedUser ? JSON.parse(storedUser) : null, // PURE user object
-    token: storedToken || null,
+    user: null, 
+    token: null,
     loading: false,
     error: null,
   },
@@ -83,13 +54,10 @@ const authSlice = createSlice({
   reducers: {
     clearTokenOnRefresh: (state) => {
       state.token = null;
-      localStorage.removeItem("token");
     },
     logoutUser: (state) => {
       state.user = null;
       state.token = null;
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
     },
   },
 
@@ -107,9 +75,6 @@ const authSlice = createSlice({
 
         state.user = user || null;
         state.token = token || null;
-
-        if (user) localStorage.setItem("user", JSON.stringify(user));
-        if (token) localStorage.setItem("token", token);
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -125,12 +90,8 @@ const authSlice = createSlice({
         state.loading = false;
 
         const { user, token } = action.payload;
-
         state.user = user || null;
         state.token = token || null;
-
-        if (user) localStorage.setItem("user", JSON.stringify(user));
-        if (token) localStorage.setItem("token", token);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -141,6 +102,3 @@ const authSlice = createSlice({
 
 export const { logoutUser,clearTokenOnRefresh } = authSlice.actions;
 export default authSlice.reducer;
-
-
-

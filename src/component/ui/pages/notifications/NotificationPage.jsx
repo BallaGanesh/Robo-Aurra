@@ -1,5 +1,4 @@
 
-
 import React, { useContext, useEffect } from "react";
 import Layout from "../../Layout";
 import NotificationCard from "../notifications/NotificationCard";
@@ -7,7 +6,7 @@ import NotificationCard from "../notifications/NotificationCard";
 import { SocketContext } from "../../../../Socket/SocketProvider";
 import { NotificationContext } from "../../../../Notifications/NotificationProvider";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   acceptFollowRequest,
   rejectFollowRequest,
@@ -20,7 +19,8 @@ const NotificationsPage = () => {
   const { notifications, removeNotification } = useContext(NotificationContext);
 
   // ✅ Use the same user object that profile uses
-  const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+  const auth= useSelector((state)=>state.Auth)
+  const storedUser=auth?.user;
   const backendPending = storedUser?.pendingRequests || [];
 
   // ✅ Map backend pendingRequests → NotificationCard format
@@ -58,7 +58,7 @@ const NotificationsPage = () => {
 
   // Debug
   useEffect(() => {
-    console.log("User from localStorage:", storedUser);
+    console.log("User from global state:", storedUser);
     console.log("Backend pending:", backendPending);
     console.log("Socket follow:", socketFollow);
     console.log("Merged requests:", mergedFollowRequests);
