@@ -2,11 +2,13 @@
 
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../features/auth/AuthSlice";
+import { registerUser,googleLogin } from "../features/auth/AuthSlice";
 
 import toast from "react-hot-toast";
 import { validatePassword } from "val-pass";
 import { Link, useNavigate } from "react-router-dom";
+
+import { GoogleLogin } from "react-oauth-google";
 
 import { FiUser } from "react-icons/fi";
 import { MdOutlineEmail } from "react-icons/md";
@@ -153,6 +155,27 @@ const Register = () => {
       }
     })();
   };
+
+  const onGoogleSuccess = (response) => {
+    const idToken = response?.credential;
+
+    if (!idToken) {
+      toast.error("Google sign-in failed.");
+      return;
+    }
+
+    dispatch(googleLogin(idToken))
+      .unwrap()
+      .then(() => {
+        toast.success("Logged in with Google!");
+        navigate("/");
+      })
+      .catch((err) => toast.error(err || "Google login failed"));
+  };
+
+
+  const onGoogleError = () => toast.error("Google Login Failed");
+
 
   return (
     <div className="min-h-screen bg-linear-to-br from-cyan-400 to-purple-600">
@@ -406,7 +429,7 @@ const Register = () => {
               </p>
               <div className="border-t flex-1"></div>
             </div>
-
+{/* 
             <button
               type="button"
               className="flex items-center justify-center w-full border border-gray-300 py-2 sm:py-2.5 rounded-full hover:bg-gray-50 transition-colors duration-300 text-sm sm:text-base"
@@ -417,7 +440,10 @@ const Register = () => {
                 className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
               />
               Continue with Google
-            </button>
+            </button> */}
+            <div className="mt-6">
+              <GoogleLogin onSuccess={onGoogleSuccess} onError={onGoogleError} />
+            </div>
           </form>
 
           {/* FOOTER */}
