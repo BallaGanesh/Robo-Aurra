@@ -395,7 +395,7 @@
 
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser, googleLogin } from "../features/auth/AuthSlice";
+import { registerUser,googleLogin } from "../features/auth/AuthSlice";
 
 import toast from "react-hot-toast";
 import { validatePassword } from "val-pass";
@@ -553,7 +553,26 @@ const Register = () => {
       .catch((err) => toast.error(err || "Google login failed"));
   };
 
+  const onGoogleSuccess = (response) => {
+    const idToken = response?.credential;
+
+    if (!idToken) {
+      toast.error("Google sign-in failed.");
+      return;
+    }
+
+    dispatch(googleLogin(idToken))
+      .unwrap()
+      .then(() => {
+        toast.success("Logged in with Google!");
+        navigate("/");
+      })
+      .catch((err) => toast.error(err || "Google login failed"));
+  };
+
+
   const onGoogleError = () => toast.error("Google Login Failed");
+
 
   return (
     <div className="min-h-screen bg-linear-to-br from-cyan-400 to-purple-600">

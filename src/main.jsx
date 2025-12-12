@@ -7,6 +7,7 @@ import App from "./App";
 import "./style/style.css";
 import { store } from "./component/store/store";
 import { Toaster } from "react-hot-toast";
+import { GoogleOAuthProvider } from "react-oauth-google";
 
 const GOOGLE_CLIENT_ID = "177987024396-2k935vlmislv9btiugi95nb63pf6b1aj.apps.googleusercontent.com";
 
@@ -16,28 +17,11 @@ if (!GOOGLE_CLIENT_ID) {
   );
 }
 
-createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+createRoot(document.getElementById('root')).render(
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <Provider store={store}>
-        <App />
-        <Toaster />
-      </Provider>
+    <Provider store={store}>
+        <App></App>
+        <Toaster></Toaster>
+    </Provider>
     </GoogleOAuthProvider>
-  </React.StrictMode>
-);
-
-
-// import {createRoot} from "react-dom/client"
-// import App from "./App"
-// import "./style/style.css"
-// import { Provider } from "react-redux"
-// import { store } from './component/store/store';
-// import { Toaster } from "react-hot-toast";
-
-// createRoot(document.getElementById('root')).render(
-//     <Provider store={store}>
-//         <App></App>
-//         <Toaster></Toaster>
-//     </Provider>
-// )
+)
