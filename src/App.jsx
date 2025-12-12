@@ -1,9 +1,5 @@
-import { RouterProvider } from "react-router-dom";
-import routers from "./component/routers/routes";
-import { SocketProvider } from "./Socket/SocketProvider";
+
 import { NotificationProvider } from "./Notifications/NotificationProvider";
-
-
 import React, { useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
 import routers from "./component/routers/routes";

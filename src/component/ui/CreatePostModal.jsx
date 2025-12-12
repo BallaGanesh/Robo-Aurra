@@ -7,12 +7,10 @@ const CreatePostModal = ({ isOpen, onClose, onPost, userAvatar, userName }) => {
   const [visibility, setVisibility] = useState("public");
   const [title, setTitle] = useState("");
 
-  const authData = JSON.parse(localStorage.getItem("user"));
-  const loggedUser = authData;
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.Auth);
   const user = auth?.user ?? null;
-
+  const loggedUser = user;
   const handlePost = () => {
     if (content.trim()) {
       onPost(content, visibility, title);

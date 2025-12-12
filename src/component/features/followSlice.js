@@ -1,30 +1,14 @@
-// ==============================
-// FOLLOW SLICE (CLEAN + FIXED)
-// ==============================
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const API_URL = "https://robo-zv8u.onrender.com/api/follow";
 
-// 🔥 TOKEN HELPER (works for any project setup)
-const getToken = () => {
-  return (
-    localStorage.getItem("Token") ||
-    localStorage.getItem("token") ||
-    sessionStorage.getItem("Token") ||
-    sessionStorage.getItem("token")
-  );
-};
-
-// ======================================================
-// 1️⃣ SEND FOLLOW REQUEST
-// ======================================================
+// SEND FOLLOW REQUEST -------------
 export const sendFollowRequest = createAsyncThunk(
   "follow/sendFollowRequest",
   async (targetUsername, thunkAPI) => {
     try {
-      const token = getToken();
-
+       const token = thunkAPI.getState().Auth.token; 
       const res = await axios.post(
         `${API_URL}/send-request`,
         { targetUsername },
@@ -33,7 +17,7 @@ export const sendFollowRequest = createAsyncThunk(
         }
       );
 
-      return res.data; // { message }
+      return res.data; // { message, user? }
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Failed to send follow request"
@@ -42,24 +26,23 @@ export const sendFollowRequest = createAsyncThunk(
   }
 );
 
-// ======================================================
-// 2️⃣ ACCEPT FOLLOW REQUEST
-// ======================================================
+// ACCEPT FOLLOW REQUEST -------------
 export const acceptFollowRequest = createAsyncThunk(
   "follow/acceptFollowRequest",
   async (followerId, thunkAPI) => {
     try {
-      const token = getToken();
+      const token = thunkAPI.getState().Auth.token; 
 
       const res = await axios.post(
         `${API_URL}/accept-request`,
-        { followerId },
+        { followerId },  // 👈 IMPORTANT: followerId
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      return res.data; // { message, user: updatedUser }
+      // res.data = { message, user: updatedCurrentUser }
+      return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Failed to accept request"
@@ -68,14 +51,12 @@ export const acceptFollowRequest = createAsyncThunk(
   }
 );
 
-// ======================================================
-// 3️⃣ REJECT FOLLOW REQUEST
-// ======================================================
+// REJECT FOLLOW REQUEST -------------
 export const rejectFollowRequest = createAsyncThunk(
   "follow/rejectFollowRequest",
   async (followerId, thunkAPI) => {
     try {
-      const token = getToken();
+    const token = thunkAPI.getState().Auth.token; 
 
       const res = await axios.post(
         `${API_URL}/reject-request`,
@@ -85,7 +66,7 @@ export const rejectFollowRequest = createAsyncThunk(
         }
       );
 
-      return res.data; // { message }
+      return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Failed to reject request"
@@ -94,9 +75,6 @@ export const rejectFollowRequest = createAsyncThunk(
   }
 );
 
-// ======================================================
-// FOLLOW SLICE
-// ======================================================
 const followSlice = createSlice({
   name: "follow",
   initialState: {
@@ -104,7 +82,6 @@ const followSlice = createSlice({
     message: null,
     error: null,
   },
-
   reducers: {
     clearFollowState: (state) => {
       state.loading = false;
@@ -112,10 +89,9 @@ const followSlice = createSlice({
       state.error = null;
     },
   },
-
   extraReducers: (builder) => {
     builder
-      // SEND REQUEST
+      // send
       .addCase(sendFollowRequest.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -129,35 +105,17 @@ const followSlice = createSlice({
         state.error = action.payload;
       })
 
-      // ACCEPT REQUEST
-      .addCase(acceptFollowRequest.pending, (state) => {
-        state.loading = true;
-      })
+      // accept
       .addCase(acceptFollowRequest.fulfilled, (state, action) => {
-        state.loading = false;
         state.message = action.payload.message;
-      })
-      .addCase(acceptFollowRequest.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
       })
 
-      // REJECT REQUEST
-      .addCase(rejectFollowRequest.pending, (state) => {
-        state.loading = true;
-      })
+      // reject
       .addCase(rejectFollowRequest.fulfilled, (state, action) => {
-        state.loading = false;
         state.message = action.payload.message;
-      })
-      .addCase(rejectFollowRequest.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
       });
   },
 });
 
 export const { clearFollowState } = followSlice.actions;
 export default followSlice.reducer;
-
-

@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setChildValue } from "../../features/auth/childSlice";
 import { useNavigate } from "react-router-dom";
 import { setIsDarkMode } from "../../features/auth/childSlice";
+import toast from "react-hot-toast";
 
 const Settings = () => {
   const dispatch = useDispatch();
@@ -75,9 +76,7 @@ const {isDarkMode}=useSelector((state)=>state.child);
 
   const handleLogout = () => {
     dispatch(setChildValue(null));
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    alert("You have been logged out");
+    toast.success("logout successfully")
     navigate("/Login");
   };
 
