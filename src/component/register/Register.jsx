@@ -536,22 +536,7 @@ const Register = () => {
   // -----------------------
   // GOOGLE LOGIN HANDLER
   // -----------------------
-  const onGoogleSuccess = (response) => {
-    const idToken = response?.credential;
 
-    if (!idToken) {
-      toast.error("Google sign-in failed.");
-      return;
-    }
-
-    dispatch(googleLogin(idToken))
-      .unwrap()
-      .then(() => {
-        toast.success("Logged in with Google!");
-        navigate("/");
-      })
-      .catch((err) => toast.error(err || "Google login failed"));
-  };
 
   const onGoogleSuccess = (response) => {
     const idToken = response?.credential;

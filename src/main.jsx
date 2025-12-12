@@ -7,7 +7,7 @@ import App from "./App";
 import "./style/style.css";
 import { store } from "./component/store/store";
 import { Toaster } from "react-hot-toast";
-import { GoogleOAuthProvider } from "react-oauth-google";
+
 
 const GOOGLE_CLIENT_ID = "177987024396-2k935vlmislv9btiugi95nb63pf6b1aj.apps.googleusercontent.com";
 
