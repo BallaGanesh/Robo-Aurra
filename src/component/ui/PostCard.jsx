@@ -15,8 +15,7 @@ dayjs.extend(relativeTime);
 
 const PostCard = ({
   id,
-  author,    // 👈 username + avatar
-  title,      // 👈 NEW: article title
+  author,    
   content,
   timestamp,
   likes,
@@ -37,11 +36,8 @@ const PostCard = ({
   const loggedUser = auth?.user ?? null;
 
 const userLikeKey = `liked_posts_${loggedUser?._id}`;
-  console.log("🔑 userLikeKey:", userLikeKey);
+  
   const [isLiked, setIsLiked] = useState(() => {
-  const likedPosts = JSON.parse(localStorage.getItem(userLikeKey)) || [];
-  console.log("❤️ Loaded liked posts:", likedPosts);
-  console.log("📌 Current post ID:", id);
   return likedPosts.includes(id);
 });
 
@@ -66,10 +62,6 @@ const userLikeKey = `liked_posts_${loggedUser?._id}`;
 
   dispatch(toggleLike(id));
 };
-console.log("❤️ Is this post liked?", id, isLiked);
-
-
-
   // COMMENT API
   const handleAddComment = async (postId) => {
     if (!commentText.trim()) return;
@@ -90,16 +82,6 @@ console.log("❤️ Is this post liked?", id, isLiked);
       const newComment = response.data.comment || response.data;
 
       // ⭐ FIX: Add username locally so UI updates instantly
-      // setCommentsList((prev) => [
-      //   ...prev,
-      //   {
-      //     text: newComment.text,
-      //     user: {
-      //       username: loggedUser?.username,
-      //       profilePhoto: loggedUser?.profilePhoto,
-      //     },
-      //   },
-      // ]);
       setCommentsList((prev) => [
   ...prev,
   {
@@ -110,8 +92,6 @@ console.log("❤️ Is this post liked?", id, isLiked);
     }
   }
 ]);
-
-
       setCommentText("");
     } catch (error) {
       console.error("Comment error:", error);

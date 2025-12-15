@@ -1,5 +1,3 @@
-
-
 import React, { useContext, useEffect } from "react";
 import Layout from "../../Layout";
 import NotificationCard from "../notifications/NotificationCard";
@@ -56,7 +54,7 @@ const NotificationsPage = () => {
 
   // ✅ Follow ACCEPTED notifications (Feature 1)
   const followAccepted = notifications.filter(
-    (n) => n.type === "followAccepted" // make sure your NotificationProvider uses this type
+    (n) => n.type === "followAccepted"
   );
 
   // Debug
@@ -75,6 +73,8 @@ const NotificationsPage = () => {
     console.log("🔌 NotificationsPage socket active:", socket.id);
   }, [socket]);
 
+
+  // HANDLE ACCEPT
   const handleAccept = async (notification) => {
     try {
       if (!notification?.followerId) {
@@ -97,27 +97,7 @@ const NotificationsPage = () => {
     }
   };
 
-  // const handleReject = async (notification) => {
-  //   try {
-  //     if (!notification?.followerId) {
-  //       console.warn("handleReject: missing followerId", notification);
-  //       return;
-  //     }
-
-  //     const res = await dispatch(
-  //       rejectFollowRequest(notification.followerId)
-  //     ).unwrap();
-
-  //     if (res?.user) {
-  //       localStorage.setItem("user", JSON.stringify(res.user));
-  //     }
-
-  //     removeNotification(notification.id);
-  //   } catch (err) {
-  //     console.error("Failed to reject follow request:", err);
-  //   }
-  // };
-
+  // HANDLE REJECT
 const handleReject = async (notification) => {
   try {
     const id = notification.followerId || notification.fromId;

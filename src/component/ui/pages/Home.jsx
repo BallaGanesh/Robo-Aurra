@@ -11,11 +11,6 @@ import { getAllPosts, postArticle } from "../../features/articleSlice";
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
-
-  // const { posts } = useSelector((state) => state.articles);
-  // const auth = useSelector((state) => state.Auth);
- 
-  // const loggedUser = auth?.user ?? null;
 const { posts } = useSelector((state) => state.articles);
   const auth = useSelector((state) => state.Auth);
   const loggedUser = auth?.user ?? null;

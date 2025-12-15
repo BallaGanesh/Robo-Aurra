@@ -432,6 +432,7 @@ export const NotificationProvider = ({ children }) => {
 
     console.log("🔔 Notification listeners active");
 
+    // FOLLOW REQUEST RECEIVED
     socket.on("followRequestReceived", (data) => {
       const notif = {
         id: Date.now(),
@@ -450,6 +451,7 @@ export const NotificationProvider = ({ children }) => {
       showPopup(notif);
     });
 
+  //  FOLLOW REQUEST ACCEPTED
     socket.on("followRequestAccepted", (data) => {
       const notif = {
         id: Date.now(),
@@ -468,6 +470,7 @@ export const NotificationProvider = ({ children }) => {
       showPopup(notif);
     });
 
+    // FOLLOW REQUEST REJECTED
     socket.on("followRequestRejected", (data) => {
       const notif = {
         id: Date.now(),
@@ -486,26 +489,7 @@ export const NotificationProvider = ({ children }) => {
       showPopup(notif);
     });
 
-    // socket.on("articleLiked", (data) => {
-    //   const notif = {
-    //     id: Date.now(),
-    //     type: "like",
-    //     user: {
-    //       name: data.likedBy,
-    //       username: data.likedBy,
-    //       avatar: data.profilePhoto
-    //         ? `data:image/jpeg;base64,${data.profilePhoto}`
-    //         : "/default-avatar.png",
-    //     },
-    //     action: "liked your post",
-    //     postId: data.postId,
-    //     timestamp: dayjs().fromNow(),
-    //     isNew: true,
-    //   };
-    //   addNotification(notif);
-    //   showPopup(notif);
-    // });
-
+    // ARTICLE LIKED
     socket.on("articleLiked", (data) => {
   console.log("❤️ LIKE SOCKET DATA:", data);
 
@@ -533,7 +517,7 @@ export const NotificationProvider = ({ children }) => {
   showPopup(notif);
 });
 
-
+// NEW COMMENT
     socket.on("newComment", (data) => {
       const loggedUser = getUser();
       const commenterId = data?.comment?.user;
@@ -556,6 +540,7 @@ export const NotificationProvider = ({ children }) => {
       showPopup(notif);
     });
 
+    // NEW POST
     socket.on("newPost", (data) => {
       const loggedUser = getUser();
       if (String(data.user_id) === String(loggedUser?._id)) return;
