@@ -7,7 +7,7 @@ import NotificationCard from "../notifications/NotificationCard";
 import { SocketContext } from "../../../../Socket/SocketProvider";
 import { NotificationContext } from "../../../../Notifications/NotificationProvider";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   acceptFollowRequest,
   rejectFollowRequest,
@@ -15,12 +15,15 @@ import {
 
 const NotificationsPage = () => {
   const dispatch = useDispatch();
+  const {user}=useSelector((state)=>state.Auth); 
+  console.log(user);
+   
 
   const { socket } = useContext(SocketContext);
   const { notifications, removeNotification } = useContext(NotificationContext);
 
   // ✅ Use the same user object that profile uses
-  const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+  const storedUser = user;
   const backendPending = storedUser?.pendingRequests || [];
 
   // ✅ Map backend pendingRequests → NotificationCard format
@@ -94,26 +97,50 @@ const NotificationsPage = () => {
     }
   };
 
-  const handleReject = async (notification) => {
-    try {
-      if (!notification?.followerId) {
-        console.warn("handleReject: missing followerId", notification);
-        return;
-      }
+  // const handleReject = async (notification) => {
+  //   try {
+  //     if (!notification?.followerId) {
+  //       console.warn("handleReject: missing followerId", notification);
+  //       return;
+  //     }
 
-      const res = await dispatch(
-        rejectFollowRequest(notification.followerId)
-      ).unwrap();
+  //     const res = await dispatch(
+  //       rejectFollowRequest(notification.followerId)
+  //     ).unwrap();
 
-      if (res?.user) {
-        localStorage.setItem("user", JSON.stringify(res.user));
-      }
+  //     if (res?.user) {
+  //       localStorage.setItem("user", JSON.stringify(res.user));
+  //     }
 
-      removeNotification(notification.id);
-    } catch (err) {
-      console.error("Failed to reject follow request:", err);
+  //     removeNotification(notification.id);
+  //   } catch (err) {
+  //     console.error("Failed to reject follow request:", err);
+  //   }
+  // };
+
+const handleReject = async (notification) => {
+  try {
+    const id = notification.followerId || notification.fromId;
+
+    if (!id) {
+      console.warn("handleReject: missing followerId", notification);
+      return;
     }
-  };
+
+    const res = await dispatch(
+      rejectFollowRequest(id)
+    ).unwrap();
+
+    if (res?.user) {
+      localStorage.setItem("user", JSON.stringify(res.user));
+    }
+
+    removeNotification(notification.id);
+  } catch (err) {
+    console.error("Failed to reject follow request:", err);
+  }
+};
+
 
   const deleteNotification = (id) => {
     removeNotification(id);

@@ -37,9 +37,10 @@ export const SocketProvider = ({ children }) => {
 
     s.on("connect", () => {
       console.log("🔌 Socket connected:", s.id);
+        s.emit("register", user._id);
     });
 
-    s.emit("register", user._id);
+    // s.emit("register", user._id);
     setSocket(s);
 
     return () => s.disconnect();

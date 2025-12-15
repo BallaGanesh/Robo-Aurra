@@ -54,17 +54,9 @@ const Profile = () => {
   const followersList = loggedUser?.followers || [];
   const followingList = loggedUser?.following || [];
 
-  // ❗ YOUR OLD DUMMY LIST (kept but commented)
-  /*
-  const followers = [
-    { id: "1", name: "Sarah Johnson", username: "sarahj", avatar: "...", isFollowing: true },
-    { id: "2", name: "Alex Chen", username: "alexchen", avatar: "...", isFollowing: false },
-    ...
-  ];
-  */
   //  filter posts by logged-in user
   const userPosts = Array.isArray(posts)
-    ? posts.filter((post) => post.user?._id === loggedUser?._id)
+    ? posts.filter((post) => String(post.user?._id) === String(loggedUser?._id))
     : [];
 
   // handle send follow request
@@ -126,7 +118,12 @@ const Profile = () => {
         }}
       >
         <div
-          className="bg-white rounded-2xl w-full max-w-md max-h-[85vh] overflow-hidden animate-scale-in flex flex-col"
+          // className="bg-white rounded-2xl w-full max-w-md max-h-[85vh] overflow-hidden animate-scale-in flex flex-col"
+          className="bg-white dark:bg-gray-900
+             text-black dark:text-gray-100
+             border border-gray-200 dark:border-gray-700
+             rounded-2xl w-full max-w-md max-h-[85vh]
+             overflow-hidden animate-scale-in flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
@@ -263,7 +260,7 @@ const Profile = () => {
               {/* Stats */}
               <div className="flex gap-6 justify-center md:justify-start text-center">
                 <button className="hover:underline">
-                  <p className="font-bold">{posts?.length || 0}</p>
+                  <p className="font-bold">{userPosts.length}</p>
                   <p className="text-sm text-gray-500">Posts</p>
                 </button>
 
@@ -337,9 +334,9 @@ const Profile = () => {
             const postUser = post.user;
 
             const author = {
-              name: postUser.username,
-              avatar: postUser.profilePhoto
-                ? `data:image/jpeg;base64,${postUser.profilePhoto}`
+              name: loggedUser.username,
+              avatar: loggedUser.profilePhoto
+                ? `data:image/jpeg;base64,${loggedUser.profilePhoto}`
                 : "/default-avatar.png",
             };
 
@@ -369,6 +366,11 @@ const Profile = () => {
           >
             <div
               className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto animate-scale-in"
+            //   className="bg-white dark:bg-gray-900
+            //  text-black dark:text-gray-100
+            //  border border-gray-200 dark:border-gray-700
+            //  rounded-2xl max-w-lg w-full max-h-[90vh]
+            //  overflow-y-auto animate-scale-in"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
@@ -409,6 +411,7 @@ const Profile = () => {
                       setEditForm({ ...editForm, name: e.target.value })
                     }
                     className="w-full px-4 py-3 rounded-xl bg-gray-100 border focus:ring-2 focus:ring-primary"
+                    
                   />
                 </div>
 
@@ -440,6 +443,12 @@ const Profile = () => {
                     }
                     rows={4}
                     className="w-full px-4 py-3 rounded-xl bg-gray-100 border focus:ring-2 focus:ring-primary resize-none"
+          //           className="w-full px-4 py-3 rounded-xl
+          //  bg-gray-100 dark:bg-gray-800
+          //  border border-gray-300 dark:border-gray-600
+          //  text-black dark:text-gray-100
+          //  focus:ring-2 focus:ring-primary"
+
                   />
                   <p className="text-xs text-gray-500 text-right">
                     {editForm.bio.length}/150
