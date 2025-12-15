@@ -74,14 +74,9 @@ const NotificationsPage = () => {
         return;
       }
 
-      const res = await dispatch(
+       await dispatch(
         acceptFollowRequest(notification.followerId)
       ).unwrap();
-
-      // if backend returns updated user, sync into localStorage
-      if (res?.user) {
-        localStorage.setItem("user", JSON.stringify(res.user));
-      }
 
       removeNotification(notification.id);
     } catch (err) {
@@ -96,13 +91,9 @@ const NotificationsPage = () => {
         return;
       }
 
-      const res = await dispatch(
+     await dispatch(
         rejectFollowRequest(notification.followerId)
       ).unwrap();
-
-      if (res?.user) {
-        localStorage.setItem("user", JSON.stringify(res.user));
-      }
 
       removeNotification(notification.id);
     } catch (err) {
