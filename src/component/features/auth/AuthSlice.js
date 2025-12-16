@@ -1,27 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const storedToken = localStorage.getItem("token");
-const storedUser = localStorage.getItem("user");
-
-// -------------------- ASYNC THUNKS -------------------- //
-
 export const registerUser = createAsyncThunk(
   "api/users/register",
+  
   async (formData, thunkAPI) => {
     try {
       const response = await axios.post(
+        // Example endpoint — replace with your backend API
         "https://robo-zv8u.onrender.com/api/users/register",
         formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
-
       console.log(response);
-
-      return response.data; // { user, token }
+      return response.data;
     } catch (error) {
-      console.log(error);
-
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Registration failed"
       );
@@ -46,23 +41,45 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const googleLogin = createAsyncThunk(
+  "api/users/google-login",
+  async (idToken, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/users/google`,
+        { idToken },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      // Expected response:
+      // { user: {...}, token: "xxxx" }
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Google login failed"
+      );
+    }
+  }
+);
+
 // -------------------- SLICE -------------------- //
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: storedUser ? JSON.parse(storedUser) : null, // PURE user object
-    token: storedToken || null,
+    user: null, 
+    token: null,
     loading: false,
     error: null,
   },
 
   reducers: {
+    clearTokenOnRefresh: (state) => {
+      state.token = null;
+    },
     logoutUser: (state) => {
       state.user = null;
       state.token = null;
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
     },
   },
 
@@ -80,9 +97,6 @@ const authSlice = createSlice({
 
         state.user = user || null;
         state.token = token || null;
-
-        if (user) localStorage.setItem("user", JSON.stringify(user));
-        if (token) localStorage.setItem("token", token);
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -98,22 +112,32 @@ const authSlice = createSlice({
         state.loading = false;
 
         const { user, token } = action.payload;
-
         state.user = user || null;
         state.token = token || null;
-
-        if (user) localStorage.setItem("user", JSON.stringify(user));
-        if (token) localStorage.setItem("token", token);
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(googleLogin.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(googleLogin.fulfilled, (state, action) => {
+        state.loading = false;
+
+        const { user, token } = action.payload;
+
+        state.user = user|| null;
+        state.token = token|| null;
+
+      })
+      .addCase(googleLogin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
 
-export const { logoutUser } = authSlice.actions;
+export const { logoutUser,clearTokenOnRefresh } = authSlice.actions;
 export default authSlice.reducer;
-
-
-

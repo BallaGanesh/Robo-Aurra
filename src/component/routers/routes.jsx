@@ -9,6 +9,7 @@ import Messages from "../ui/pages/Messages";
 import NotFound from './../ui/pages/NotFound';
 import LandingPg from "../ui/pages/LandingPg";
 import NotificationsPage from './../ui/pages/notifications/NotificationPage';
+import PrivateRoute from "./PrivateRoute";
 
 
 let routers = createBrowserRouter([{
@@ -22,22 +23,26 @@ let routers = createBrowserRouter([{
     element:<Login></Login>
 }, {
     path:"/Home",
-    element:<Home></Home>
+    element:<PrivateRoute><Home></Home></PrivateRoute>
 }, {
     path:"/Explore",
-    element:<Explore></Explore>
+    element:<PrivateRoute><Explore></Explore></PrivateRoute>
+  
 }, {
     path:"/Settings",
-    element:<Settings></Settings>
+    element:<PrivateRoute><Settings></Settings></PrivateRoute>
+  
 }, {
     path:"/Profile",
-    element: <Profile></Profile>
+    element:<PrivateRoute><Profile></Profile></PrivateRoute>
+   
 }, {
     path:"/Messages",
-    element:<Messages></Messages>
-}, {
+    element:<PrivateRoute><Messages></Messages></PrivateRoute>
+  
+},{
     path:'/notifications',
-    element:<NotificationsPage></NotificationsPage>
+    element:<PrivateRoute><NotificationsPage></NotificationsPage></PrivateRoute>
 },
  {
     path:'*',

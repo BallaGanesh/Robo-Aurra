@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MdOutlineEmail } from "react-icons/md";
@@ -41,7 +40,6 @@ const Login = () => {
       try {
         let result = await dispatch(loginUser(formData)).unwrap();
        
-
         if (result && result.token) {
           toast.success("Login successful!");
           navigate("/home");
@@ -74,8 +72,7 @@ const Login = () => {
                   Don't have an account?{" "}
                   <Link
                     to="/register"
-                    className="text-blue-600 hover:underline font-semibold"
-                  >
+                    className="text-blue-600 hover:underline font-semibold">
                     Sign Up
                   </Link>
                 </p>
@@ -88,27 +85,14 @@ const Login = () => {
         <div className="w-full max-w-md">
           {/* CARD HEADER */}
           <div className="text-center  mb-8">
-            <h1 className="text-4xl md:text-4xl font-medium text-white  mb-2">
-              Welcome Back
-            </h1>
-            <p className="text-white/80">
-              Sign in to your AURRA account to continue
-            </p>
+            <h1 className="text-4xl md:text-4xl font-medium text-white  mb-2">Welcome Back</h1>
+            <p className="text-white/80">Sign in to your AURRA account to continue</p>
           </div>
 
           {/* FORM */}
           <form
             onSubmit={handleSubmit}
-            className="bg-white rounded-2xl shadow-lg p-6 md:p-8 space-y-6"
-          >
-            {/* ERROR MESSAGE */}
-            {(error || localError) && (
-              <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
-                <p className="text-red-600 text-sm font-medium">
-                  {error || localError}
-                </p>
-              </div>
-            )}
+            className="bg-white rounded-2xl shadow-lg p-6 md:p-8 space-y-6">
 
             {/* FORM FIELDS */}
             <div className="space-y-4">
@@ -125,8 +109,7 @@ const Login = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"
-                />
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"/>
               </div>
 
               {/* PASSWORD */}
@@ -138,8 +121,7 @@ const Login = () => {
                   </label>
                   <Link
                     to="#"
-                    className="text-xs text-blue-600 hover:underline font-medium"
-                  >
+                    className="text-xs text-blue-600 hover:underline font-medium">
                     Forgot?
                   </Link>
                 </div>
@@ -151,13 +133,11 @@ const Login = () => {
                     value={formData.password}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 pr-10 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"
-                  />
+                    className="w-full px-4 py-3 pr-10 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"/>
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                  >
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
                     {showPassword ? (
                       <FaEyeSlash size={16} />
                     ) : (
@@ -173,12 +153,10 @@ const Login = () => {
               <input
                 type="checkbox"
                 id="remember"
-                className="w-4 h-4 accent-blue-600 cursor-pointer"
-              />
+                className="w-4 h-4 accent-blue-600 cursor-pointer"/>
               <label
                 htmlFor="remember"
-                className="ml-2 text-sm text-gray-600 cursor-pointer"
-              >
+                className="ml-2 text-sm text-gray-600 cursor-pointer">
                 Remember me
               </label>
             </div>
@@ -187,8 +165,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full flex justify-center items-center gap-2 relative overflow-hidden bg-linear-to-r from-cyan-400 to-purple-500 text-white py-2.5 sm:py-3 mt-6 rounded-lg transition-all duration-300 ease-in-out transform text-sm sm:text-base font-medium hover:scale-[1.02] hover:from-purple-500 hover:to-cyan-400 active:scale-95 focus:outline-none shadow-lg`}
-            >
+              className={`w-full flex justify-center items-center gap-2 relative overflow-hidden bg-linear-to-r from-cyan-400 to-purple-500 text-white py-2.5 sm:py-3 mt-6 rounded-lg transition-all duration-300 ease-in-out transform text-sm sm:text-base font-medium hover:scale-[1.02] hover:from-purple-500 hover:to-cyan-400 active:scale-95 focus:outline-none shadow-lg`}>
               <span>{loading ? "Signing in..." : "Sign In"}</span>
               {!loading && <GoArrowRight size={18} />}
               {loading && (
@@ -208,13 +185,11 @@ const Login = () => {
             {/* GOOGLE BUTTON */}
             <button
               type="button"
-              className="w-full py-3 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition-all duration-300 flex items-center justify-center gap-3 font-medium text-sm"
-            >
+              className="w-full py-3 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition-all duration-300 flex items-center justify-center gap-3 font-medium text-sm">
               <img
                 src="https://www.svgrepo.com/show/355037/google.svg"
                 alt="Google"
-                className="w-5 h-5"
-              />
+                className="w-5 h-5"/>
               Continue with Google
             </button>
           </form>
@@ -224,8 +199,7 @@ const Login = () => {
             Don't have an account?{" "}
             <Link
               to="/register"
-              className="text-white font-semibold hover:underline"
-            >
+              className="text-white font-semibold hover:underline">
               Create one now
             </Link>
           </p>
