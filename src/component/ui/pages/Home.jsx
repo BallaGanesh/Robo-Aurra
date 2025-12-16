@@ -11,11 +11,10 @@ import { getAllPosts, postArticle } from "../../features/articleSlice";
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
-
-  const { posts } = useSelector((state) => state.articles);
+const { posts } = useSelector((state) => state.articles);
   const auth = useSelector((state) => state.Auth);
-  const user = auth?.user ?? null;
-
+  const loggedUser = auth?.user ?? null;
+ const user = auth?.user ?? null;
   useEffect(() => {
     dispatch(getAllPosts());
   }, [dispatch]);
@@ -30,6 +29,57 @@ const Home = () => {
       .then(() => dispatch(getAllPosts()))
       .catch((err) => console.log("ERROR CREATING POST:", err));
   };
+
+  const resolveAuthor = (postUser) => {
+    if (!postUser || !loggedUser) {
+      return {
+        name: "Unknown User",
+        avatar: "/default-avatar.png",
+      };
+    }
+
+    // 1️⃣ Logged-in user
+    if (loggedUser._id === postUser._id) {
+      return {
+        name: loggedUser.username,
+        avatar: loggedUser.profilePhoto
+          ? `data:image/jpeg;base64,${loggedUser.profilePhoto}`
+          : "/default-avatar.png",
+      };
+    }
+
+    // 2️⃣ Check followers
+    const followerMatch = loggedUser.followers?.find(
+      (u) => u._id === postUser._id
+    );
+    if (followerMatch) {
+      return {
+        name: followerMatch.username,
+        avatar: followerMatch.profilePhoto
+          ? `data:image/jpeg;base64,${followerMatch.profilePhoto}`
+          : "/default-avatar.png",
+      };
+    }
+
+    // 3️⃣ Check following
+    const followingMatch = loggedUser.following?.find(
+      (u) => u._id === postUser._id
+    );
+    if (followingMatch) {
+      return {
+        name: followingMatch.username,
+        avatar: followingMatch.profilePhoto
+          ? `data:image/jpeg;base64,${followingMatch.profilePhoto}`
+          : "/default-avatar.png",
+      };
+    }
+
+    return {
+      name: "Unknown User",
+      avatar: "/default-avatar.png",
+    };
+  };
+
 
   return (
     <Layout>
@@ -50,7 +100,9 @@ const Home = () => {
             👋
           </h1>
 
-          <p className="text-muted-foreground text-lg">Ready to share something today?</p>
+          <p className="text-muted-foreground text-lg">
+            Ready to share something today?
+          </p>
         </div>
       </div>
 
@@ -59,36 +111,28 @@ const Home = () => {
         <div className="max-w-2xl mx-auto">
           <div className="space-y-6">
             {Array.isArray(posts) && posts.length > 0 ? (
-              posts.map((post) => {
-                const postUser = post.user && typeof post.user === "object" ? post.user : null;
+             posts.map((post) => {
+                  const author = resolveAuthor(post.user);
 
-                const author = {
-                  name: postUser?.username || user?.username || "Unknown User",
-                  email: postUser?.email || user?.email || "",
-                  avatar: postUser?.profilePhoto
-                    ? `data:image/jpeg;base64,${postUser.profilePhoto}`
-                    : user?.profilePhoto
-                    ? `data:image/jpeg;base64,${user.profilePhoto}`
-                    : "/default-avatar.png",
-                };
-
-                return (
-                  <PostCard
-                    key={post._id || post.id}
-                    id={post._id || post.id}
-                    author={author}
-                    title={post.title}               // <- PASS TITLE
-                    content={post.content}
-                    timestamp={post.createdAt}
-                    likes={post.likeCount || 0}
-                    comments={post.comments || []}
-                    shares={post.shares || 0}
-                  />
-                );
-              })
+                  return (
+                    <PostCard
+                      key={post._id}
+                      id={post._id}
+                      author={author}
+                      title={post.title}  
+                      content={post.content}
+                      timestamp={post.createdAt}
+                      likes={post.likeCount || 0}
+                      comments={post.comments || []}
+                      shares={post.shares || 0}
+                    />
+                  );
+                })
             ) : (
               <div className="text-center py-16">
-                <p className="text-muted-foreground text-lg">No posts yet. Create one to get started!</p>
+                <p className="text-muted-foreground text-lg">
+                  No posts yet. Create one to get started!
+                </p>
               </div>
             )}
           </div>
@@ -101,7 +145,9 @@ const Home = () => {
         onClose={() => setIsModalOpen(false)}
         onPost={handleCreatePost}
         userAvatar={
-          user?.profilePhoto ? `data:image/jpeg;base64,${user.profilePhoto}` : user?.avatar || "/logo.png"
+          user?.profilePhoto
+            ? `data:image/jpeg;base64,${user.profilePhoto}`
+            : user?.avatar || "/logo.png"
         }
         userName={user?.username || "You"}
       />
@@ -116,7 +162,10 @@ const Home = () => {
         hover:shadow-2xl hover:shadow-purple-500/60 hover:scale-110 active:scale-95
         group z-50"
       >
-        <BsPlusLg size={28} className="transition-transform duration-300 group-hover:rotate-90" />
+        <BsPlusLg
+          size={28}
+          className="transition-transform duration-300 group-hover:rotate-90"
+        />
       </button>
     </Layout>
   );

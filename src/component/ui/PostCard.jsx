@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { FaRegHeart, FaHeart } from "react-icons/fa6";
 import { TbMessageCircle } from "react-icons/tb";
@@ -8,6 +8,8 @@ import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { toggleLike } from "./../features/articleSlice";
 
 dayjs.extend(relativeTime);
 
@@ -21,10 +23,11 @@ const PostCard = ({
   comments,
   shares,
 }) => {
-  const [isLiked, setIsLiked] = useState(false);
+  
   const [isSaved, setIsSaved] = useState(false);
   const [currentLikes, setCurrentLikes] = useState(likes);
   const [showComments, setShowComments] = useState(false);
+  const dispatch = useDispatch();
   const [commentsList, setCommentsList] = useState(
     Array.isArray(comments) ? comments : []
   );
@@ -35,12 +38,33 @@ const PostCard = ({
   const user = auth?.user ?? null;
  
 
-  // LIKE
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    setCurrentLikes((prev) => (isLiked ? prev - 1 : prev + 1));
-  };
+const userLikeKey = `liked_posts_${loggedUser?._id}`;
+  
+  const [isLiked, setIsLiked] = useState(() => {
+  return likedPosts.includes(id);
+});
 
+  // LIKE API
+ const handleLike = () => {
+  const likedPosts = JSON.parse(localStorage.getItem(userLikeKey)) || [];
+
+  let updatedLikedPosts;
+
+  if (isLiked) {
+    // Unlike
+    updatedLikedPosts = likedPosts.filter((pid) => pid !== id);
+    setCurrentLikes((prev) => prev - 1);
+  } else {
+    // Like
+    updatedLikedPosts = [...likedPosts, id];
+    setCurrentLikes((prev) => prev + 1);
+  }
+
+  localStorage.setItem(userLikeKey, JSON.stringify(updatedLikedPosts));
+  setIsLiked(!isLiked);
+
+  dispatch(toggleLike(id));
+};
   // COMMENT API
   const handleAddComment = async (postId) => {
     if (!commentText.trim()) return;
@@ -59,6 +83,8 @@ const PostCard = ({
       );
 
       const newComment = response.data.comment || response.data;
+
+      // ⭐ FIX: Add username locally so UI updates instantly
       setCommentsList((prev) => [
   ...prev,
   {
@@ -69,8 +95,6 @@ const PostCard = ({
     }
   }
 ]);
-
-
       setCommentText("");
     } catch (error) {
       console.error("Comment error:", error);
