@@ -15,7 +15,7 @@ dayjs.extend(relativeTime);
 
 const PostCard = ({
   id,
-  author,    //  username + avatar
+  author,    //  name + avatar
   title,      //  NEW: article title
   content,
   timestamp,
@@ -38,15 +38,24 @@ const PostCard = ({
   const user = auth?.user ?? null;
  
 
-const userLikeKey = `liked_posts_${loggedUser?._id}`;
-  
-  const [isLiked, setIsLiked] = useState(() => {
+const userLikeKey = loggedUser?._id ? `liked_posts_${loggedUser._id}` : null;
+
+const [isLiked, setIsLiked] = useState(() => {
+  if (!userLikeKey) return false;
+
+  const stored = localStorage.getItem(userLikeKey);
+  const likedPosts = stored ? JSON.parse(stored) : [];
+
   return likedPosts.includes(id);
 });
 
+
   // LIKE API
  const handleLike = () => {
-  const likedPosts = JSON.parse(localStorage.getItem(userLikeKey)) || [];
+  if (!userLikeKey) return;
+
+  const stored = localStorage.getItem(userLikeKey);
+  const likedPosts = stored ? JSON.parse(stored) : [];
 
   let updatedLikedPosts;
 
@@ -99,6 +108,60 @@ const userLikeKey = `liked_posts_${loggedUser?._id}`;
     } catch (error) {
       console.error("Comment error:", error);
     }
+  };
+
+   // 🔍 Resolve username from id
+  const resolveUserFromId = (userId) => {
+    
+    if (!userId || !loggedUser) {
+      return {
+        name: "Unknown User",
+        username: "unknown",
+        avatar: "/default-avatar.png",
+      };
+    }
+
+    if (String(loggedUser._id) === String(userId)) {
+      return {
+        name: loggedUser.username,
+        username: loggedUser.username,
+        avatar: loggedUser.profilePhoto
+          ? `data:image/jpeg;base64,${loggedUser.profilePhoto}`
+          : "/default-avatar.png",
+      };
+    }
+
+    const follower = loggedUser.followers?.find(
+      (u) => String(u._id) === String(userId)
+    );
+    if (follower) {
+      return {
+        name: follower.username,
+        username: follower.username,
+        avatar: follower.profilePhoto
+          ? `data:image/jpeg;base64,${follower.profilePhoto}`
+          : "/default-avatar.png",
+      };
+    }
+
+    const following = loggedUser.following?.find(
+      (u) => String(u._id) === String(userId)
+    );
+    if (following) {
+      return {
+        name: following.username,
+        username: following.username,
+        avatar: following.profilePhoto
+          ? `data:image/jpeg;base64,${following.profilePhoto}`
+          : "/default-avatar.png",
+      };
+    }
+
+    return {
+      name: "Unknown User",
+      username: "unknown",
+      avatar: "/default-avatar.png",
+    };
   };
 
   return (
@@ -184,11 +247,11 @@ const userLikeKey = `liked_posts_${loggedUser?._id}`;
                 <div key={index} className="flex gap-3 items-start">
                   {/* Avatar */}
                   <img
-                    src={c.user?.profilePhoto || "/default-avatar.png"}
+                    src={c.user?.profilePhoto?`data:image/jpeg;base64,${c.user?.profilePhoto}`:"/default-avatar.png"}
                     className="w-8 h-8 rounded-full object-cover"/>
 
                   <div>
-                    <p className="font-semibold text-sm">{c.user?.username || "Anonymous"}</p>
+                    <p className="font-semibold text-sm">{resolveUserFromId(c.user?._id)?.username || "Anonymous"}</p>
                     <p className="text-gray-700 text-sm">{c.text}</p>
                   </div>
                 </div>

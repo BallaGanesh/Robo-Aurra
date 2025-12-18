@@ -321,11 +321,12 @@ const Profile = () => {
               <PostCard
                 key={post._id}
                 id={post._id}
+                title={post.title}
                 author={author}
                 content={post.content}
                 timestamp={post.createdAt}
                 likes={post.likeCount || 0}
-                comments={post.comments?.length || 0}/>
+                comments={post.comments || []}/>
             );
           })}
         </div>
