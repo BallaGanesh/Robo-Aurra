@@ -121,7 +121,7 @@ const handleReject = async (notification) => {
   return (
     <Layout>
       <div className="max-w-5xl mx-auto px-4 py-6">
-        <div className="sticky top-0 z-10 bg-background pb-4 mb-6">
+        <div className="sticky top-0 z-10 bg-background pb-2 mb-6  bg-white">
           <h1 className="text-3xl w-44 font-bold gradient-text mb-4 bg-linear-to-r from-purple-600 to-blue-400 text-transparent bg-clip-text">Notifications</h1>
         </div>
 
