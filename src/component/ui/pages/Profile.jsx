@@ -115,12 +115,12 @@ const Profile = () => {
           setShowFollowingModal(false);
         }}>
         <div
-          // className="bg-white rounded-2xl w-full max-w-md max-h-[85vh] overflow-hidden animate-scale-in flex flex-col"
-          className="bg-white dark:bg-gray-900
-             text-black dark:text-gray-100
-             border border-gray-200 dark:border-gray-700
-             rounded-2xl w-full max-w-md max-h-[85vh]
-             overflow-hidden animate-scale-in flex flex-col"
+          className="bg-white rounded-2xl w-full max-w-md max-h-[85vh] overflow-hidden animate-scale-in flex flex-col"
+          // className="bg-white dark:bg-gray-900
+          //    text-black dark:text-gray-100
+          //    border border-gray-200 dark:border-gray-700
+          //    rounded-2xl w-full max-w-md max-h-[85vh]
+          //    overflow-hidden animate-scale-in flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
@@ -155,14 +155,14 @@ const Profile = () => {
           </div>
 
           {/* List */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto ">
             {filtered.length === 0 ? (
               <p className="p-4 text-gray-500 text-sm">No {title} found.</p>
             ) : (
               filtered.map((follower) => (
                 <div
                   key={follower._id}
-                  className="p-4 border-b flex items-center justify-between hover:bg-gray-100 transition">
+                  className="p-4 border-b flex items-center justify-between hover:bg-gray-200 transition">
                   <div className="flex items-center gap-3">
                     <img
                       src={
@@ -219,19 +219,22 @@ const Profile = () => {
                   <p className="text-gray-500 ml-5 text-sm md:text-base">@{loggedUser?.username}</p>
                 </div>
 
-                <button
+                <div className="flex gap-5 justify-center md:justify-end flex-col">
+                   <button
                   onClick={() => setShowEditModal(true)}
                   className="rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white px-6 py-2 text-md font-semibold">
                   Edit Profile
                 </button>
-              </div>
-
+                
               {/* Follow Button */}
               <button
                 onClick={() => setShowFollowModal(true)}
-                className="rounded-full w-35 p-1.5 self-end font-semibold bg-linear-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg px-6">
+                className="rounded-full bg-linear-to-r from-blue-500 to-purple-600 text-white px-6 py-2 text-md font-semibold">
                 Search Users
-              </button>
+              </button> 
+              </div>
+              </div>
+
 
               {/* Bio */}
               <p className="text-gray-700 mb-4 text-sm md:text-base wrap-break-words">{user?.bio}</p>
