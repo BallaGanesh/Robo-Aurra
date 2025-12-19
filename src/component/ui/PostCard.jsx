@@ -38,33 +38,43 @@ const PostCard = ({
   const user = auth?.user ?? null;
  
 
-const userLikeKey = `liked_posts_${loggedUser?._id}`;
-  
-  const [isLiked, setIsLiked] = useState(() => {
-  return likedPosts.includes(id);
-});
+const userLikeKey = loggedUser?._id
+  ? `liked_posts_${loggedUser._id}`
+  : null;
+
+const likedPosts = userLikeKey
+  ? JSON.parse(localStorage.getItem(userLikeKey)) || []
+  : [];
+
+const [isLiked, setIsLiked] = useState(likedPosts.includes(id));
+
 
   // LIKE API
  const handleLike = () => {
-  const likedPosts = JSON.parse(localStorage.getItem(userLikeKey)) || [];
+  if (!userLikeKey) return;
+
+  const likedPosts =
+    JSON.parse(localStorage.getItem(userLikeKey)) || [];
 
   let updatedLikedPosts;
 
   if (isLiked) {
-    // Unlike
     updatedLikedPosts = likedPosts.filter((pid) => pid !== id);
     setCurrentLikes((prev) => prev - 1);
   } else {
-    // Like
     updatedLikedPosts = [...likedPosts, id];
     setCurrentLikes((prev) => prev + 1);
   }
 
-  localStorage.setItem(userLikeKey, JSON.stringify(updatedLikedPosts));
-  setIsLiked(!isLiked);
+  localStorage.setItem(
+    userLikeKey,
+    JSON.stringify(updatedLikedPosts)
+  );
 
+  setIsLiked(!isLiked);
   dispatch(toggleLike(id));
 };
+
   // COMMENT API
   const handleAddComment = async (postId) => {
     if (!commentText.trim()) return;

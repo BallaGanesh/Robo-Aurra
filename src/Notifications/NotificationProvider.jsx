@@ -317,9 +317,9 @@ import { SocketContext } from "../Socket/SocketProvider";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-export const NotificationContext = createContext();
 
 dayjs.extend(relativeTime);
+export const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
   const { socket } = useContext(SocketContext);
