@@ -16,6 +16,9 @@ const NotificationsPage = () => {
   const {user}=useSelector((state)=>state.Auth); 
   console.log(user);
    
+// value of child
+const {valueFromChild}=useSelector((state)=>state.child);
+
 
   const { socket } = useContext(SocketContext);
   const { notifications, removeNotification } = useContext(NotificationContext);
@@ -99,13 +102,13 @@ const handleReject = async (notification) => {
       return;
     }
 
-    const res = await dispatch(
-      rejectFollowRequest(id)
-    ).unwrap();
+    // const res = await dispatch(
+    //   rejectFollowRequest(id)
+    // ).unwrap();
 
-    if (res?.user) {
-      localStorage.setItem("user", JSON.stringify(res.user));
-    }
+    // if (res?.user) {
+    //   localStorage.setItem("user", JSON.stringify(res.user));
+    // }
 
     removeNotification(notification.id);
   } catch (err) {
@@ -121,7 +124,7 @@ const handleReject = async (notification) => {
   return (
     <Layout>
       <div className="max-w-5xl mx-auto px-4 py-6">
-        <div className="sticky top-0 z-10 bg-background pb-2 mb-6  bg-white">
+        <div className="sticky top-0 z-10 bg-background pb-2 mb-6 " style={`${valueFromChild}`==='light'?{backgroundColor:'black'}:{backgroundColor:'#f5f5f5'}}>
           <h1 className="text-3xl w-44 font-bold gradient-text mb-4 bg-linear-to-r from-purple-600 to-blue-400 text-transparent bg-clip-text">Notifications</h1>
         </div>
 

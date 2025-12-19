@@ -98,32 +98,104 @@ export const NotificationProvider = ({ children }) => {
 
     console.log("🔔 Notification listeners active");
 
-    socket.on("articleLiked", (data) => {
-      if (String(data.likedBy) === String(user._id)) return;
-
+   // FOLLOW REQUEST RECEIVED
+    socket.on("followRequestReceived", (data) => {
       const notif = {
         id: Date.now(),
-        type: "like",
-        user: resolveUserFromId(data.likedBy),
-        action: "liked your post",
-        postId: data.postId,
+        type: "follow",
+        followerId: data.fromId,
+        user: {
+          name: data.from,
+          username: data.from,
+          avatar: "/default-avatar.png",
+        },
+        action: "sent you a follow request",
         timestamp: dayjs().fromNow(),
         isNew: true,
       };
-
       addNotification(notif);
       showPopup(notif);
     });
 
+  //  FOLLOW REQUEST ACCEPTED
+    socket.on("followRequestAccepted", (data) => {
+      const notif = {
+        id: Date.now(),
+        type: "followAccepted",
+        followerId: data.byId,
+        user: {
+          name: data.by,
+          username: data.by,
+          avatar: "/default-avatar.png",
+        },
+        action: "accepted your follow request",
+        timestamp: dayjs().fromNow(),
+        isNew: true,
+      };
+      addNotification(notif);
+      showPopup(notif);
+    });
+
+    // FOLLOW REQUEST REJECTED
+    socket.on("followRequestRejected", (data) => {
+      const notif = {
+        id: Date.now(),
+        type: "followRejected",
+        followerId: data.byId,
+        user: {
+          name: data.by,
+          username: data.by,
+          avatar: "/default-avatar.png",
+        },
+        action: "rejected your follow request",
+        timestamp: dayjs().fromNow(),
+        isNew: true,
+      };
+      addNotification(notif);
+      showPopup(notif);
+    });
+
+    // ARTICLE LIKED
+    socket.on("articleLiked", (data) => {
+  console.log("❤️ LIKE SOCKET DATA:", data);
+
+  const loggedUser = user;
+  const likerId = data?.likedBy; // backend sends user_id
+
+  if (!likerId) return;
+
+  // 🔕 Ignore own likes
+  if (String(likerId) === String(loggedUser?._id)) return;
+
+  const author = resolveUserFromId(likerId);
+
+  const notif = {
+    id: Date.now(),
+    type: "like",
+    user: author,
+    action: "liked your post",
+    postId: data.postId,
+    timestamp: dayjs().fromNow(),
+    isNew: true,
+  };
+
+  addNotification(notif);
+  showPopup(notif);
+});
+
+// NEW COMMENT
     socket.on("newComment", (data) => {
+      const loggedUser = user;
       const commenterId = data?.comment?.user;
       if (!commenterId) return;
-      if (String(commenterId) === String(user._id)) return;
+      if (String(commenterId) === String(loggedUser?._id)) return;
+
+      const author = resolveUserFromId(commenterId);
 
       const notif = {
         id: Date.now(),
         type: "comment",
-        user: resolveUserFromId(commenterId),
+        user: author,
         action: "commented on your post",
         postId: data.articleId,
         timestamp: dayjs().fromNow(),
@@ -134,15 +206,20 @@ export const NotificationProvider = ({ children }) => {
       showPopup(notif);
     });
 
+    // NEW POST
     socket.on("newPost", (data) => {
-      if (String(data.user_id) === String(user._id)) return;
+      const loggedUser = user;
+      if (String(data.user_id) === String(loggedUser?._id)) return;
+
+      const author = resolveUserFromId(data.user_id);
 
       const notif = {
         id: Date.now(),
         type: "post",
-        user: resolveUserFromId(data.user_id),
+        user: author,
         action: "posted a new article",
         postId: data.post?._id,
+        title: data.post?.title || "",
         timestamp: dayjs().fromNow(),
         isNew: true,
       };
@@ -152,12 +229,14 @@ export const NotificationProvider = ({ children }) => {
     });
 
     return () => {
+      socket.off("followRequestReceived");
+      socket.off("followRequestAccepted");
+      socket.off("followRequestRejected");
       socket.off("articleLiked");
       socket.off("newComment");
       socket.off("newPost");
     };
-  }, [socket, user, resolveUserFromId, addNotification]);
-
+  }, [socket]);
   return (
     <NotificationContext.Provider value={{ notifications, addNotification, removeNotification }}>
       {popup && (
