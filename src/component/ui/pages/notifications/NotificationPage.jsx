@@ -27,8 +27,12 @@ const NotificationsPage = () => {
 
   // Mark all as read on page load
 useEffect(() => {
-  markAllAsRead();
+  if (notifications.some((n) => n.isNew)) {
+    markAllAsRead();
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
+
   //  Map backend pendingRequests → NotificationCard format
   const backendMapped = backendPending.map((req) => ({
     id: req._id,
@@ -57,6 +61,10 @@ useEffect(() => {
   //  Follow ACCEPTED notifications (Feature 1)
   const followAccepted = notifications.filter(
     (n) => n.type === "followAccepted"
+  );
+
+  const followRejected = notifications.filter(
+    (n) => n.type === "followRejected"
   );
 
   // Debug

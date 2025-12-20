@@ -82,6 +82,15 @@ export const NotificationProvider = ({ children }) => {
     setNotifications((prev) => [notif, ...prev]);
   }, []);
 
+  const unreadCount = notifications.filter((n) => n.isNew).length; 
+const markAllAsRead = () => {
+  setNotifications((prev) =>
+    prev.map((n) => ({ ...n, isNew: false }))
+  );
+};
+
+
+
   const removeNotification = (id) => {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   };
@@ -238,24 +247,24 @@ export const NotificationProvider = ({ children }) => {
       socket.off("newPost");
     };
   }, [socket]);
-  const unreadCount = notifications.filter((n) => n.isNew).length;
  
-  const markAllAsRead = useCallback(() => {
-  setNotifications((prev) =>
-    prev.map((n) => ({ ...n, isNew: false }))
-  );
-}, []);
+ 
+//   const markAllAsRead = useCallback(() => {
+//   setNotifications((prev) =>
+//     prev.map((n) => ({ ...n, isNew: false }))
+//   );
+// }, []);
 
   return (
     <NotificationContext.Provider
   value={{
     notifications,
-    unreadCount: notifications.filter(n => n.isNew).length,
+    unreadCount,
     markAllAsRead,
     addNotification,
     removeNotification,
   }}>
-      {popup && (
+      {/* {popup && (
         <div className="fixed top-4 right-4 bg-white shadow-lg border rounded-xl p-4 flex items-center gap-3">
           <img src={popup.user.avatar} className="w-10 h-10 rounded-full" />
           <div>
@@ -263,7 +272,20 @@ export const NotificationProvider = ({ children }) => {
             <p className="text-sm text-gray-500">{popup.action}</p>
           </div>
         </div>
-      )}
+      )} */}
+      {popup && (
+  <div className="fixed top-6 right-6 z-[9999] bg-white shadow-xl border rounded-xl p-4 flex items-center gap-3">
+    <img
+      src={popup.user.avatar}
+      className="w-10 h-10 rounded-full"
+      alt=""
+    />
+    <div>
+      <p className="font-semibold">{popup.user.name}</p>
+      <p className="text-sm text-gray-500">{popup.action}</p>
+    </div>
+  </div>
+)}
       {children}
     </NotificationContext.Provider>
   );
