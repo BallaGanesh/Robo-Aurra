@@ -21,7 +21,14 @@ createRoot(document.getElementById('root')).render(
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <Provider store={store}>
         <App></App>
-        <Toaster></Toaster>
+        <Toaster
+  position="top-center"
+  toastOptions={{
+    style: {
+      zIndex: 99999,
+    },
+  }}
+/>
     </Provider>
     </GoogleOAuthProvider>
 )

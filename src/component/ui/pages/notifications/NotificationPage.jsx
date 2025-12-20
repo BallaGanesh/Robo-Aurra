@@ -17,16 +17,18 @@ const NotificationsPage = () => {
   console.log(user);
    
 // value of child
-const {valueFromChild}=useSelector((state)=>state.child);
-
-
+  const {valueFromChild}=useSelector((state)=>state.child);
   const { socket } = useContext(SocketContext);
-  const { notifications, removeNotification } = useContext(NotificationContext);
+  const { notifications, removeNotification ,markAllAsRead } = useContext(NotificationContext);
 
   // ✅ Use the same user object that profile uses
   const storedUser = user;
   const backendPending = storedUser?.pendingRequests || [];
 
+  // Mark all as read on page load
+useEffect(() => {
+  markAllAsRead();
+}, []);
   //  Map backend pendingRequests → NotificationCard format
   const backendMapped = backendPending.map((req) => ({
     id: req._id,
