@@ -16,6 +16,7 @@ export const NotificationProvider = ({ children }) => {
 
   // 🔔 notifications
   const [notifications, setNotifications] = useState([]);
+  
 
   // 🔄 reload on user change
   useEffect(() => {
@@ -237,8 +238,23 @@ export const NotificationProvider = ({ children }) => {
       socket.off("newPost");
     };
   }, [socket]);
+  const unreadCount = notifications.filter((n) => n.isNew).length;
+ 
+  const markAllAsRead = useCallback(() => {
+  setNotifications((prev) =>
+    prev.map((n) => ({ ...n, isNew: false }))
+  );
+}, []);
+
   return (
-    <NotificationContext.Provider value={{ notifications, addNotification, removeNotification }}>
+    <NotificationContext.Provider
+  value={{
+    notifications,
+    unreadCount: notifications.filter(n => n.isNew).length,
+    markAllAsRead,
+    addNotification,
+    removeNotification,
+  }}>
       {popup && (
         <div className="fixed top-4 right-4 bg-white shadow-lg border rounded-xl p-4 flex items-center gap-3">
           <img src={popup.user.avatar} className="w-10 h-10 rounded-full" />

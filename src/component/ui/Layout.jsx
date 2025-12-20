@@ -8,34 +8,36 @@ import { FaRegHeart } from "react-icons/fa6";
 import { FiUser } from "react-icons/fi";
 import { LuSettings } from "react-icons/lu";
 import { useSelector } from "react-redux";
+import { useContext } from "react";
+import { NotificationContext } from "../../Notifications/NotificationProvider";
 
 const Layout = ({ children }) => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openPreview, setOpenPreview] = useState(false);
   const [zoom, setZoom] = useState(1);
+  const { unreadCount } = useContext(NotificationContext);
 
-  const auth = useSelector((state)=>state.Auth);
+  const auth = useSelector((state) => state.Auth);
   const user = auth?.user ?? null;
-   const{profilePhoto,username,email} =user;
-   const {valueFromChild}=useSelector((state)=>state.child);
-   const lightMode={
-    backgroundColor:"white",
-    color:"black",
-    borderRadius:"15px",
+  const { profilePhoto, username, email } = user;
+  const { valueFromChild } = useSelector((state) => state.child);
+  const lightMode = {
+    backgroundColor: "white",
+    color: "black",
+    borderRadius: "15px",
     // boxShadow:"0px 4px 6px rgba(255, 156, 130, 0.9)",
-
-   }
-   const darkMode={
-    backgroundColor:"black",
-    color:"gray",
-    }
-    const Mode={
-    backgroundColor:"white",
-    color:"black",
-    borderRadius:"15px",
-     boxShadow:"4px 4px 6px rgba(255, 0, 0, 0.9)",
-    }
+  };
+  const darkMode = {
+    backgroundColor: "black",
+    color: "gray",
+  };
+  const Mode = {
+    backgroundColor: "white",
+    color: "black",
+    borderRadius: "15px",
+    boxShadow: "4px 4px 6px rgba(255, 0, 0, 0.9)",
+  };
 
   const navItems = [
     { path: "/home", label: "Home", icon: FiHome },
@@ -50,16 +52,20 @@ const Layout = ({ children }) => {
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
-    <div className="flex h-screen bg-background text-foreground " style={`${valueFromChild}`==='light'?darkMode:lightMode}>
+    <div
+      className="flex h-screen bg-background text-foreground "
+      style={`${valueFromChild}` === "light" ? darkMode : lightMode}
+    >
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex md:w-64 lg:w-56 border-r border-gray-300 border-border bg-card flex-col sticky top-0 shadow-lg">
         {/* Logo */}
         <div className="p-4 lg:p-6 border-b border-gray-300 border-border hover:bg-muted/30 transition-colors">
-          <Link 
-            to="/" 
-            className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center gap-3 group">
             <div className="w-12 h-12  rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300">
-              <img src="/Only logo-aurra.png" style={`${valueFromChild}`==='light'?Mode:lightMode}/>
+              <img
+                src="/Only logo-aurra.png"
+                style={`${valueFromChild}` === "light" ? Mode : lightMode}
+              />
             </div>
             <span className="text-3xl font-bold gradient-text hidden md:inline bg-linear-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
               AURRA
@@ -77,14 +83,36 @@ const Layout = ({ children }) => {
                 isActive(path)
                   ? "bg-linear-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/30 scale-105 "
                   : "text-foreground hover:bg-muted/50 hover:translate-x-1"
-              }`}>
-              <Icon
+              }`}
+            >
+              {/* <Icon
                 size={24}
-                className="transition-transform duration-300 group-hover:scale-125"/>
-              <span className="text-base lg:text-lg font-medium hidden md:inline">{label}</span>
+                className="transition-transform duration-300 group-hover:scale-125"/> */}
+              <div className="relative">
+                <Icon
+                  size={24}
+                  className="transition-transform duration-300 group-hover:scale-125"
+                />
+
+                {path === "/notifications" && unreadCount > 0 && (
+                  <span
+                    className="absolute -top-2 -right-2
+      bg-red-600 text-white text-xs
+      w-5 h-5 flex items-center justify-center
+      rounded-full font-bold"
+                  >
+                    {unreadCount}
+                  </span>
+                )}
+              </div>
+
+              <span className="text-base lg:text-lg font-medium hidden md:inline">
+                {label}
+              </span>
             </Link>
           ))}
         </nav>
+
 
         {/* User Profile Section */}
         <div className="p-4 border-t border-gray-300 border-border hover:bg-muted/30 transition-colors">
@@ -94,35 +122,46 @@ const Layout = ({ children }) => {
                 src={
                   profilePhoto
                     ? `data:image/jpeg;base64,${profilePhoto}`
-                    : '/logo.png'
+                    : "/logo.png"
                 }
-                alt={username ?? 'avatar'}
+                alt={username ?? "avatar"}
                 className="size-full cursor-pointer rounded-full"
-                onClick={() => profilePhoto && setOpenPreview(true)}/>
-             
+                onClick={() => profilePhoto && setOpenPreview(true)}
+              />
             </div>
             <div className="hidden md:block">
-              <p className="text-sm font-semibold">{username ?? 'Guest'}</p>
-              <p className="text-xs text-muted-foreground">{email ?? ''}</p>
+              <p className="text-sm font-semibold">{username ?? "Guest"}</p>
+              <p className="text-xs text-muted-foreground">{email ?? ""}</p>
             </div>
           </div>
         </div>
       </aside>
 
       {/* Mobile Header */}
-      <div className="bg-white md:hidden fixed top-0 left-0 right-0 bg-card border-border z-50 flex items-center justify-between p-4 shadow-md border-b-2" style={`${valueFromChild}`==='light'?darkMode:lightMode}>
-        <Link to="/" className=" justify-between w-[60%] flex items-center gap-2">
+      <div
+        className="bg-white md:hidden fixed top-0 left-0 right-0 bg-card border-border z-50 flex items-center justify-between p-4 shadow-md border-b-2"
+        style={`${valueFromChild}` === "light" ? darkMode : lightMode}
+      >
+        <Link
+          to="/"
+          className=" justify-between w-[60%] flex items-center gap-2"
+        >
           <div className="w-10 h-10  rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold" >
-                <img src="/Only logo-aurra.png"  alt="" />
+            <span className="text-white font-bold">
+              <img src="/Only logo-aurra.png" alt="" />
             </span>
           </div>
-          <span className="text-3xl font-bold gradient-text bg-linear-to-r  to-purple-600 from-blue-500 w-25 bg-clip-text text-transparent">AURRA</span>
+          <span className="text-3xl font-bold gradient-text bg-linear-to-r  to-purple-600 from-blue-500 w-25 bg-clip-text text-transparent">
+            AURRA
+          </span>
         </Link>
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="bg-white md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-40 shadow-2xl" style={`${valueFromChild}`==='light'?darkMode:lightMode}>
+      <nav
+        className="bg-white md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-40 shadow-2xl"
+        style={`${valueFromChild}` === "light" ? darkMode : lightMode}
+      >
         <div className="flex items-center justify-around">
           {navItems.map(({ path, label, icon: Icon }) => (
             <Link
@@ -132,8 +171,26 @@ const Layout = ({ children }) => {
                 isActive(path)
                   ? "text-blue-500 scale-110 "
                   : "text-muted-foreground hover:text-foreground"
-                }`}>
-              <Icon size={25} />
+              }`}
+            >
+              {/* console.log("🔔 unreadCount:", unreadCount); */}
+
+              {/* <Icon size={25} /> */}
+              <div className="relative">
+                <Icon size={25} />
+
+                {path === "/notifications" && unreadCount > 0 && (
+                  <span
+                    className="absolute -top-1 -right-2
+                   bg-red-600 text-white text-[10px]
+      w-4 h-4 flex items-center justify-center
+      rounded-full font-bold"
+                  >
+                    {unreadCount}
+                  </span>
+                )}
+              </div>
+
               <span className="text-xs font-medium mt-1 truncate">{label}</span>
             </Link>
           ))}
@@ -148,20 +205,23 @@ const Layout = ({ children }) => {
       {/* opening Preview */}
       {openPreview && profilePhoto && (
         <div
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-999999"
-        onClick={() => setOpenPreview(false)}>
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="relative animate-zoomIn">
-          <img
-            src={`data:image/jpeg;base64,${profilePhoto}`}
-            alt="preview"
-            className="max-w-[90vw] max-h-[90vh] rounded-xl shadow-2xl"/>
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-999999"
+          onClick={() => setOpenPreview(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative animate-zoomIn"
+          >
+            <img
+              src={`data:image/jpeg;base64,${profilePhoto}`}
+              alt="preview"
+              className="max-w-[90vw] max-h-[90vh] rounded-xl shadow-2xl"
+            />
+          </div>
         </div>
-      </div>
-    )}
+      )}
     </div>
   );
-}
+};
 
 export default Layout;
