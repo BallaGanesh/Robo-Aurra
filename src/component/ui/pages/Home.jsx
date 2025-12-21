@@ -11,14 +11,15 @@ import { getAllPosts, postArticle } from "../../features/articleSlice";
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
-const { posts } = useSelector((state) => state.articles);
+  const { posts, loading } = useSelector((state) => state.articles);
   const auth = useSelector((state) => state.Auth);
   const loggedUser = auth?.user ?? null;
- const user = auth?.user ?? null;
+  const user = auth?.user ?? null;
   useEffect(() => {
     dispatch(getAllPosts());
   }, [dispatch]);
 
+  // Create Post Handler
   const handleCreatePost = (content, visibility, title) => {
     const formData = new FormData();
     formData.append("title", title);
@@ -29,6 +30,20 @@ const { posts } = useSelector((state) => state.articles);
       .then(() => dispatch(getAllPosts()))
       .catch((err) => console.log("ERROR CREATING POST:", err));
   };
+
+  // loading the posts
+  // const [loading, setLoading] = useState(true);
+
+  // useEffect(() => {
+  //   const loadPosts = async () => {
+  //     try {
+  //       await dispatch(fetchArticles());
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   loadPosts();
+  // }, []);
 
   const resolveAuthor = (postUser) => {
     if (!postUser || !loggedUser) {
@@ -80,7 +95,6 @@ const { posts } = useSelector((state) => state.articles);
     };
   };
 
-
   return (
     <Layout>
       {/* HERO SECTION */}
@@ -107,7 +121,7 @@ const { posts } = useSelector((state) => state.articles);
       </div>
 
       {/* POSTS FEED */}
-      <div className="py-8 md:py-12 px-4 md:px-8">
+      {/* <div className="py-8 md:py-12 px-4 md:px-8">
         <div className="max-w-2xl mx-auto">
           <div className="space-y-6">
             {Array.isArray(posts) && posts.length > 0 ? (
@@ -137,7 +151,53 @@ const { posts } = useSelector((state) => state.articles);
             )}
           </div>
         </div>
-      </div>
+      </div> */}
+
+<div className="py-8 md:py-12 px-4 md:px-8">
+  <div className="max-w-2xl mx-auto">
+    <div className="space-y-6">
+
+      {/* ⏳ Loader */}
+      {loading && (
+        <div className="flex justify-center py-16">
+          <div className="w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+        </div>
+      )}
+
+      {/* 📦 Posts */}
+      {!loading && Array.isArray(posts) && posts.length > 0 &&
+        posts.map((post) => {
+          const author = resolveAuthor(post.user);
+
+          return (
+            <PostCard
+              key={post._id}
+              id={post._id}
+              author={author}
+              title={post.title}
+              content={post.content}
+              timestamp={post.createdAt}
+              likes={post.likeCount || 0}
+              comments={post.comments || []}
+              shares={post.shares || 0}
+            />
+          );
+        })
+      }
+
+      {/* 🚫 Empty state */}
+      {!loading && Array.isArray(posts) && posts.length === 0 && (
+        <div className="text-center py-16">
+          <p className="text-muted-foreground text-lg">
+            No posts yet. Create one to get started!
+          </p>
+        </div>
+      )}
+
+    </div>
+  </div>
+</div>
+
 
       {/* Create Post Modal */}
       <CreatePostModal

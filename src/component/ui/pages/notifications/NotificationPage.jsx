@@ -13,25 +13,26 @@ import {
 
 const NotificationsPage = () => {
   const dispatch = useDispatch();
-  const {user}=useSelector((state)=>state.Auth); 
+  const { user } = useSelector((state) => state.Auth);
   console.log(user);
-   
-// value of child
-  const {valueFromChild}=useSelector((state)=>state.child);
+
+  // value of child
+  const { valueFromChild } = useSelector((state) => state.child);
   const { socket } = useContext(SocketContext);
-  const { notifications, removeNotification ,markAllAsRead } = useContext(NotificationContext);
+  const { notifications, removeNotification, markAllAsRead } =
+    useContext(NotificationContext);
 
   // ✅ Use the same user object that profile uses
   const storedUser = user;
   const backendPending = storedUser?.pendingRequests || [];
 
   // Mark all as read on page load
-useEffect(() => {
-  if (notifications.some((n) => n.isNew)) {
-    markAllAsRead();
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, []);
+  useEffect(() => {
+    if (notifications.some((n) => n.isNew)) {
+      markAllAsRead();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   //  Map backend pendingRequests → NotificationCard format
   const backendMapped = backendPending.map((req) => ({
@@ -54,7 +55,7 @@ useEffect(() => {
   //  Real-time follow requests from socket
   const socketFollow = notifications
     .filter((n) => n.type === "follow")
-    .map((n) => ({ ...n, isNew: true, }));
+    .map((n) => ({ ...n, isNew: true }));
 
   const mergedFollowRequests = [...backendMapped, ...socketFollow];
 
@@ -75,6 +76,8 @@ useEffect(() => {
     console.log("Merged requests:", mergedFollowRequests);
   }, [user, backendPending.length, notifications.length]);
 
+
+
   useEffect(() => {
     if (!socket) {
       console.log("⚠️ NotificationsPage: no socket available");
@@ -82,7 +85,6 @@ useEffect(() => {
     }
     console.log("🔌 NotificationsPage socket active:", socket.id);
   }, [socket]);
-
 
   // HANDLE ACCEPT
   const handleAccept = async (notification) => {
@@ -92,9 +94,7 @@ useEffect(() => {
         return;
       }
 
-       await dispatch(
-        acceptFollowRequest(notification.followerId)
-      ).unwrap();
+      await dispatch(acceptFollowRequest(notification.followerId)).unwrap();
 
       removeNotification(notification.id);
     } catch (err) {
@@ -103,44 +103,112 @@ useEffect(() => {
   };
 
   // HANDLE REJECT
-const handleReject = async (notification) => {
-  try {
-    const id = notification.followerId || notification.fromId;
+  const handleReject = async (notification) => {
+    try {
+      const id = notification.followerId || notification.fromId;
 
-    if (!id) {
-      console.warn("handleReject: missing followerId", notification);
-      return;
+      if (!id) {
+        console.warn("handleReject: missing followerId", notification);
+        return;
+      }
+
+      // const res = await dispatch(
+      //   rejectFollowRequest(id)
+      // ).unwrap();
+
+      // if (res?.user) {
+      //   localStorage.setItem("user", JSON.stringify(res.user));
+      // }
+
+      removeNotification(notification.id);
+    } catch (err) {
+      console.error("Failed to reject follow request:", err);
     }
-
-    // const res = await dispatch(
-    //   rejectFollowRequest(id)
-    // ).unwrap();
-
-    // if (res?.user) {
-    //   localStorage.setItem("user", JSON.stringify(res.user));
-    // }
-
-    removeNotification(notification.id);
-  } catch (err) {
-    console.error("Failed to reject follow request:", err);
-  }
-};
-
+  };
 
   const deleteNotification = (id) => {
     removeNotification(id);
   };
 
+
+  // User match logic
+  const resolveUserFromId = (userId) => {
+  if (!userId) return unknownUser;
+
+  // 1️⃣ logged-in user
+  if (String(user?._id) === String(userId)) {
+    return {
+      name: user.username,
+      username: user.username,
+      avatar: user.profilePhoto
+        ? `data:image/jpeg;base64,${user.profilePhoto}`
+        : "/default-avatar.png",
+    };
+  }
+
+  // 2️⃣ followers / following
+  const known =
+    user?.followers?.find((u) => String(u._id) === String(userId)) ||
+    user?.following?.find((u) => String(u._id) === String(userId));
+
+  if (known) {
+    return {
+      name: known.username,
+      username: known.username,
+      avatar: known.profilePhoto
+        ? `data:image/jpeg;base64,${known.profilePhoto}`
+        : "/default-avatar.png",
+    };
+  }
+
+  // 3️⃣ 🔥 cached posts (MAIN FIX)
+  const cachedPosts =
+    JSON.parse(localStorage.getItem("cached_posts")) || [];
+
+  const postUser = cachedPosts.find(
+    (p) => String(p.user?._id) === String(userId)
+  )?.user;
+
+  if (postUser) {
+    return {
+      name: postUser.username,
+      username: postUser.username,
+      avatar: postUser.profilePhoto
+        ? `data:image/jpeg;base64,${postUser.profilePhoto}`
+        : "/default-avatar.png",
+    };
+  }
+
+  // 4️⃣ fallback
+  return {
+    name: "Someone",
+    username: "unknown",
+    avatar: "/default-avatar.png",
+  };
+};
+
+
   return (
     <Layout>
       <div className="max-w-5xl mx-auto px-4 py-6">
-        <div className="sticky top-0 z-10 bg-background pb-2 mb-6 " style={`${valueFromChild}`==='light'?{backgroundColor:'black'}:{backgroundColor:'#f5f5f5'}}>
-          <h1 className="text-3xl w-44 font-bold gradient-text mb-4 bg-linear-to-r from-purple-600 to-blue-400 text-transparent bg-clip-text">Notifications</h1>
+        <div
+          className="sticky top-0 z-10 bg-background pb-2 mb-6 "
+          style={
+            `${valueFromChild}` === "light"
+              ? { backgroundColor: "black" }
+              : { backgroundColor: "#f5f5f5" }
+          }
+        >
+          <h1 className="text-3xl w-44 font-bold gradient-text mb-4 bg-linear-to-r from-purple-600 to-blue-400 text-transparent bg-clip-text">
+            Notifications
+          </h1>
         </div>
 
         {/* FOLLOW REQUESTS (pending) */}
         <div className="mb-10">
-          <h2 className="text-lg font-bold text-blue-600 mb-3">Follow Requests</h2>
+          <h2 className="text-lg font-bold text-blue-600 mb-3">
+            Follow Requests
+          </h2>
 
           {mergedFollowRequests.length === 0 ? (
             <p className="text-gray-500 text-sm">No follow requests yet.</p>
@@ -153,7 +221,8 @@ const handleReject = async (notification) => {
                   onDelete={() => deleteNotification(n.id)}
                   onAccept={() => handleAccept(n)}
                   onReject={() => handleReject(n)}
-                  isNew={n.isNew}/>
+                  isNew={n.isNew}
+                />
               ))}
             </div>
           )}
@@ -161,7 +230,9 @@ const handleReject = async (notification) => {
 
         {/* FOLLOW ACTIVITY (accepted requests) */}
         <div className="mb-10">
-          <h2 className="text-lg font-bold text-purple-600 mb-3">Follow Activity</h2>
+          <h2 className="text-lg font-bold text-purple-600 mb-3">
+            Follow Activity
+          </h2>
           {followAccepted.length === 0 ? (
             <p className="text-gray-500 text-sm">No follow activity yet.</p>
           ) : (
@@ -170,7 +241,8 @@ const handleReject = async (notification) => {
                 <NotificationCard
                   key={n.id}
                   notification={n}
-                  onDelete={() => deleteNotification(n.id)}/>
+                  onDelete={() => deleteNotification(n.id)}
+                />
               ))}
             </div>
           )}
@@ -189,7 +261,8 @@ const handleReject = async (notification) => {
                   <NotificationCard
                     key={n.id}
                     notification={n}
-                    onDelete={() => deleteNotification(n.id)}/>
+                    onDelete={() => deleteNotification(n.id)}
+                  />
                 ))}
             </div>
           )}
@@ -208,11 +281,36 @@ const handleReject = async (notification) => {
                   <NotificationCard
                     key={n.id}
                     notification={n}
-                    onDelete={() => deleteNotification(n.id)}/>
+                    onDelete={() => deleteNotification(n.id)}
+                  />
                 ))}
             </div>
           )}
         </div>
+
+        {/* Posts */}
+        {/* NEW POSTS */}
+        {/* NEW POSTS */}
+<div className="mb-10">
+  <h2 className="text-lg font-bold text-indigo-600 mb-3">New Posts</h2>
+
+  {notifications.filter((n) => n.type === "post").length === 0 ? (
+    <p className="text-gray-500 text-sm">No new posts yet.</p>
+  ) : (
+    <div className="space-y-3">
+      {notifications
+        .filter((n) => n.type === "post")
+        .map((n) => (
+          <NotificationCard
+            key={n.id}
+            notification={n}
+            onDelete={() => removeNotification(n.id)}
+          />
+        ))}
+    </div>
+  )}
+</div>
+
       </div>
     </Layout>
   );

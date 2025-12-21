@@ -8,7 +8,7 @@ import { GoSearch } from "react-icons/go";
 import { IoIosList } from "react-icons/io";
 import { BsGrid } from "react-icons/bs";
 import { FiMessageSquare } from "react-icons/fi";
-
+import toast from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
 import {
   sendFollowRequest,
@@ -58,44 +58,82 @@ const Profile = () => {
     : [];
 
   // handle send follow request
-  const handleSendRequest = async () => {
-    if (!followUsername.trim()) {
-      alert("Please enter a username");
-      return;
+  // const handleSendRequest = async () => {
+  //   if (!followUsername.trim()) {
+  //     alert("Please enter a username");
+  //     return;
+  //   }
+
+  //   try {
+  //     await dispatch(sendFollowRequest(followUsername)).unwrap();
+
+  //     if (socket && socket.connected) {
+  //       socket.emit("sendFollowRequest", {
+  //         from: loggedUser.username,
+  //         fromId: loggedUser._id,
+  //         toUsername: followUsername,
+  //       });
+  //     }
+
+  //     setFollowUsername("");
+  //     setShowFollowModal(false);
+  //   } catch (err) {
+  //     console.log(err);
+
+  //     if (
+  //       err === "Follow request already sent" ||
+  //       err?.message?.includes("already")
+  //     ) {
+  //       addNotification({
+  //         type: "follow",
+  //         from: loggedUser.username,
+  //         fromId: loggedUser._id,
+  //         timestamp: "Just now",
+  //       });
+
+  //       setFollowUsername("");
+  //       setShowFollowModal(false);
+  //     }
+  //   }
+  // };
+
+const handleSendRequest = async () => {
+  if (!followUsername.trim()) {
+    toast.error("Please enter a username");
+    return;
+  }
+
+  try {
+    await dispatch(sendFollowRequest(followUsername)).unwrap();
+
+    // emit socket ONLY if request succeeded
+    if (socket && socket.connected) {
+      socket.emit("sendFollowRequest", {
+        from: loggedUser.username,
+        fromId: loggedUser._id,
+        toUsername: followUsername,
+      });
     }
 
-    try {
-      await dispatch(sendFollowRequest(followUsername)).unwrap();
+    toast.success("Follow request sent");
+    setFollowUsername("");
+    setShowFollowModal(false);
 
-      if (socket && socket.connected) {
-        socket.emit("sendFollowRequest", {
-          from: loggedUser.username,
-          fromId: loggedUser._id,
-          toUsername: followUsername,
-        });
-      }
+  } catch (err) {
+    console.error("Follow request error:", err);
 
-      setFollowUsername("");
-      setShowFollowModal(false);
-    } catch (err) {
-      console.log(err);
-
-      if (
-        err === "Follow request already sent" ||
-        err?.message?.includes("already")
-      ) {
-        addNotification({
-          type: "follow",
-          from: loggedUser.username,
-          fromId: loggedUser._id,
-          timestamp: "Just now",
-        });
-
-        setFollowUsername("");
-        setShowFollowModal(false);
-      }
+    // ✅ BACKEND MESSAGE → UI POPUP
+    if (typeof err === "string") {
+      toast.error(err);
+    } else if (err?.message) {
+      toast.error(err.message);
+    } else {
+      toast.error("Unable to send follow request");
     }
-  };
+  }
+};
+
+
 
   //  MODAL — NOW USES REAL BACKEND FOLLOWERS
   const FollowerModal = ({ isFollowing }) => {
