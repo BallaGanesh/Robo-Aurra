@@ -82,13 +82,19 @@ export const NotificationProvider = ({ children }) => {
     setNotifications((prev) => [notif, ...prev]);
   }, []);
 
-  const unreadCount = notifications.filter((n) => n.isNew).length; 
+  // const unreadCount = notifications.filter((n) => n.isNew).length; 
+  const unreadCount = notifications.filter(
+  (n) => n.isNew === true
+).length;
+
 const markAllAsRead = () => {
   setNotifications((prev) =>
     prev.map((n) => ({ ...n, isNew: false }))
   );
 };
-
+useEffect(() => {
+  markAllAsRead();
+}, [user?._id]);
 
 
   const removeNotification = (id) => {
